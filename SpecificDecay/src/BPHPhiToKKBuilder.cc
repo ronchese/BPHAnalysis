@@ -43,9 +43,10 @@ BPHPhiToKKBuilder::BPHPhiToKKBuilder(
   evSetup( &es ),
   posCollection( kPosCollection ),
   negCollection( kNegCollection ) {
-    ptSel = new BPHParticlePtSelect (  0.7 );
+    //ptSel = new BPHParticlePtSelect (  0.7 );
+    ptSel = new BPHParticlePtSelect (  0.2 );
    etaSel = new BPHParticleEtaSelect( 10.0 );
-  massSel = new BPHMassSelect( 1.0, 1.04 );
+  massSel = new BPHMassSelect( 0.8, 1.50 );
   chi2Sel = new BPHChi2Select( 0.0 );
   updated = false;
 }

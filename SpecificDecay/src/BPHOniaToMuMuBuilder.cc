@@ -308,8 +308,8 @@ void BPHOniaToMuMuBuilder::extractList( oniaType type ) {
              BPHParticleMasses::muonMass );
     np->add( "MuNeg", muNeg, ptr->getTrackSearchList( mcNeg ),
              BPHParticleMasses::muonMass );
-    if ( par.mass > 0.0 )
-    np->setConstraint( par.mass, par.sigma );
+    //if ( par.mass > 0.0 )
+    //np->setConstraint( par.mass, par.sigma );
     list.push_back( BPHPlusMinusConstCandPtr( np ) );
   }
   par.updated = true;

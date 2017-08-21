@@ -24,6 +24,8 @@
 #include "RecoVertex/KinematicFit/interface/MultiTrackMassKinematicConstraint.h"
 #include "FWCore/MessageLogger/interface/MessageLogger.h"
 
+#include "TMath.h"
+
 //---------------
 // C++ Headers --
 //---------------
@@ -204,12 +206,82 @@ const RefCountedKinematicTree& BPHKinematicFit::kinematicTree(
 }
 
 
+// the name you put is to set a VirtualKinematicParticle.
+// Thus, you cannot put "JPsi", you ned to put "Phi", "Kx0", or other.
+// Than the code will get: 
+//    MuPos, MuNeg, vParticle("Phi")
+//
 const RefCountedKinematicTree& BPHKinematicFit::kinematicTree(
                                const string& name,
                                KinematicConstraint* kc ) const {
+    kinTree = RefCountedKinematicTree( 0 );
+      oldFit = false;
+        kinParticles();
+          if ( allParticles.size() != daughFull().size() ) return kinTree;
+            vector<RefCountedKinematicParticle> kComp;
+              vector<RefCountedKinematicParticle> kTail;
+                if ( name != "" ) {
+                        const BPHRecoCandidate* comp = getComp( name ).get();
+                            if ( comp == 0 ) {
+                                      edm::LogPrint( "ParticleNotFound" )
+                                                            << "BPHKinematicFit::kinematicTree: "
+                                                                              << name << " daughter not found";
+                                            return kinTree;
+                                                }
+                                const vector<string>& names = comp->daugNames();
+                                    int ns;
+                                        int nn = ns = names.size();
+                                            vector<string> nfull( nn + 1 );
+                                                nfull[nn] = "*";
+                                                    while ( nn-- ) nfull[nn] = name + "/" + names[nn];
+                                                        vector<RefCountedKinematicParticle> kPart = kinParticles( nfull );
+                                                            vector<RefCountedKinematicParticle>::const_iterator iter = kPart.begin();
+                                                                vector<RefCountedKinematicParticle>::const_iterator imid = iter + ns;
+                                                                    vector<RefCountedKinematicParticle>::const_iterator iend = kPart.end();
+                                                                        kComp.insert( kComp.end(), iter, imid );
+                                                                            kTail.insert( kTail.end(), imid, iend );
+                                                                              }
+                  else {
+                          kComp = allParticles;
+                            }
+                    try {
+                            KinematicParticleVertexFitter vtxFitter;
+                                RefCountedKinematicTree compTree = vtxFitter.fit( kComp );
+                                    if ( compTree->isEmpty() ) return kinTree;
+                                        if ( kc != 0 ) {
+                                                  KinematicParticleFitter kinFitter;
+                                                        compTree = kinFitter.fit( kc, compTree );
+                                                              if ( compTree->isEmpty() ) return kinTree;
+                                                                  }
+                                            compTree->movePointerToTheTop();
+                                                if ( kTail.size() ) {
+                                                          RefCountedKinematicParticle compPart = compTree->currentParticle();
+                                                                if ( !compPart->currentState().isValid() ) return kinTree;
+                                                                      kTail.push_back( compPart );
+                                                                            kinTree = vtxFitter.fit( kTail );
+                                                                                }
+                                                    else {
+                                                              kinTree = compTree;
+                                                                  }
+                                                      }
+                      catch ( std::exception e ) {
+                              edm::LogPrint( "FitFailed" )
+                                                  << "BPHKinematicFit::kinematicTree: "
+                                                                  << "kin fit reset";
+                                  kinTree = RefCountedKinematicTree( 0 );
+                                    }
+                        return kinTree;
+}
+
+
+const RefCountedKinematicTree& BPHKinematicFit::kinematicTree(
+                               const string& name,
+                               MultiTrackKinematicConstraint* kc ) const {
   kinTree = RefCountedKinematicTree( 0 );
   oldFit = false;
   kinParticles();
+
+  // if there is any particle cannot find TransientTrack
   if ( allParticles.size() != daughFull().size() ) return kinTree;
   vector<RefCountedKinematicParticle> kComp;
   vector<RefCountedKinematicParticle> kTail;
@@ -227,6 +299,7 @@ const RefCountedKinematicTree& BPHKinematicFit::kinematicTree(
     vector<string> nfull( nn + 1 );
     nfull[nn] = "*";
     while ( nn-- ) nfull[nn] = name + "/" + names[nn];
+
     vector<RefCountedKinematicParticle> kPart = kinParticles( nfull );
     vector<RefCountedKinematicParticle>::const_iterator iter = kPart.begin();
     vector<RefCountedKinematicParticle>::const_iterator imid = iter + ns;
@@ -241,60 +314,48 @@ const RefCountedKinematicTree& BPHKinematicFit::kinematicTree(
     KinematicParticleVertexFitter vtxFitter;
     RefCountedKinematicTree compTree = vtxFitter.fit( kComp );
     if ( compTree->isEmpty() ) return kinTree;
-    if ( kc != 0 ) {
-      KinematicParticleFitter kinFitter;
-      compTree = kinFitter.fit( kc, compTree );
-      if ( compTree->isEmpty() ) return kinTree;
-    }
+    if (!compTree->isValid()) return kinTree;
     compTree->movePointerToTheTop();
+    KinematicParticleFitter kinFitter;
+    RefCountedKinematicParticle compPart     = compTree->currentParticle();
+    RefCountedKinematicVertex   compPart_vtx = compTree->currentDecayVertex();
+    double chi2_prob_tktk = TMath::Prob(compPart_vtx->chiSquared(),
+                                        compPart_vtx->degreesOfFreedom());
+    if(chi2_prob_tktk < 0.01) return kinTree;
     if ( kTail.size() ) {
-      RefCountedKinematicParticle compPart = compTree->currentParticle();
-      if ( !compPart->currentState().isValid() ) return kinTree;
-      kTail.push_back( compPart );
+      //RefCountedKinematicParticle compPart     = compTree->currentParticle();
+      //RefCountedKinematicVertex   compPart_vtx = compTree->currentDecayVertex();
+
+      VirtualKinematicParticleFactory vFactory;
+
+      float chi_ = compPart_vtx->chiSquared();
+      float ndf_ = compPart_vtx->degreesOfFreedom();
+      kTail.push_back( vFactory.particle( compPart->currentState(), chi_, ndf_, compPart ) );
+      //if ( !compPart->currentState().isValid() ) return kinTree;
+      //kTail.push_back( compPart );
       kinTree = vtxFitter.fit( kTail );
+     if ( kc != 0 ) {
+        //KinematicParticleFitter kinFitter;
+        //compTree = kinFitter.fit( kc, compTree );
+              KinematicConstrainedVertexFitter kcvFitter;
+              compTree = kcvFitter.fit( kTail, kc );
+        if ( compTree->isEmpty() ) return kinTree;
+              kinTree = compTree;
+      }
+     else {
+        //      KinematicConstrainedVertexFitter kcvFitter;
+        //      compTree = kcvFitter.fit( kTail );
+        //if ( compTree->isEmpty() ) return kinTree;
+        //      kinTree = compTree;
+            KinematicParticleVertexFitter   kpv_fitter;
+            compTree = kpv_fitter.fit( kTail );
+            if(!compTree->isValid()) return kinTree;
+            kinTree = compTree;
+     }
     }
     else {
       kinTree = compTree;
     }
-  }
-  catch ( std::exception e ) {
-    edm::LogPrint( "FitFailed" )
-                << "BPHKinematicFit::kinematicTree: "
-                << "kin fit reset";
-    kinTree = RefCountedKinematicTree( 0 );
-  }
-  return kinTree;
-}
-
-
-const RefCountedKinematicTree& BPHKinematicFit::kinematicTree(
-                               const string& name,
-                               MultiTrackKinematicConstraint* kc ) const {
-  kinTree = RefCountedKinematicTree( 0 );
-  oldFit = false;
-  kinParticles();
-  if ( allParticles.size() != daughFull().size() ) return kinTree;
-  vector<string> nfull;
-  if ( name != "" ) {
-    const BPHRecoCandidate* comp = getComp( name ).get();
-    if ( comp == 0 ) {
-      edm::LogPrint( "ParticleNotFound" )
-                  << "BPHKinematicFit::kinematicTree: "
-                  << name << " daughter not found";
-      return kinTree;
-    }
-    const vector<string>& names = comp->daugNames();
-    int nn = names.size();
-    nfull.resize( nn + 1 );
-    nfull[nn] = "*";
-    while ( nn-- ) nfull[nn] = name + "/" + names[nn];
-  }
-  else {
-    nfull.push_back( "*" );
-  }
-  try {
-    KinematicConstrainedVertexFitter cvf;
-    kinTree = cvf.fit( kinParticles( nfull ), kc );
   }
   catch ( std::exception e ) {
     edm::LogPrint( "FitFailed" )
@@ -405,6 +466,7 @@ void BPHKinematicFit::buildParticles() const {
     if ( tt != 0 ) allParticles.push_back( kinMap[cand] =
                                            pFactory.particle( *tt, 
                                            mass, chi, ndf, sigma ) );
+    if ( !tt->isValid() ) printf("transientTracks is not valid() !\n");
   }
   oldKPs = false;
   return;
