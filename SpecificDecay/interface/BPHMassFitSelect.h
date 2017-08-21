@@ -68,13 +68,12 @@ class BPHMassFitSelect: public BPHFitSelect, public BPHMassCuts {
     switch ( type ) {
     default:
     case none: break;
-    case mcss: cand.kinematicTree( cName, cMass, cSigma ); std::cout << "mcss kinematicTree is used\n"; break;
-    case mcst: cand.kinematicTree( cName, cMass )        ; std::cout << "mcst kinematicTree is used\n"; break;
-    case   kf: cand.kinematicTree( cName,   kc          ); std::cout << "  kf kinematicTree is used\n"; break;
-    case mtkf: cand.kinematicTree( cName, mtkc          ); std::cout << "mktf kinematicTree is used\n"; break;
+    case mcss: cand.kinematicTree( cName, cMass, cSigma ); break;
+    case mcst: cand.kinematicTree( cName, cMass )        ; break;
+    case   kf: cand.kinematicTree( cName,   kc          ); break;
+    case mtkf: cand.kinematicTree( cName, mtkc          ); break;
     }
     double mass = cand.p4().mass();
-    std::cout << "cName = " << cName.c_str() << ", fitMass = " << mass  << std::endl;
     return ( ( mass > mMin ) && ( mass < mMax ) );
   }
 
