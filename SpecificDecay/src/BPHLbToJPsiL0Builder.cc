@@ -40,11 +40,11 @@ using namespace std;
 BPHLbToJPsiL0Builder::BPHLbToJPsiL0Builder( const edm::EventSetup& es,
     const std::vector<BPHPlusMinusConstCandPtr>& jpsiCollection,
     const std::vector<BPHPlusMinusConstCandPtr>&   l0Collection ):
-  jPsiName(    "JPsi" ),
-    l0Name( "Lambda0" ),
-  evSetup( &es ),
-  jCollection( &jpsiCollection ),
-  lCollection( &  l0Collection ) {
+ jPsiName(    "JPsi" ),
+   l0Name( "Lambda0" ),
+ evSetup( &es ),
+ jCollection( &jpsiCollection ),
+ lCollection( &  l0Collection ) {
   jpsiSel = new BPHMassSelect   ( 2.80, 3.40 );
    ml0Sel = new BPHMassFitSelect( 0.00, 3.00 );
   massSel = new BPHMassSelect   ( 3.50, 8.00 );

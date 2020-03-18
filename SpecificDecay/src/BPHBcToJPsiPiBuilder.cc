@@ -40,11 +40,11 @@ using namespace std;
 BPHBcToJPsiPiBuilder::BPHBcToJPsiPiBuilder( const edm::EventSetup& es,
     const std::vector<BPHPlusMinusConstCandPtr>& jpsiCollection,
     const BPHRecoBuilder::BPHGenericCollection*  pionCollection ):
-  jPsiName( "JPsi" ),
-  pionName( "Pion" ),
-  evSetup( &es ),
-  jCollection( &jpsiCollection ),
-  pCollection(  pionCollection )  {
+ jPsiName( "JPsi" ),
+ pionName( "Pion" ),
+ evSetup( &es ),
+ jCollection( &jpsiCollection ),
+ pCollection(  pionCollection ) {
   jpsiSel = new BPHMassSelect       ( 2.80, 3.40 );
    pnVeto = new BPHParticleNeutralVeto;
     ptSel = new BPHParticlePtSelect (  3.0 );

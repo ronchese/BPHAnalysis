@@ -44,14 +44,14 @@ BPHK0sToPiPiBuilder::BPHK0sToPiPiBuilder(
                const edm::EventSetup& es,
                const BPHRecoBuilder::BPHGenericCollection* posCollection,
                const BPHRecoBuilder::BPHGenericCollection* negCollection ):
-  pionPosName( "PionPos" ),
-  pionNegName( "PionNeg" ),
-  evSetup( &es ),
-  pCollection( posCollection ),
-  nCollection( negCollection ), 
-  vCollection( nullptr ),
-  rCollection( nullptr ),
-  sList( "" ) {
+ pionPosName( "PionPos" ),
+ pionNegName( "PionNeg" ),
+ evSetup( &es ),
+ pCollection( posCollection ),
+ nCollection( negCollection ), 
+ vCollection( nullptr ),
+ rCollection( nullptr ),
+ sList( "" ) {
     ptSel = new BPHParticlePtSelect (  0.7 );
    etaSel = new BPHParticleEtaSelect( 10.0 );
   massSel = new BPHMassSelect( 0.40, 0.60 ) ;
@@ -64,14 +64,14 @@ BPHK0sToPiPiBuilder::BPHK0sToPiPiBuilder(
                const std::vector<reco::VertexCompositeCandidate>*
                      v0Collection,
                const std::string& searchList ):
-  pionPosName( "PionPos" ),
-  pionNegName( "PionNeg" ),
-  evSetup( &es ),
-  pCollection( nullptr ),
-  nCollection( nullptr ), 
-  vCollection( v0Collection ),
-  rCollection( nullptr ),
-  sList( searchList )  {
+ pionPosName( "PionPos" ),
+ pionNegName( "PionNeg" ),
+ evSetup( &es ),
+ pCollection( nullptr ),
+ nCollection( nullptr ), 
+ vCollection( v0Collection ),
+ rCollection( nullptr ),
+ sList( searchList ) {
     ptSel = new BPHParticlePtSelect (  0.0 );
    etaSel = new BPHParticleEtaSelect( 10.0 );
   massSel = new BPHMassSelect( 0.0, 2.0 ) ;
@@ -85,14 +85,14 @@ BPHK0sToPiPiBuilder::BPHK0sToPiPiBuilder(
                const std::vector<reco::VertexCompositePtrCandidate>*
                      vpCollection,
                const std::string& searchList ):
-  pionPosName( "PionPos" ),
-  pionNegName( "PionNeg" ),
-  evSetup( &es ),
-  pCollection( nullptr ),
-  nCollection( nullptr ), 
-  vCollection( nullptr ),
-  rCollection( vpCollection ),
-  sList( searchList )  {
+ pionPosName( "PionPos" ),
+ pionNegName( "PionNeg" ),
+ evSetup( &es ),
+ pCollection( nullptr ),
+ nCollection( nullptr ), 
+ vCollection( nullptr ),
+ rCollection( vpCollection ),
+ sList( searchList ) {
     ptSel = new BPHParticlePtSelect (  0.0 );
    etaSel = new BPHParticleEtaSelect( 10.0 );
   massSel = new BPHMassSelect( 0.0, 2.0 ) ;

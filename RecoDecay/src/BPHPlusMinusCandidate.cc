@@ -37,19 +37,19 @@ using namespace std;
 // Constructors --
 //----------------
 BPHPlusMinusCandidate::BPHPlusMinusCandidate( const edm::EventSetup* es ):
-  BPHDecayVertex( es ),
-  BPHPlusMinusVertex( es ),
-  BPHRecoCandidate( es ) {
+ BPHDecayVertex( es ),
+ BPHPlusMinusVertex( es ),
+ BPHRecoCandidate( es ) {
 }
 
 
 BPHPlusMinusCandidate::BPHPlusMinusCandidate( const edm::EventSetup* es,
                        const BPHRecoBuilder::ComponentSet& compList ):
-  BPHDecayMomentum( compList.daugMap, compList.compMap ),
-  BPHDecayVertex( this, es ),
-  BPHKinematicFit( this ),
-  BPHPlusMinusVertex( es ),
-  BPHRecoCandidate( es, compList ) {
+ BPHDecayMomentum( compList.daugMap, compList.compMap ),
+ BPHDecayVertex( this, es ),
+ BPHKinematicFit( this ),
+ BPHPlusMinusVertex( es ),
+ BPHRecoCandidate( es, compList ) {
 }
 
 //--------------

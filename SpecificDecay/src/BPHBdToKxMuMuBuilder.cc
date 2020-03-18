@@ -37,11 +37,11 @@ using namespace std;
 BPHBdToKxMuMuBuilder::BPHBdToKxMuMuBuilder( const edm::EventSetup& es,
     const std::vector<BPHPlusMinusConstCandPtr>& oniaCollection,
     const std::vector<BPHPlusMinusConstCandPtr>&  kx0Collection ):
-  oniaName( "Onia" ),
-   kx0Name(  "Kx0" ),
-  evSetup( &es ),
-  jCollection( &oniaCollection ),
-  kCollection( & kx0Collection ) {
+ oniaName( "Onia" ),
+  kx0Name(  "Kx0" ),
+ evSetup( &es ),
+ jCollection( &oniaCollection ),
+ kCollection( & kx0Collection ) {
   oniaSel = new BPHMassSelect   ( 1.00, 12.00 );
   mkx0Sel = new BPHMassSelect   ( 0.80, 1.00 );
   massSel = new BPHMassSelect   ( 3.50, 8.00 );

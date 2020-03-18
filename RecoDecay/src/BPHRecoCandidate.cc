@@ -29,15 +29,15 @@ using namespace std;
 // Constructors --
 //----------------
 BPHRecoCandidate::BPHRecoCandidate( const edm::EventSetup* es ):
-  BPHDecayVertex( es ) {
+ BPHDecayVertex( es ) {
 }
 
 
 BPHRecoCandidate::BPHRecoCandidate( const edm::EventSetup* es,
                   const BPHRecoBuilder::ComponentSet& compList ):
-  BPHDecayMomentum( compList.daugMap, compList.compMap ),
-  BPHDecayVertex( this, es ),
-  BPHKinematicFit( this ) {
+ BPHDecayMomentum( compList.daugMap, compList.compMap ),
+ BPHDecayVertex( this, es ),
+ BPHKinematicFit( this ) {
 }
 
 //--------------

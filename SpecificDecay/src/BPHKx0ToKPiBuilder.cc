@@ -81,11 +81,11 @@ BPHKx0ToKPiBuilder::BPHKx0ToKPiBuilder(
                const BPHRecoBuilder::BPHGenericCollection* pCollection,
                const BPHRecoBuilder::BPHGenericCollection* nCollection,
                BPHKx0ToKPiBuilder::buildMode mode ):
-  kaonName( "Kaon" ),
-  pionName( "Pion" ),
-  evSetup( &es ),
-  posCollection( pCollection ),
-  negCollection( nCollection ) {
+ kaonName( "Kaon" ),
+ pionName( "Pion" ),
+ evSetup( &es ),
+ posCollection( pCollection ),
+ negCollection( nCollection ) {
   ptMin = 0.7;
   etaMax = 10.0;
   massMin = 0.75;

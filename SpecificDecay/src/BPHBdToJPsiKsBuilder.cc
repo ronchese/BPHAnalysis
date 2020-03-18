@@ -37,11 +37,11 @@ using namespace std;
 BPHBdToJPsiKsBuilder::BPHBdToJPsiKsBuilder( const edm::EventSetup& es,
     const std::vector<BPHPlusMinusConstCandPtr>& jpsiCollection,
     const std::vector<BPHPlusMinusConstCandPtr>&  k0sCollection ):
-  jPsiName( "JPsi" ),
-   k0sName(  "K0s" ),
-  evSetup( &es ),
-  jCollection( &jpsiCollection ),
-  kCollection( & k0sCollection ) {
+ jPsiName( "JPsi" ),
+  k0sName(  "K0s" ),
+ evSetup( &es ),
+ jCollection( &jpsiCollection ),
+ kCollection( & k0sCollection ) {
   jpsiSel = new BPHMassSelect   ( 2.80, 3.40 );
   mk0sSel = new BPHMassFitSelect( 0.00, 2.00 );
   massSel = new BPHMassSelect   ( 3.50, 8.00 );

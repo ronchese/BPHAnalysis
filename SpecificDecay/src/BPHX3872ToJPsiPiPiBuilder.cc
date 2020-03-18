@@ -38,13 +38,13 @@ BPHX3872ToJPsiPiPiBuilder::BPHX3872ToJPsiPiPiBuilder( const edm::EventSetup& es,
     const std::vector<BPHPlusMinusConstCandPtr>& jpsiCollection,
     const BPHRecoBuilder::BPHGenericCollection*   posCollection,
     const BPHRecoBuilder::BPHGenericCollection*   negCollection ):
-     jPsiName( "JPsi" ),
-  pionPosName( "PionPos" ),
-  pionNegName( "PionNeg" ),
-  evSetup( &es ),
-  jCollection( &jpsiCollection ),
-  pCollection(   posCollection ),
-  nCollection(   negCollection )  {
+    jPsiName( "JPsi" ),
+ pionPosName( "PionPos" ),
+ pionNegName( "PionNeg" ),
+ evSetup( &es ),
+ jCollection( &jpsiCollection ),
+ pCollection(   posCollection ),
+ nCollection(   negCollection ) {
   jpsiSel = new BPHMassSelect       ( 2.80, 3.40 );
   ptMin = 1.0;
   etaMax = 10.0;

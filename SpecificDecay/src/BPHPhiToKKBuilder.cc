@@ -77,11 +77,11 @@ BPHPhiToKKBuilder::BPHPhiToKKBuilder(
                const edm::EventSetup& es,
                const BPHRecoBuilder::BPHGenericCollection* pCollection,
                const BPHRecoBuilder::BPHGenericCollection* nCollection ):
-  kPosName( "KPos" ),
-  kNegName( "KNeg" ),
-  evSetup( &es ),
-  posCollection( pCollection ),
-  negCollection( nCollection ) {
+ kPosName( "KPos" ),
+ kNegName( "KNeg" ),
+ evSetup( &es ),
+ posCollection( pCollection ),
+ negCollection( nCollection ) {
   ptMin = 0.7;
   etaMax = 10.0;
   massMin = 1.0;

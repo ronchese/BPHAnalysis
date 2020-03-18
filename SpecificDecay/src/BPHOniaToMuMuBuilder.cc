@@ -40,11 +40,11 @@ BPHOniaToMuMuBuilder::BPHOniaToMuMuBuilder(
     const edm::EventSetup& es,
     const BPHRecoBuilder::BPHGenericCollection* muPosCollection,
     const BPHRecoBuilder::BPHGenericCollection* muNegCollection ):
-  muPosName( "MuPos" ),
-  muNegName( "MuNeg" ),
-  evSetup( &es ),
-  posCollection( muPosCollection ),
-  negCollection( muNegCollection ) {
+ muPosName( "MuPos" ),
+ muNegName( "MuNeg" ),
+ evSetup( &es ),
+ posCollection( muPosCollection ),
+ negCollection( muNegCollection ) {
   setParameters( Phi , 2.0, 10.0,  0.50,  1.50, 0.0,
                  BPHParticleMasses:: phiMass, BPHParticleMasses:: phiMWidth );
   setParameters( Psi1, 2.0, 10.0,  2.00,  3.40, 0.0,
