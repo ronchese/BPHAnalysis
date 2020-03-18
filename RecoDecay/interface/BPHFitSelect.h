@@ -34,7 +34,7 @@ class BPHFitSelect {
 
   /** Constructor
    */
-  BPHFitSelect();
+  BPHFitSelect() {}
 
   // deleted copy constructor and assignment operator
   BPHFitSelect           ( const BPHFitSelect& x ) = delete;
@@ -42,7 +42,9 @@ class BPHFitSelect {
 
   /** Destructor
    */
-  virtual ~BPHFitSelect();
+  virtual ~BPHFitSelect() {}
+
+  using AcceptArg = BPHKinematicFit;
 
   /** Operations
    */

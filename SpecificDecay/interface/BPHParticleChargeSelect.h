@@ -57,10 +57,10 @@ class BPHParticleChargeSelect: public BPHRecoSelect {
     return true;
   };
 
-  /// set seelction charge
+  /// set selection charge
   void setCharge( int c ) { charge =( c ? ( c > 0 ? 1 : -1 ) : 0 ); return; }
 
-  /// get seelction charge
+  /// get selection charge
   double getCharge() const { return charge; }
 
  private:

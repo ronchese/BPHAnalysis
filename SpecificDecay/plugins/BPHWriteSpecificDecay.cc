@@ -14,7 +14,6 @@
 #include "BPHAnalysis/SpecificDecay/interface/BPHMuonEtaSelect.h"
 #include "BPHAnalysis/SpecificDecay/interface/BPHParticlePtSelect.h"
 #include "BPHAnalysis/SpecificDecay/interface/BPHParticleNeutralVeto.h"
-#include "BPHAnalysis/RecoDecay/interface/BPHMultiSelect.h"
 #include "BPHAnalysis/SpecificDecay/interface/BPHMassSelect.h"
 #include "BPHAnalysis/SpecificDecay/interface/BPHChi2Select.h"
 

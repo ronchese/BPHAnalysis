@@ -34,7 +34,7 @@ class BPHMomentumSelect {
 
   /** Constructor
    */
-  BPHMomentumSelect();
+  BPHMomentumSelect() {}
 
   // deleted copy constructor and assignment operator
   BPHMomentumSelect           ( const BPHMomentumSelect& x ) = delete;
@@ -42,7 +42,9 @@ class BPHMomentumSelect {
 
   /** Destructor
    */
-  virtual ~BPHMomentumSelect();
+  virtual ~BPHMomentumSelect() {}
+
+  using AcceptArg = BPHDecayMomentum;
 
   /** Operations
    */

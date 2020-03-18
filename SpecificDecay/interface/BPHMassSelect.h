@@ -53,7 +53,6 @@ class BPHMassSelect: public BPHMomentumSelect, public BPHMassCuts {
     double mass = cand.composite().mass();
     return ( ( mass >= mMin ) && ( mass <= mMax ) );
   }
-
 };
 
 
