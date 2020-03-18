@@ -29,10 +29,6 @@
 //---------------
 // C++ Headers --
 //---------------
-#include <iostream>
-#include <stdio.h>
-#include <fstream>
-#include <string>
 using namespace std;
 
 //-------------------

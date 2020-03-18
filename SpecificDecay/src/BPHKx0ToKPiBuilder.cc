@@ -66,7 +66,6 @@ class BPHKx0ToKPiBuilder::DZSelect: public BPHRecoSelect {
 //---------------
 // C++ Headers --
 //---------------
-#include <iostream>
 using namespace std;
 
 //-------------------

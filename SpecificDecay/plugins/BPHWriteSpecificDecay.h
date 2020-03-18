@@ -27,8 +27,6 @@
 #include <string>
 #include <vector>
 #include <map>
-#include <iostream>
-#include <fstream>
 
 class TH1F;
 class BPHRecoCandidate;

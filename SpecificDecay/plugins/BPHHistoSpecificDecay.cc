@@ -29,7 +29,7 @@
 #include <string>
 #include <iostream>
 #include <fstream>
-#include <math.h>
+#include <cmath>
 
 using namespace std;
 

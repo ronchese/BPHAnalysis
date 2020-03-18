@@ -29,10 +29,6 @@
 //---------------
 // C++ Headers --
 //---------------
-#include <iostream>
-#include <stdio.h>
-#include <fstream>
-#include <string>
 using namespace std;
 
 //-------------------
@@ -48,14 +44,14 @@ BPHLambda0ToPPiBuilder::BPHLambda0ToPPiBuilder(
                const edm::EventSetup& es,
                const BPHRecoBuilder::BPHGenericCollection* protonCollection,
                const BPHRecoBuilder::BPHGenericCollection*   pionCollection ):
-  protonName( "Proton" ),
-    pionName(   "Pion" ),
-  evSetup( &es ),
-  prCollection( protonCollection ),
-  piCollection(   pionCollection ), 
+ protonName( "Proton" ),
+   pionName(   "Pion" ),
+ evSetup( &es ),
+ prCollection( protonCollection ),
+ piCollection(   pionCollection ), 
   vCollection( nullptr ),
   rCollection( nullptr ),
-  sList( "" ) {
+ sList( "" ) {
     ptSel = new BPHParticlePtSelect (  0.7 );
    etaSel = new BPHParticleEtaSelect( 10.0 );
   massSel = new BPHMassSelect( 0.80, 1.40 ) ;
@@ -68,14 +64,14 @@ BPHLambda0ToPPiBuilder::BPHLambda0ToPPiBuilder(
                const std::vector<reco::VertexCompositeCandidate>*
                      v0Collection,
                const std::string& searchList ):
-  protonName( "Proton" ),
-    pionName(   "Pion" ),
-  evSetup( &es ),
-  prCollection( nullptr ),
-  piCollection( nullptr ), 
-   vCollection( v0Collection ),
-   rCollection( nullptr ),
-  sList( searchList )  {
+ protonName( "Proton" ),
+   pionName(   "Pion" ),
+ evSetup( &es ),
+ prCollection( nullptr ),
+ piCollection( nullptr ), 
+  vCollection( v0Collection ),
+  rCollection( nullptr ),
+ sList( searchList ) {
     ptSel = new BPHParticlePtSelect (  0.0 );
    etaSel = new BPHParticleEtaSelect( 10.0 );
   massSel = new BPHMassSelect( 0.0, 3.0 ) ;
@@ -89,14 +85,14 @@ BPHLambda0ToPPiBuilder::BPHLambda0ToPPiBuilder(
                const std::vector<reco::VertexCompositePtrCandidate>*
                      vpCollection,
                const std::string& searchList ):
-  protonName( "Proton" ),
-    pionName(   "Pion" ),
-  evSetup( &es ),
-  prCollection( nullptr ),
-  piCollection( nullptr ), 
-   vCollection( nullptr ),
-   rCollection( vpCollection ),
-  sList( searchList )  {
+ protonName( "Proton" ),
+   pionName(   "Pion" ),
+ evSetup( &es ),
+ prCollection( nullptr ),
+ piCollection( nullptr ), 
+  vCollection( nullptr ),
+  rCollection( vpCollection ),
+ sList( searchList ) {
     ptSel = new BPHParticlePtSelect (  0.0 );
    etaSel = new BPHParticleEtaSelect( 10.0 );
   massSel = new BPHMassSelect( 0.0, 3.0 ) ;
