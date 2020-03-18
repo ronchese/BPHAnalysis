@@ -73,7 +73,7 @@ class BPHMassFitSelect: public BPHFitSelect, public BPHMassCuts {
     default:
     case none: break;
     case mcss: cand.kinematicTree( cName, cMass, cSigma ); break;
-    case mcst: cand.kinematicTree( cName, cMass )        ; break;
+    case mcst: cand.kinematicTree( cName, cMass         ); break;
     case   kf: cand.kinematicTree( cName,   kc          ); break;
     case mtkf: cand.kinematicTree( cName, mtkc          ); break;
     }
