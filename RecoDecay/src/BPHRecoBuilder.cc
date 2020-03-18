@@ -73,15 +73,6 @@ BPHRecoBuilder::BPHGenericCollection* BPHRecoBuilder::createCollection(
 }
 
 
-template<>
-const reco::Candidate&
-BPHRecoBuilder::BPHSpecificCollection< vector<
-                                       const reco::Candidate*> >::get( int i )
-                                       const {
-  return *(*cPtr)[i];
-}
-
-
 void BPHRecoBuilder::add( const string& name,
                           const BPHGenericCollection* collection,
                           double mass,
