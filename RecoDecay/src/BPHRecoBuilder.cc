@@ -279,15 +279,17 @@ void BPHRecoBuilder::build( vector<ComponentSet>& compList,
       if ( contained( compSet, cand ) ) continue;
       m = momSelector.size();
       for ( j = 0; j < m; ++j ) {
-        if ( !momSelector[j]->accept( *cand ) ) skip = true;
+        if ( !momSelector[j]->accept( *cand ) ) { skip = true; break; }
       }
+      if ( skip ) continue;
       m = vtxSelector.size();
       for ( j = 0; j < m; ++j ) {
-        if ( !vtxSelector[j]->accept( *cand ) ) skip = true;
+        if ( !vtxSelector[j]->accept( *cand ) ) { skip = true; break; }
       }
+      if ( skip ) continue;
       m = fitSelector.size();
       for ( j = 0; j < m; ++j ) {
-        if ( !fitSelector[j]->accept( *cand ) ) skip = true;
+        if ( !fitSelector[j]->accept( *cand ) ) { skip = true; break; }
       }
       if ( skip ) continue;
       compMap[*source->name] = cand;
@@ -311,7 +313,7 @@ void BPHRecoBuilder::build( vector<ComponentSet>& compList,
     if ( contained( compSet, &cand ) ) continue;
     skip = false;
     for ( j = 0; j < m; ++j ) {
-      if ( !selector[j]->accept( cand, this ) ) skip = true;
+      if ( !selector[j]->accept( cand, this ) ) { skip = true; break; }
     }
     if ( skip ) continue;
     BPHDecayMomentum::Component comp;
