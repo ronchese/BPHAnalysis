@@ -223,7 +223,7 @@ const RefCountedKinematicTree& BPHKinematicFit::kinematicTree(
   vector<RefCountedKinematicParticle> kComp;
   vector<RefCountedKinematicParticle> kTail;
   splitKP( name, &kComp, &kTail );
-  if ( kComp.size() == 0 ) {
+  if ( kComp.empty() ) {
     edm::LogPrint( "ParticleNotFound" )
                 << "BPHKinematicFit::kinematicTree: "
                 << name << " daughter not found";
@@ -239,7 +239,7 @@ const RefCountedKinematicTree& BPHKinematicFit::kinematicTree(
       if ( compTree->isEmpty() ) return kinTree;
     }
     compTree->movePointerToTheTop();
-    if ( kTail.size() ) {
+    if ( !kTail.empty() ) {
       RefCountedKinematicParticle compPart = compTree->currentParticle();
       if ( !compPart->currentState().isValid() ) return kinTree;
       kTail.push_back( compPart );
@@ -268,7 +268,7 @@ const RefCountedKinematicTree& BPHKinematicFit::kinematicTree(
   if ( allParticles.size() != numParticles() ) return kinTree;
   vector<RefCountedKinematicParticle> kPart;
   splitKP( name, &kPart );
-  if ( kPart.size() == 0 ) {
+  if ( kPart.empty() ) {
     edm::LogPrint( "ParticleNotFound" )
                 << "BPHKinematicFit::kinematicTree: "
                 << name << " daughter not found";
@@ -460,7 +460,7 @@ void BPHKinematicFit::getParticles( const string& moth, const string& daug,
     }
     else {
       vector<string> list;
-      if ( daug != "" ) {
+      if ( !daug.empty() ) {
         list.push_back( daug );
       }
       else {
@@ -537,7 +537,7 @@ void BPHKinematicFit::splitKP( const string& name,
   if ( kTail == nullptr ) kTail = kComp;
   else                    kTail->clear();
   kinParticles();
-  if ( name == "" ) {
+  if ( name.empty() ) {
     *kComp = allParticles;
     return;
   }

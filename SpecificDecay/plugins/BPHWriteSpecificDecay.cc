@@ -58,16 +58,16 @@ using namespace std;
 
 BPHWriteSpecificDecay::BPHWriteSpecificDecay( const edm::ParameterSet& ps ) {
 
-  usePV = ( SET_PAR( string, pVertexLabel, ps ) != "" );
-  usePM = ( SET_PAR( string, patMuonLabel, ps ) != "" );
-  useCC = ( SET_PAR( string, ccCandsLabel, ps ) != "" );
-  usePF = ( SET_PAR( string, pfCandsLabel, ps ) != "" );
-  usePC = ( SET_PAR( string, pcCandsLabel, ps ) != "" );
-  useGP = ( SET_PAR( string, gpCandsLabel, ps ) != "" );
-  useK0 = ( SET_PAR( string, k0CandsLabel, ps ) != "" );
-  useL0 = ( SET_PAR( string, l0CandsLabel, ps ) != "" );
-  useKS = ( SET_PAR( string, kSCandsLabel, ps ) != "" );
-  useLS = ( SET_PAR( string, lSCandsLabel, ps ) != "" );
+  usePV = ( !SET_PAR( string, pVertexLabel, ps ).empty() );
+  usePM = ( !SET_PAR( string, patMuonLabel, ps ).empty() );
+  useCC = ( !SET_PAR( string, ccCandsLabel, ps ).empty() );
+  usePF = ( !SET_PAR( string, pfCandsLabel, ps ).empty() );
+  usePC = ( !SET_PAR( string, pcCandsLabel, ps ).empty() );
+  useGP = ( !SET_PAR( string, gpCandsLabel, ps ).empty() );
+  useK0 = ( !SET_PAR( string, k0CandsLabel, ps ).empty() );
+  useL0 = ( !SET_PAR( string, l0CandsLabel, ps ).empty() );
+  useKS = ( !SET_PAR( string, kSCandsLabel, ps ).empty() );
+  useLS = ( !SET_PAR( string, lSCandsLabel, ps ).empty() );
   SET_PAR( string,  oniaName, ps );
   SET_PAR( string,    sdName, ps );
   SET_PAR( string,    ssName, ps );

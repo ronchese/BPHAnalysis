@@ -40,7 +40,7 @@ set<string> parseLabels( const string& labelString ) {
     while ( *labelPtr == ' ' ) ++labelPtr;
     string labelNext( labelPtr );
     cout << "parse ---" << labelNext << "---" << endl;
-    if ( labelNext == "" ) break;
+    if ( labelNext.empty() ) break;
     unsigned long currentLength = labelLength = labelNext.find( ":" );
     string labelCurr ;
     if ( currentLength != string::npos ) {

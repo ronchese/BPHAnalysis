@@ -565,19 +565,19 @@ class BPHFittedVertexSelect: public BPHHistoSpecificDecay::CandidateSelect {
 
 BPHHistoSpecificDecay::BPHHistoSpecificDecay( const edm::ParameterSet& ps ) {
 
-  useTrig  = ( SET_LABEL( trigResultsLabel, ps ) != "" );
-  useOnia  = ( SET_LABEL(   oniaCandsLabel, ps ) != "" );
-  useSd    = ( SET_LABEL(     sdCandsLabel, ps ) != "" );
-  useSs    = ( SET_LABEL(     ssCandsLabel, ps ) != "" );
-  useBu    = ( SET_LABEL(     buCandsLabel, ps ) != "" );
-  useBd    = ( SET_LABEL(     bdCandsLabel, ps ) != "" );
-  useBs    = ( SET_LABEL(     bsCandsLabel, ps ) != "" );
-  useK0    = ( SET_LABEL(     k0CandsLabel, ps ) != "" );
-  useL0    = ( SET_LABEL(     l0CandsLabel, ps ) != "" );
-  useB0    = ( SET_LABEL(     b0CandsLabel, ps ) != "" );
-  useLb    = ( SET_LABEL(     lbCandsLabel, ps ) != "" );
-  useBc    = ( SET_LABEL(     bcCandsLabel, ps ) != "" );
-  useX3872 = ( SET_LABEL(  x3872CandsLabel, ps ) != "" );
+  useTrig  = ( !SET_LABEL( trigResultsLabel, ps ).empty() );
+  useOnia  = ( !SET_LABEL(   oniaCandsLabel, ps ).empty() );
+  useSd    = ( !SET_LABEL(     sdCandsLabel, ps ).empty() );
+  useSs    = ( !SET_LABEL(     ssCandsLabel, ps ).empty() );
+  useBu    = ( !SET_LABEL(     buCandsLabel, ps ).empty() );
+  useBd    = ( !SET_LABEL(     bdCandsLabel, ps ).empty() );
+  useBs    = ( !SET_LABEL(     bsCandsLabel, ps ).empty() );
+  useK0    = ( !SET_LABEL(     k0CandsLabel, ps ).empty() );
+  useL0    = ( !SET_LABEL(     l0CandsLabel, ps ).empty() );
+  useB0    = ( !SET_LABEL(     b0CandsLabel, ps ).empty() );
+  useLb    = ( !SET_LABEL(     lbCandsLabel, ps ).empty() );
+  useBc    = ( !SET_LABEL(     bcCandsLabel, ps ).empty() );
+  useX3872 = ( !SET_LABEL(  x3872CandsLabel, ps ).empty() );
   if ( useTrig  ) consume< edm::TriggerResults           >(  trigResultsToken,
                                                              trigResultsLabel );
   if ( useOnia  ) consume< vector<pat::CompositeCandidate> >(  oniaCandsToken,
@@ -1552,7 +1552,7 @@ void BPHHistoSpecificDecay::analyze( const edm::Event& ev,
 //  if ( ev.id().run  () !=    316239 ) return;
 //  if ( ev.id().event() != 170736782 ) return;
   static map<string,ofstream*> ofMap;
-  if ( !ofMap.size() ) {
+  if ( ofMap.empty() ) {
     ofMap["BarPhi"] = nullptr;
     ofMap["IncJPsi"] = nullptr;
     ofMap["BarJPsi"] = nullptr;
