@@ -69,6 +69,8 @@ const BPHRecoCandidate* BPHRecoCandidate::clone( int level ) const {
 }
 
 
+// function doing the job to clone reconstructed decays:
+// copy stable particles and clone cascade decays up to chosen level
 void BPHRecoCandidate::fill( BPHRecoCandidate* ptr, int level ) const {
   ptr->setConstraint( constrMass(), constrSigma() );
   const std::vector<std::string>& nDaug = daugNames();

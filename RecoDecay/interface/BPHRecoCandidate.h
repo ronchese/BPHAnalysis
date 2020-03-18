@@ -94,6 +94,8 @@ class BPHRecoCandidate: public virtual BPHKinematicFit {
 
  protected:
 
+  // function doing the job to clone reconstructed decays:
+  // copy stable particles and clone cascade decays up to chosen level
   void fill( BPHRecoCandidate* ptr, int level ) const override;
 
   // template function called by "build" to allow
