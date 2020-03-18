@@ -82,6 +82,49 @@ BPHRecoBuilder::BPHSpecificCollection< vector<
 }
 
 
+void BPHRecoBuilder::add( const string& name,
+                          const BPHGenericCollection* collection,
+                          double mass,
+                          double msig ) {
+  BPHRecoSource* rs;
+  if ( sourceId.find( name ) != sourceId.end() ) {
+    edm::LogPrint( "TooManyParticles" )
+                << "BPHRecoBuilder::add: "
+                << "Decay product already inserted with name " << name
+                << " , skipped";
+    return;
+  }
+  rs = new BPHRecoSource;
+  rs->name =
+      &sourceId.insert( make_pair( name, sourceList.size() ) ).first->first;
+  rs->collection = collection;
+  rs->selector.reserve( 5 );
+  rs->mass = mass;
+  rs->msig = msig;
+  sourceList.push_back( rs );
+  return;
+}
+
+
+void BPHRecoBuilder::add( const string& name,
+                          const vector<BPHRecoConstCandPtr>& collection ) {
+  BPHCompSource* cs;
+  if ( srCompId.find( name ) != srCompId.end() ) {
+    edm::LogPrint( "TooManyParticles" )
+                << "BPHRecoBuilder::add: "
+                << "Decay product already inserted with name " << name
+                << " , skipped";
+    return;
+  }
+  cs = new BPHCompSource;
+  cs->name =
+      &srCompId.insert( make_pair( name, srCompList.size() ) ).first->first;
+  cs->collection = &collection;
+  srCompList.push_back( cs );
+  return;
+}
+
+
 void BPHRecoBuilder::filter( const string& name,
                              const BPHRecoSelect& sel ) const {
   map<string,int>::const_iterator iter = sourceId.find( name );
@@ -204,49 +247,6 @@ bool BPHRecoBuilder::sameTrack( const reco::Candidate* lCand,
   if ( ( ( pDMod / pMMod ) < minPDifference ) &&
        ( lCand->charge() == rCand->charge() ) ) return true;
   return false;
-}
-
-
-void BPHRecoBuilder::add( const string& name,
-                          const BPHGenericCollection* collection,
-                          double mass,
-                          double msig ) {
-  BPHRecoSource* rs;
-  if ( sourceId.find( name ) != sourceId.end() ) {
-    edm::LogPrint( "TooManyParticles" )
-                << "BPHRecoBuilder::add: "
-                << "Decay product already inserted with name " << name
-                << " , skipped";
-    return;
-  }
-  rs = new BPHRecoSource;
-  rs->name =
-      &sourceId.insert( make_pair( name, sourceList.size() ) ).first->first;
-  rs->collection = collection;
-  rs->selector.reserve( 5 );
-  rs->mass = mass;
-  rs->msig = msig;
-  sourceList.push_back( rs );
-  return;
-}
-
-
-void BPHRecoBuilder::add( const string& name,
-                          const vector<BPHRecoConstCandPtr>& collection ) {
-  BPHCompSource* cs;
-  if ( srCompId.find( name ) != srCompId.end() ) {
-    edm::LogPrint( "TooManyParticles" )
-                << "BPHRecoBuilder::add: "
-                << "Decay product already inserted with name " << name
-                << " , skipped";
-    return;
-  }
-  cs = new BPHCompSource;
-  cs->name =
-      &srCompId.insert( make_pair( name, srCompList.size() ) ).first->first;
-  cs->collection = &collection;
-  srCompList.push_back( cs );
-  return;
 }
 
 

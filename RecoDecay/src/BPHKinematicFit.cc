@@ -92,6 +92,7 @@ BPHKinematicFit::~BPHKinematicFit() {
 //--------------
 // Operations --
 //--------------
+/// apply a mass constraint
 void BPHKinematicFit::setConstraint( double mass, double sigma ) {
   oldKPs = oldFit = oldMom = true;
   massConst = mass;
@@ -99,7 +100,7 @@ void BPHKinematicFit::setConstraint( double mass, double sigma ) {
   return;
 }
 
-
+/// retrieve the constraint
 double BPHKinematicFit::constrMass() const {
   return massConst;
 }
@@ -109,7 +110,7 @@ double BPHKinematicFit::constrSigma() const {
   return massSigma;
 }
 
-
+/// set a decaying daughter as an unique particle fitted independently
 void BPHKinematicFit::setIndependentFit( const string& name, bool flag ) {
   string::size_type pos = name.find( "/" );
   if ( pos != string::npos ) {
@@ -130,7 +131,7 @@ void BPHKinematicFit::setIndependentFit( const string& name, bool flag ) {
   return;
 }
 
-
+/// get kinematic particles
 const vector<RefCountedKinematicParticle>& BPHKinematicFit::kinParticles()
                                                             const {
   if ( oldKPs ) buildParticles();
@@ -165,7 +166,7 @@ vector<RefCountedKinematicParticle> BPHKinematicFit::kinParticles(
   return plist;
 }
 
-
+/// perform the kinematic fit and get the result
 const RefCountedKinematicTree& BPHKinematicFit::kinematicTree() const {
   if ( oldFit ) return kinematicTree( "", massConst, massSigma );
   return kinTree;
@@ -271,13 +272,13 @@ const RefCountedKinematicTree& BPHKinematicFit::kinematicTree(
   return kinematicTree( kPart, kc );
 }
 
-
+/// reset the kinematic fit
 void BPHKinematicFit::resetKinematicFit() const {
   oldKPs = oldFit = oldMom = true;
   return;
 }
 
-
+/// get fit status
 bool BPHKinematicFit::isEmpty() const {
   kinematicTree();
   if ( kinTree.get() == nullptr ) return true;
@@ -291,7 +292,7 @@ bool BPHKinematicFit::isValidFit() const {
   return kPart->currentState().isValid();
 }
 
-
+/// get current particle
 const RefCountedKinematicParticle BPHKinematicFit::currentParticle() const {
   if ( isEmpty() ) return RefCountedKinematicParticle( nullptr );
   return kinTree->currentParticle();
@@ -303,7 +304,7 @@ const RefCountedKinematicVertex BPHKinematicFit::currentDecayVertex() const {
   return kinTree->currentDecayVertex();
 }
 
-
+/// get top particle
 const RefCountedKinematicParticle BPHKinematicFit::topParticle() const {
   if ( isEmpty() ) return RefCountedKinematicParticle( nullptr );
   return kinTree->topParticle();
@@ -325,7 +326,7 @@ ParticleMass BPHKinematicFit::mass() const {
   return -1.0;
 }
 
-
+/// compute total momentum after the fit
 const math::XYZTLorentzVector& BPHKinematicFit::p4() const {
   if ( oldMom ) fitMomentum();
   return totalMomentum;
@@ -346,7 +347,8 @@ bool BPHKinematicFit::getIndependentFit( const std::string& name ) const {
   return ( iter != cKinP.end() ? iter->second : false );
 }
 
-
+/// add a simple particle and specify a criterion to search for
+/// the associated track
 void BPHKinematicFit::addK( const string& name,
                             const reco::Candidate* daug, 
                             double mass, double sigma ) {
@@ -354,7 +356,7 @@ void BPHKinematicFit::addK( const string& name,
   return;
 }
 
-
+/// add a previously reconstructed particle giving it a name
 void BPHKinematicFit::addK( const string& name,
                             const reco::Candidate* daug, 
                             const string& searchList,
@@ -364,7 +366,7 @@ void BPHKinematicFit::addK( const string& name,
   return;
 }
 
-
+/// add a previously reconstructed particle giving it a name
 void BPHKinematicFit::addK( const string& name,
                             const BPHRecoConstCandPtr& comp ) {
   addV( name, comp );
@@ -376,14 +378,14 @@ void BPHKinematicFit::addK( const string& name,
   return;
 }
 
-
+// utility function used to cash reconstruction results
 void BPHKinematicFit::setNotUpdated() const {
   BPHDecayVertex::setNotUpdated();
   resetKinematicFit();
   return;
 }
 
-
+// build kin particles, perform the fit and compute the total momentum
 void BPHKinematicFit::buildParticles() const {
   kinMap.clear();
   kCDMap.clear();
