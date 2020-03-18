@@ -59,7 +59,8 @@ class BPHKinematicFit: public virtual BPHDecayVertex {
   double constrMass() const;
   double constrSigma() const;
   /// set a decaying daughter as an unique particle fitted independently
-  void setIndependentFit( const std::string& name, bool flag = true );
+  void setIndependentFit( const std::string& name, bool flag = true,
+                          double mass = -1.0, double sigma = -1.0 );
 
   /// get kinematic particles
   virtual const std::vector<RefCountedKinematicParticle>& kinParticles() const;
@@ -140,7 +141,12 @@ class BPHKinematicFit: public virtual BPHDecayVertex {
   std::map<const reco::Candidate*,double> dMSig;
 
   // map to handle composite daughters as single particles
-  std::map<const BPHRecoCandidate*,bool> cKinP;
+  struct FlyingParticle {
+    bool   flag  = false;
+    double mass  = -1.0;
+    double sigma = -1.0;
+  };
+  std::map<const BPHRecoCandidate*,FlyingParticle> cKinP;
 
   // temporary particle set
   mutable std::vector<BPHRecoConstCandPtr> tmpList;

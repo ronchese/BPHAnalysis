@@ -75,11 +75,11 @@ BPHKinematicFit::BPHKinematicFit( const BPHKinematicFit* ptr ):
   int m = dComp.size();
   for ( j = 0; j < m; ++j ) {
     const BPHRecoCandidate* rc = dComp[j].get();
-    const map<const reco:: Candidate*,double>& dMap = rc->dMSig;
-    const map<const BPHRecoCandidate*,bool  >& cMap = rc->cKinP;
+    const map<const reco:: Candidate*,double        >& dMap = rc->dMSig;
+    const map<const BPHRecoCandidate*,FlyingParticle>& cMap = rc->cKinP;
     dMSig.insert( dMap.begin(), dMap.end() );
     cKinP.insert( cMap.begin(), cMap.end() );
-    cKinP[rc] = false;
+    cKinP[rc];
   }
 }
 
@@ -111,7 +111,8 @@ double BPHKinematicFit::constrSigma() const {
 }
 
 /// set a decaying daughter as an unique particle fitted independently
-void BPHKinematicFit::setIndependentFit( const string& name, bool flag ) {
+void BPHKinematicFit::setIndependentFit( const string& name, bool flag,
+                                         double mass, double sigma ) {
   string::size_type pos = name.find( "/" );
   if ( pos != string::npos ) {
     edm::LogPrint( "WrongRequest" )
@@ -127,7 +128,10 @@ void BPHKinematicFit::setIndependentFit( const string& name, bool flag ) {
     return;
   }
   oldKPs = oldFit = oldMom = true;
-  cKinP[comp] = flag;
+  FlyingParticle& fp = cKinP[comp];
+  fp.flag  = flag;
+  fp.mass  = mass;
+  fp.sigma = sigma;
   return;
 }
 
@@ -343,8 +347,9 @@ double BPHKinematicFit::getMassSigma( const reco::Candidate* cand ) const {
 /// retrieve independent fit flag
 bool BPHKinematicFit::getIndependentFit( const std::string& name ) const {
   const BPHRecoCandidate* comp = getComp( name ).get();
-  map<const BPHRecoCandidate*,bool>::const_iterator iter = cKinP.find( comp );
-  return ( iter != cKinP.end() ? iter->second : false );
+  map<const BPHRecoCandidate*,FlyingParticle>::const_iterator iter =
+                                               cKinP.find( comp );
+  return ( iter != cKinP.end() ? iter->second.flag : false );
 }
 
 /// add a simple particle and specify a criterion to search for
@@ -370,11 +375,11 @@ void BPHKinematicFit::addK( const string& name,
 void BPHKinematicFit::addK( const string& name,
                             const BPHRecoConstCandPtr& comp ) {
   addV( name, comp );
-  const map<const reco::Candidate*,double>& dMap = comp->dMSig;
-  const map<const BPHRecoCandidate*,bool >& cMap = comp->cKinP;
+  const map<const reco::Candidate *,double        >& dMap = comp->dMSig;
+  const map<const BPHRecoCandidate*,FlyingParticle>& cMap = comp->cKinP;
   dMSig.insert( dMap.begin(), dMap.end() );
   cKinP.insert( cMap.begin(), cMap.end() );
-  cKinP[comp.get()] = false;
+  cKinP[comp.get()];
   return;
 }
 
@@ -421,8 +426,13 @@ void BPHKinematicFit::addParticles(
   int m = comp.size();
   while ( m-- ) {
     const BPHRecoCandidate* cptr = comp[m].get();
-    if ( cKinP.at( cptr ) ) {
-      const BPHRecoCandidate* tptr = cptr->clone();
+    const FlyingParticle& fp = cKinP.at( cptr );
+    if ( fp.flag ) {
+      BPHRecoCandidate* tptr = const_cast<BPHRecoCandidate*>( cptr->clone() );
+      double mass  = fp.mass;
+      double sigma = fp.sigma;
+      if ( ( mass  > 0.0 ) &&
+	   ( sigma > 0.0 ) ) tptr->setConstraint( mass, sigma );
       tmpList.push_back( BPHRecoConstCandPtr( tptr ) );
       if ( tptr->isEmpty() ) return;
       if ( !tptr->isValidFit() ) return;
@@ -441,7 +451,7 @@ void BPHKinematicFit::getParticles( const string& moth, const string& daug,
                       set   <RefCountedKinematicParticle>& ks ) const {
   const BPHRecoCandidate* cptr = getComp( moth ).get();
   if ( cptr != nullptr ) {
-    if ( cKinP.at( cptr ) ) {
+    if ( cKinP.at( cptr ).flag ) {
       insertParticle( kCDMap[cptr], kl, ks );
     }
     else {
@@ -499,8 +509,8 @@ unsigned int BPHKinematicFit::numParticles(
   int i = cnames.size();
   while ( i ) {
     const BPHRecoCandidate* comp = cand->getComp( cnames[--i] ).get();
-    if ( cKinP.at( comp ) ) ++n;
-    else                    n += numParticles( comp );
+    if ( cKinP.at( comp ).flag ) ++n;
+    else                         n += numParticles( comp );
   }
   return n;
 }
@@ -533,7 +543,7 @@ const BPHKinematicFit* BPHKinematicFit::splitKP( const string& name,
   const BPHRecoCandidate* comp = getComp( name ).get();
   int ns;
   if ( comp != nullptr ) {
-    ns = ( cKinP.at( comp ) ? 1 : numParticles( comp ) );
+    ns = ( cKinP.at( comp ).flag ? 1 : numParticles( comp ) );
   }
   else {
     edm::LogPrint( "ParticleNotFound" )
