@@ -38,6 +38,10 @@ class BPHMassSelect: public BPHMomentumSelect, public BPHMassCuts {
   BPHMassSelect( double minMass, double maxMass ): BPHMassCuts( minMass,
                                                                 maxMass ) {}
 
+  // deleted copy constructor and assignment operator
+  BPHMassSelect           ( const BPHMassSelect& x ) = delete;
+  BPHMassSelect& operator=( const BPHMassSelect& x ) = delete;
+
   /** Destructor
    */
   ~BPHMassSelect() override {}
@@ -51,10 +55,6 @@ class BPHMassSelect: public BPHMomentumSelect, public BPHMassCuts {
   }
 
  private:
-
-  // private copy and assigment constructors
-  BPHMassSelect           ( const BPHMassSelect& x );
-  BPHMassSelect& operator=( const BPHMassSelect& x );
 
 };
 

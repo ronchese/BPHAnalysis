@@ -63,6 +63,10 @@ class BPHMultiSelect: public T {
     }
   }
 
+  // deleted copy constructor and assignment operator
+  BPHMultiSelect           ( const BPHMultiSelect<T>& x ) = delete;
+  BPHMultiSelect& operator=( const BPHMultiSelect<T>& x ) = delete;
+
   /** Destructor
    */
   ~BPHMultiSelect() override {}
@@ -90,10 +94,6 @@ class BPHMultiSelect: public T {
   bool accept( const BPHKinematicFit & cand ) const { return false; }
 
  private:
-
-  // private copy and assigment constructors
-  BPHMultiSelect           ( const BPHMultiSelect<T>& x );
-  BPHMultiSelect& operator=( const BPHMultiSelect<T>& x );
 
   struct SelectElement {
     T* selector;

@@ -58,6 +58,10 @@ class BPHLambda0ToPPiBuilder {
        const std::vector<reco::VertexCompositePtrCandidate>* vpCollection,
        const std::string& searchList = "cfp" );
 
+  // deleted copy constructor and assignment operator
+  BPHLambda0ToPPiBuilder           ( const BPHLambda0ToPPiBuilder& x ) = delete;
+  BPHLambda0ToPPiBuilder& operator=( const BPHLambda0ToPPiBuilder& x ) = delete;
+
   /** Destructor
    */
   virtual ~BPHLambda0ToPPiBuilder();
@@ -85,10 +89,6 @@ class BPHLambda0ToPPiBuilder {
   double getConstrSigma() const;
 
  private:
-
-  // private copy and assigment constructors
-  BPHLambda0ToPPiBuilder           ( const BPHLambda0ToPPiBuilder& x );
-  BPHLambda0ToPPiBuilder& operator=( const BPHLambda0ToPPiBuilder& x );
 
   std::string protonName;
   std::string   pionName;

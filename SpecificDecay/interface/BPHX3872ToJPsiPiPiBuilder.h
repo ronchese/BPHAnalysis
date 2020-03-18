@@ -51,6 +51,10 @@ class BPHX3872ToJPsiPiPiBuilder {
       const BPHRecoBuilder::BPHGenericCollection*   posCollection,
       const BPHRecoBuilder::BPHGenericCollection*   negCollection );
 
+  // deleted copy constructor and assignment operator
+  BPHX3872ToJPsiPiPiBuilder           ( const BPHX3872ToJPsiPiPiBuilder& x ) = delete;
+  BPHX3872ToJPsiPiPiBuilder& operator=( const BPHX3872ToJPsiPiPiBuilder& x ) = delete;
+
   /** Destructor
    */
   virtual ~BPHX3872ToJPsiPiPiBuilder();
@@ -85,10 +89,6 @@ class BPHX3872ToJPsiPiPiBuilder {
   bool   getConstr     () const;
 
  private:
-
-  // private copy and assigment constructors
-  BPHX3872ToJPsiPiPiBuilder           ( const BPHX3872ToJPsiPiPiBuilder& x );
-  BPHX3872ToJPsiPiPiBuilder& operator=( const BPHX3872ToJPsiPiPiBuilder& x );
 
   std::string    jPsiName;
   std::string pionPosName;

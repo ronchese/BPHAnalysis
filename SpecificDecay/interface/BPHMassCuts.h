@@ -40,6 +40,10 @@ class BPHMassCuts {
   BPHMassCuts( double minMass, double maxMass ): mMin( minMass ),
                                                  mMax( maxMass ) {}
 
+  // deleted copy constructor and assignment operator
+  BPHMassCuts           ( const BPHMassCuts& x ) = delete;
+  BPHMassCuts& operator=( const BPHMassCuts& x ) = delete;
+
   /** Destructor
    */
   virtual ~BPHMassCuts() {}
@@ -55,10 +59,6 @@ class BPHMassCuts {
   double getMassMax() const { return mMax; }
 
  protected:
-
-  // private copy and assigment constructors
-  BPHMassCuts           ( const BPHMassCuts& x );
-  BPHMassCuts& operator=( const BPHMassCuts& x );
 
   double mMin;
   double mMax;

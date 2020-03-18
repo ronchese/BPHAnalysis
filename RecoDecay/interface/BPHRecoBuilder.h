@@ -58,6 +58,10 @@ class BPHRecoBuilder {
    */
   BPHRecoBuilder( const edm::EventSetup& es );
 
+  // deleted copy constructor and assignment operator
+  BPHRecoBuilder           ( const BPHRecoBuilder& x ) = delete;
+  BPHRecoBuilder& operator=( const BPHRecoBuilder& x ) = delete;
+
   /** Destructor
    */
   virtual ~BPHRecoBuilder();
@@ -153,10 +157,6 @@ class BPHRecoBuilder {
                   const reco::Candidate* rCand, double minPDifference );
 
  private:
-
-  // private copy and assigment constructors
-  BPHRecoBuilder           ( const BPHRecoBuilder& x );
-  BPHRecoBuilder& operator=( const BPHRecoBuilder& x );
 
   // object to interface with a specific edm collection
   template <class T>

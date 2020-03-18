@@ -47,6 +47,10 @@ class BPHBdToJPsiKsBuilder {
       const std::vector<BPHPlusMinusConstCandPtr>& jpsiCollection,
       const std::vector<BPHPlusMinusConstCandPtr>&  k0sCollection );
 
+  // deleted copy constructor and assignment operator
+  BPHBdToJPsiKsBuilder           ( const BPHBdToJPsiKsBuilder& x ) = delete;
+  BPHBdToJPsiKsBuilder& operator=( const BPHBdToJPsiKsBuilder& x ) = delete;
+
   /** Destructor
    */
   virtual ~BPHBdToJPsiKsBuilder();
@@ -85,10 +89,6 @@ class BPHBdToJPsiKsBuilder {
   bool   getConstr     () const;
 
  private:
-
-  // private copy and assigment constructors
-  BPHBdToJPsiKsBuilder           ( const BPHBdToJPsiKsBuilder& x );
-  BPHBdToJPsiKsBuilder& operator=( const BPHBdToJPsiKsBuilder& x );
 
   std::string jPsiName;
   std::string  k0sName;

@@ -47,6 +47,9 @@ class BPHDecayVertex: public virtual BPHDecayMomentum {
   /** Constructor is protected
    *  this object can exist only as part of a derived class
    */
+  // deleted copy constructor and assignment operator
+  BPHDecayVertex           ( const BPHDecayVertex& x ) = delete;
+  BPHDecayVertex& operator=( const BPHDecayVertex& x ) = delete;
 
   /** Destructor
    */

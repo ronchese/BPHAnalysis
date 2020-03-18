@@ -55,6 +55,10 @@ class BPHOniaToMuMuBuilder {
     const BPHRecoBuilder::BPHGenericCollection* muPosCollection,
     const BPHRecoBuilder::BPHGenericCollection* muNegCollection );
 
+  // deleted copy constructor and assignment operator
+  BPHOniaToMuMuBuilder           ( const BPHOniaToMuMuBuilder& x ) = delete;
+  BPHOniaToMuMuBuilder& operator=( const BPHOniaToMuMuBuilder& x ) = delete;
+
   /** Destructor
    */
   virtual ~BPHOniaToMuMuBuilder();
@@ -72,7 +76,7 @@ class BPHOniaToMuMuBuilder {
                                         BPHVertexSelect  * vSel = nullptr,
                                         BPHFitSelect     * kSel = nullptr );
 
-  /// retrieve original candidate from a copy with the same daughters
+  /// retrieve original candidate from a copy constructor with the same daughters
   /// obtained through "getList"
   BPHPlusMinusConstCandPtr getOriginalCandidate( 
                            const BPHRecoCandidate& cand );
@@ -95,10 +99,6 @@ class BPHOniaToMuMuBuilder {
   double getConstrSigma( oniaType type ) const;
 
  private:
-
-  // private copy and assigment constructors
-  BPHOniaToMuMuBuilder           ( const BPHOniaToMuMuBuilder& x );
-  BPHOniaToMuMuBuilder& operator=( const BPHOniaToMuMuBuilder& x );
 
   std::string muPosName;
   std::string muNegName;

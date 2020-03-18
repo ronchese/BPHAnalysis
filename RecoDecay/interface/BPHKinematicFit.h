@@ -42,6 +42,9 @@ class BPHKinematicFit: public virtual BPHDecayVertex {
   /** Constructor is protected
    *  this object can exist only as part of a derived class
    */
+  // deleted copy constructor and assignment operator
+  BPHKinematicFit           ( const BPHKinematicFit& x ) = delete;
+  BPHKinematicFit& operator=( const BPHKinematicFit& x ) = delete;
 
   /** Destructor
    */

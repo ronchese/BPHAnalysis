@@ -47,6 +47,10 @@ class BPHBdToKxMuMuBuilder {
       const std::vector<BPHPlusMinusConstCandPtr>& oniaCollection,
       const std::vector<BPHPlusMinusConstCandPtr>&  kx0Collection );
 
+  // deleted copy constructor and assignment operator
+  BPHBdToKxMuMuBuilder           ( const BPHBdToKxMuMuBuilder& x ) = delete;
+  BPHBdToKxMuMuBuilder& operator=( const BPHBdToKxMuMuBuilder& x ) = delete;
+
   /** Destructor
    */
   virtual ~BPHBdToKxMuMuBuilder();
@@ -81,10 +85,6 @@ class BPHBdToKxMuMuBuilder {
   bool   getConstr     () const;
 
  private:
-
-  // private copy and assigment constructors
-  BPHBdToKxMuMuBuilder           ( const BPHBdToKxMuMuBuilder& x );
-  BPHBdToKxMuMuBuilder& operator=( const BPHBdToKxMuMuBuilder& x );
 
   std::string oniaName;
   std::string  kx0Name;

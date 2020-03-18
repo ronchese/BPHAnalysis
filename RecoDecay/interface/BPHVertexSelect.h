@@ -36,6 +36,10 @@ class BPHVertexSelect {
    */
   BPHVertexSelect();
 
+  // deleted copy constructor and assignment operator
+  BPHVertexSelect           ( const BPHVertexSelect& x ) = delete;
+  BPHVertexSelect& operator=( const BPHVertexSelect& x ) = delete;
+
   /** Destructor
    */
   virtual ~BPHVertexSelect();
@@ -46,10 +50,6 @@ class BPHVertexSelect {
   virtual bool accept( const BPHDecayVertex& cand ) const = 0;
 
  private:
-
-  // private copy and assigment constructors
-  BPHVertexSelect           ( const BPHVertexSelect& x );
-  BPHVertexSelect& operator=( const BPHVertexSelect& x );
 
 };
 

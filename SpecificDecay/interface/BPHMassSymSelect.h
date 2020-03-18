@@ -40,6 +40,10 @@ class BPHMassSymSelect: public BPHMomentumSelect {
                     const BPHMassSelect* ms ): nPos( np ), nNeg( nn ),
                                                mSel( ms ) {}
 
+  // deleted copy constructor and assignment operator
+  BPHMassSymSelect           ( const BPHMassSymSelect& x ) = delete;
+  BPHMassSymSelect& operator=( const BPHMassSymSelect& x ) = delete;
+
   /** Destructor
    */
   ~BPHMassSymSelect() override {}
@@ -72,10 +76,6 @@ class BPHMassSymSelect: public BPHMomentumSelect {
   }
 
  private:
-
-  // private copy and assigment constructors
-  BPHMassSymSelect           ( const BPHMassSymSelect& x );
-  BPHMassSymSelect& operator=( const BPHMassSymSelect& x );
 
   std::string nPos;
   std::string nNeg;

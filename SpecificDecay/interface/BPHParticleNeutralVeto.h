@@ -36,6 +36,10 @@ class BPHParticleNeutralVeto: public BPHRecoSelect {
    */
   BPHParticleNeutralVeto() {}
 
+  // deleted copy constructor and assignment operator
+  BPHParticleNeutralVeto           ( const BPHParticleNeutralVeto& x ) = delete;
+  BPHParticleNeutralVeto& operator=( const BPHParticleNeutralVeto& x ) = delete;
+
   /** Destructor
    */
   ~BPHParticleNeutralVeto() override {}
@@ -48,10 +52,6 @@ class BPHParticleNeutralVeto: public BPHRecoSelect {
   }
 
  private:
-
-  // private copy and assigment constructors
-  BPHParticleNeutralVeto           ( const BPHParticleNeutralVeto& x );
-  BPHParticleNeutralVeto& operator=( const BPHParticleNeutralVeto& x );
 
 };
 

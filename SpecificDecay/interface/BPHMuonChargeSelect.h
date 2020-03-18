@@ -36,6 +36,10 @@ class BPHMuonChargeSelect: public BPHParticleChargeSelect {
    */
   BPHMuonChargeSelect( int c ): BPHParticleChargeSelect( c ) {}
 
+  // deleted copy constructor and assignment operator
+  BPHMuonChargeSelect           ( const BPHMuonChargeSelect& x ) = delete;
+  BPHMuonChargeSelect& operator=( const BPHMuonChargeSelect& x ) = delete;
+
   /** Destructor
    */
   ~BPHMuonChargeSelect() override {}
@@ -49,10 +53,6 @@ class BPHMuonChargeSelect: public BPHParticleChargeSelect {
   };
 
  private:
-
-  // private copy and assigment constructors
-  BPHMuonChargeSelect           ( const BPHMuonChargeSelect& x );
-  BPHMuonChargeSelect& operator=( const BPHMuonChargeSelect& x );
 
 };
 

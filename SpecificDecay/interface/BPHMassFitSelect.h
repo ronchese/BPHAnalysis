@@ -56,6 +56,10 @@ class BPHMassFitSelect: public BPHFitSelect, public BPHMassCuts {
                     double minMass, double maxMass ):
    BPHMassCuts( minMass, maxMass ) { setFitConstraint( name, c ); }
 
+  // deleted copy constructor and assignment operator
+  BPHMassFitSelect           ( const BPHMassFitSelect& x ) = delete;
+  BPHMassFitSelect& operator=( const BPHMassFitSelect& x ) = delete;
+
   /** Destructor
    */
   ~BPHMassFitSelect() override {
@@ -128,10 +132,6 @@ class BPHMassFitSelect: public BPHFitSelect, public BPHMassCuts {
   MultiTrackKinematicConstraint* getMultiTrackKC() const { return mtkc; }
 
  private:
-
-  // private copy and assigment constructors
-  BPHMassFitSelect           ( const BPHMassFitSelect& x );
-  BPHMassFitSelect& operator=( const BPHMassFitSelect& x );
 
   enum fit_type { none, mcss, mcst, kf, mtkf };
 

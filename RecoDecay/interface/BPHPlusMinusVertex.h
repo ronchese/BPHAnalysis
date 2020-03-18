@@ -38,6 +38,9 @@ class BPHPlusMinusVertex: public virtual BPHDecayVertex {
   /** Constructor is protected
    *  this object can exist only as part of a derived class
    */
+  // deleted copy constructor and assignment operator
+  BPHPlusMinusVertex           ( const BPHPlusMinusVertex& x ) = delete;
+  BPHPlusMinusVertex& operator=( const BPHPlusMinusVertex& x ) = delete;
 
   /** Destructor
    */

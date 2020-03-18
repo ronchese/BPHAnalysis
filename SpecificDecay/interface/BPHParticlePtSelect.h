@@ -36,6 +36,10 @@ class BPHParticlePtSelect: public BPHRecoSelect {
    */
   BPHParticlePtSelect( double pt ): ptMin( pt ) {}
 
+  // deleted copy constructor and assignment operator
+  BPHParticlePtSelect           ( const BPHParticlePtSelect& x ) = delete;
+  BPHParticlePtSelect& operator=( const BPHParticlePtSelect& x ) = delete;
+
   /** Destructor
    */
   ~BPHParticlePtSelect() override {}
@@ -54,10 +58,6 @@ class BPHParticlePtSelect: public BPHRecoSelect {
   double getPtMin() const { return ptMin; }
 
  private:
-
-  // private copy and assigment constructors
-  BPHParticlePtSelect           ( const BPHParticlePtSelect& x );
-  BPHParticlePtSelect& operator=( const BPHParticlePtSelect& x );
 
   double ptMin;
 

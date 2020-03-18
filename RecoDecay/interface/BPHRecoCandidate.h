@@ -47,7 +47,7 @@ class BPHRecoCandidate: public virtual BPHKinematicFit {
 
  public:
 
-  /** Constructors are private
+  /** Constructor
    */
   /// create an "empty" object to add daughters later
   /// (see BPHDecayMomentum)
@@ -55,6 +55,10 @@ class BPHRecoCandidate: public virtual BPHKinematicFit {
   // create an object with daughters as specified in the ComponentSet
   BPHRecoCandidate( const edm::EventSetup* es,
                     const BPHRecoBuilder::ComponentSet& compSet );
+
+  // deleted copy constructor and assignment operator
+  BPHRecoCandidate           ( const BPHRecoCandidate& x ) = delete;
+  BPHRecoCandidate& operator=( const BPHRecoCandidate& x ) = delete;
 
   /** Destructor
    */

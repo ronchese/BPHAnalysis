@@ -48,6 +48,10 @@ class BPHPhiToKKBuilder {
        const BPHRecoBuilder::BPHGenericCollection* pCollection,
        const BPHRecoBuilder::BPHGenericCollection* nCollection );
 
+  // deleted copy constructor and assignment operator
+  BPHPhiToKKBuilder           ( const BPHPhiToKKBuilder& x ) = delete;
+  BPHPhiToKKBuilder& operator=( const BPHPhiToKKBuilder& x ) = delete;
+
   /** Destructor
    */
   virtual ~BPHPhiToKKBuilder();
@@ -77,10 +81,6 @@ class BPHPhiToKKBuilder {
   double getConstrSigma() const;
 
  private:
-
-  // private copy and assigment constructors
-  BPHPhiToKKBuilder           ( const BPHPhiToKKBuilder& x );
-  BPHPhiToKKBuilder& operator=( const BPHPhiToKKBuilder& x );
 
   std::string kPosName;
   std::string kNegName;

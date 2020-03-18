@@ -40,6 +40,10 @@ class BPHRecoSelect {
    */
   BPHRecoSelect();
 
+  // deleted copy constructor and assignment operator
+  BPHRecoSelect           ( const BPHRecoSelect& x ) = delete;
+  BPHRecoSelect& operator=( const BPHRecoSelect& x ) = delete;
+
   /** Destructor
    */
   virtual ~BPHRecoSelect();
@@ -61,10 +65,6 @@ class BPHRecoSelect {
                               const BPHRecoBuilder* build ) const;
 
  private:
-
-  // private copy and assigment constructors
-  BPHRecoSelect           ( const BPHRecoSelect& x );
-  BPHRecoSelect& operator=( const BPHRecoSelect& x );
 
 };
 

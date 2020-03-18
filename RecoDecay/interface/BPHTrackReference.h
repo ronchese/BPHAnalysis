@@ -43,11 +43,15 @@ class BPHTrackReference {
 
   /** Constructor
    */
-  BPHTrackReference();
+  BPHTrackReference() {}
+
+  // deleted copy constructor and assignment operator
+  BPHTrackReference           ( const BPHTrackReference& x ) = delete;
+  BPHTrackReference& operator=( const BPHTrackReference& x ) = delete;
 
   /** Destructor
    */
-  ~BPHTrackReference();
+  ~BPHTrackReference() {}
 
   /** Operations
    */
@@ -258,10 +262,6 @@ class BPHTrackReference {
   }
 
  private:
-
-  // private copy and assigment constructors
-  BPHTrackReference           ( const BPHTrackReference& x );
-  BPHTrackReference& operator=( const BPHTrackReference& x );
 
 };
 

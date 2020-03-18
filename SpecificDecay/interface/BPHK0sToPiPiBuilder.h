@@ -57,6 +57,10 @@ class BPHK0sToPiPiBuilder {
        const std::vector<reco::VertexCompositePtrCandidate>* vpCollection,
        const std::string& searchList = "cfp" );
 
+  // deleted copy constructor and assignment operator
+  BPHK0sToPiPiBuilder           ( const BPHK0sToPiPiBuilder& x ) = delete;
+  BPHK0sToPiPiBuilder& operator=( const BPHK0sToPiPiBuilder& x ) = delete;
+
   /** Destructor
    */
   virtual ~BPHK0sToPiPiBuilder();
@@ -84,10 +88,6 @@ class BPHK0sToPiPiBuilder {
   double getConstrSigma() const;
 
  private:
-
-  // private copy and assigment constructors
-  BPHK0sToPiPiBuilder           ( const BPHK0sToPiPiBuilder& x );
-  BPHK0sToPiPiBuilder& operator=( const BPHK0sToPiPiBuilder& x );
 
   std::string pionPosName;
   std::string pionNegName;
