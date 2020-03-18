@@ -12,7 +12,7 @@
 //----------------------
 // Base Class Headers --
 //----------------------
-
+#include "BPHAnalysis/SpecificDecay/interface/BPHDecayToResFlyingBuilder.h"
 
 //------------------------------------
 // Collaborating Class Declarations --
@@ -20,12 +20,9 @@
 #include "BPHAnalysis/RecoDecay/interface/BPHRecoBuilder.h"
 #include "BPHAnalysis/RecoDecay/interface/BPHRecoCandidate.h"
 #include "BPHAnalysis/RecoDecay/interface/BPHPlusMinusCandidate.h"
+#include "BPHAnalysis/SpecificDecay/interface/BPHParticleMasses.h"
 
 #include "FWCore/Framework/interface/Event.h"
-
-class BPHMassSelect;
-class BPHChi2Select;
-class BPHMassFitSelect;
 
 //---------------
 // C++ Headers --
@@ -37,7 +34,7 @@ class BPHMassFitSelect;
 //              -- Class Interface --
 //              ---------------------
 
-class BPHLbToJPsiL0Builder {
+class BPHLbToJPsiL0Builder: public BPHDecayToResFlyingBuilder {
 
  public:
 
@@ -45,7 +42,23 @@ class BPHLbToJPsiL0Builder {
    */
   BPHLbToJPsiL0Builder( const edm::EventSetup& es,
       const std::vector<BPHPlusMinusConstCandPtr>& jpsiCollection,
-      const std::vector<BPHPlusMinusConstCandPtr>&   l0Collection );
+      const std::vector<BPHPlusMinusConstCandPtr>&   l0Collection ):
+   BPHDecayToResFlyingBuilder( es,
+                               "JPsi",
+                               BPHParticleMasses::   jPsiMass,
+                               BPHParticleMasses::   jPsiMWidth,
+                               jpsiCollection,
+                               "Lambda0",
+                               BPHParticleMasses::lambda0Mass,
+                               BPHParticleMasses::lambda0MSigma,
+                                 l0Collection ) {
+    setResMassRange   ( 2.80, 3.40 );
+    setFlyingMassRange( 0.00, 3.00 );
+    setMassRange      ( 3.50, 8.00 );
+    setKinFitProbMin  ( 0.02 );
+    setMassFitRange   ( 5.00, 6.00 );
+    setConstr( true );
+  }
 
   // deleted copy constructor and assignment operator
   BPHLbToJPsiL0Builder           ( const BPHLbToJPsiL0Builder& x ) = delete;
@@ -53,64 +66,21 @@ class BPHLbToJPsiL0Builder {
 
   /** Destructor
    */
-  virtual ~BPHLbToJPsiL0Builder();
+  ~BPHLbToJPsiL0Builder() override {}
 
   /** Operations
    */
-  /// build Bs candidates
-  std::vector<BPHRecoConstCandPtr> build();
-
-  /// get original daughters map
-  const std::map<const BPHRecoCandidate*,
-                 const BPHRecoCandidate*>& daughMap() const;
-
   /// set cuts
-  void setJPsiMassMin   ( double m  );
-  void setJPsiMassMax   ( double m  );
-  void setLambda0MassMin( double m  );
-  void setLambda0MassMax( double m  );
-  void setMassMin       ( double m  );
-  void setMassMax       ( double m  );
-  void setProbMin       ( double p  );
-  void setMassFitMin    ( double m  );
-  void setMassFitMax    ( double m  );
-  void setConstr        ( bool flag );
+  void setJPsiMassMin   ( double m ) { setResMassMin   ( m ); }
+  void setJPsiMassMax   ( double m ) { setResMassMax   ( m ); }
+  void setLambda0MassMin( double m ) { setFlyingMassMin( m ); }
+  void setLambda0MassMax( double m ) { setFlyingMassMax( m ); }
 
   /// get current cuts
-  double getJPsiMassMin   () const;
-  double getJPsiMassMax   () const;
-  double getLambda0MassMin() const;
-  double getLambda0MassMax() const;
-  double getMassMin       () const;
-  double getMassMax       () const;
-  double getProbMin       () const;
-  double getMassFitMin    () const;
-  double getMassFitMax    () const;
-  bool   getConstr        () const;
-
- private:
-
-  std::string jPsiName;
-  std::string   l0Name;
-
-  const edm::EventSetup* evSetup;
-  const std::vector<BPHPlusMinusConstCandPtr>* jCollection;
-  const std::vector<BPHPlusMinusConstCandPtr>* lCollection;
-
-  BPHMassSelect   * jpsiSel;
-  BPHMassFitSelect*  ml0Sel;
-
-  BPHMassSelect   * massSel;
-  double probMin;
-  BPHMassFitSelect* mFitSel;
-
-  bool massConstr;
-  float minPDiff;
-  bool updated;
-
-  std::map<const BPHRecoCandidate*,const BPHRecoCandidate*> dMap;
-  std::vector<BPHRecoConstCandPtr> lbList;
-
+  double getJPsiMassMin   () const { return getResMassMin   (); }
+  double getJPsiMassMax   () const { return getResMassMax   (); }
+  double getLambda0MassMin() const { return getFlyingMassMin(); }
+  double getLambda0MassMax() const { return getFlyingMassMax(); }
 };
 
 

@@ -12,7 +12,7 @@
 //----------------------
 // Base Class Headers --
 //----------------------
-
+#include "BPHAnalysis/SpecificDecay/interface/BPHDecayToChargedXXbarBuilder.h"
 
 //------------------------------------
 // Collaborating Class Declarations --
@@ -20,13 +20,9 @@
 #include "BPHAnalysis/RecoDecay/interface/BPHRecoBuilder.h"
 #include "BPHAnalysis/RecoDecay/interface/BPHRecoCandidate.h"
 #include "BPHAnalysis/RecoDecay/interface/BPHPlusMinusCandidate.h"
+#include "BPHAnalysis/SpecificDecay/interface/BPHParticleMasses.h"
 
 #include "FWCore/Framework/interface/Event.h"
-
-class BPHParticlePtSelect;
-class BPHParticleEtaSelect;
-class BPHChi2Select;
-class BPHMassSelect;
 
 //---------------
 // C++ Headers --
@@ -38,15 +34,26 @@ class BPHMassSelect;
 //              -- Class Interface --
 //              ---------------------
 
-class BPHPhiToKKBuilder {
+class BPHPhiToKKBuilder: public BPHDecayToChargedXXbarBuilder {
 
  public:
 
   /** Constructor
    */
   BPHPhiToKKBuilder( const edm::EventSetup& es,
-       const BPHRecoBuilder::BPHGenericCollection* pCollection,
-       const BPHRecoBuilder::BPHGenericCollection* nCollection );
+       const BPHRecoBuilder::BPHGenericCollection* posCollection,
+       const BPHRecoBuilder::BPHGenericCollection* negCollection ):
+   BPHDecayToChargedXXbarBuilder( es,
+                            "KPos", 
+                            "KNeg",
+                            BPHParticleMasses::kaonMass,
+                            BPHParticleMasses::kaonMSigma,
+                            posCollection, negCollection ) {
+    setPtMin (  0.7 );
+    setEtaMax( 10.0 );
+    setMassRange ( 1.00, 1.04 );
+    setProbMin   ( 0.0 );
+  }
 
   // deleted copy constructor and assignment operator
   BPHPhiToKKBuilder           ( const BPHPhiToKKBuilder& x ) = delete;
@@ -54,64 +61,7 @@ class BPHPhiToKKBuilder {
 
   /** Destructor
    */
-  virtual ~BPHPhiToKKBuilder();
-
-  /** Operations
-   */
-  /// build Phi candidates
-  std::vector<BPHPlusMinusConstCandPtr> build();
-
-  /// set cuts
-  void setPtMin  ( double pt  );
-  void setEtaMax ( double eta );
-  void setMassMin( double m   );
-  void setMassMax( double m   );
-  void setProbMin( double p   );
-// mass constraint: foreseen but actually not implemented
-  void setConstr ( double mass, double sigma );
-
-  /// get current cuts
-  double getPtMin  () const;
-  double getEtaMax () const;
-  double getMassMin() const;
-  double getMassMax() const;
-  double getProbMin() const;
-// mass constraint: foreseen but actually not implemented
-  double getConstrMass () const;
-  double getConstrSigma() const;
-
- private:
-
-  std::string kPosName;
-  std::string kNegName;
-
-  const edm::EventSetup* evSetup;
-  const BPHRecoBuilder::BPHGenericCollection* posCollection;
-  const BPHRecoBuilder::BPHGenericCollection* negCollection;
-
-  double ptMin;
-  double etaMax;
-  double massMin;
-  double massMax;
-  double probMin;
-
-// old code left for example/reference
-
-//  BPHParticlePtSelect *  ptSel;
-//  BPHParticleEtaSelect* etaSel;
-//  BPHMassSelect* massSel;
-//  BPHChi2Select* chi2Sel;
-
-//  class DZSelect;
-//  DZSelect* dzSel;
-
-// mass constraint: foreseen but actually not implemented
-  double cMass;
-  double cSigma;
-
-  bool updated;
-
-  std::vector<BPHPlusMinusConstCandPtr> phiList;
+  ~BPHPhiToKKBuilder() override {}
 
 };
 
