@@ -52,8 +52,6 @@ class BPHMuonEtaSelect: public BPHParticleEtaSelect {
     return BPHParticleEtaSelect::accept( cand );
   }
 
- private:
-
 };
 
 

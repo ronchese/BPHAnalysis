@@ -49,8 +49,6 @@ class BPHVertexSelect {
   /// accept function
   virtual bool accept( const BPHDecayVertex& cand ) const = 0;
 
- private:
-
 };
 
 

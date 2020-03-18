@@ -64,8 +64,6 @@ class BPHRecoSelect {
   const reco::Candidate* get( const std::string& name,
                               const BPHRecoBuilder* build ) const;
 
- private:
-
 };
 
 

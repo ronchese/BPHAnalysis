@@ -63,8 +63,6 @@ class BPHParticleMasses {
   static const double    ups2MWidth;
   static const double    ups3MWidth;
 
- private:
-
 };
 
 

@@ -54,8 +54,6 @@ class BPHMassSelect: public BPHMomentumSelect, public BPHMassCuts {
     return ( ( mass >= mMin ) && ( mass <= mMax ) );
   }
 
- private:
-
 };
 
 

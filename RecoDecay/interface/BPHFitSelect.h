@@ -34,11 +34,11 @@ class BPHFitSelect {
 
   /** Constructor
    */
+  BPHFitSelect();
+
   // deleted copy constructor and assignment operator
   BPHFitSelect           ( const BPHFitSelect& x ) = delete;
   BPHFitSelect& operator=( const BPHFitSelect& x ) = delete;
-
-  BPHFitSelect();
 
   /** Destructor
    */
@@ -48,8 +48,6 @@ class BPHFitSelect {
    */
   /// accept function
   virtual bool accept( const BPHKinematicFit& cand ) const = 0;
-
- private:
 
 };
 

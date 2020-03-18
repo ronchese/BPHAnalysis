@@ -41,17 +41,8 @@ class BPHTrackReference {
 
   typedef pat::PackedCandidate candidate;
 
-  /** Constructor
+  /** Only static functions, no data member
    */
-  BPHTrackReference() {}
-
-  // deleted copy constructor and assignment operator
-  BPHTrackReference           ( const BPHTrackReference& x ) = delete;
-  BPHTrackReference& operator=( const BPHTrackReference& x ) = delete;
-
-  /** Destructor
-   */
-  ~BPHTrackReference() {}
 
   /** Operations
    */
@@ -260,8 +251,6 @@ class BPHTrackReference {
     }
     return nullptr;
   }
-
- private:
 
 };
 

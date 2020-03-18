@@ -76,7 +76,7 @@ class BPHOniaToMuMuBuilder {
                                         BPHVertexSelect  * vSel = nullptr,
                                         BPHFitSelect     * kSel = nullptr );
 
-  /// retrieve original candidate from a copy constructor with the same daughters
+  /// retrieve original candidate from a copy with the same daughters
   /// obtained through "getList"
   BPHPlusMinusConstCandPtr getOriginalCandidate( 
                            const BPHRecoCandidate& cand );

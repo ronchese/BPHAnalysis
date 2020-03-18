@@ -52,8 +52,6 @@ class BPHMuonChargeSelect: public BPHParticleChargeSelect {
     return BPHParticleChargeSelect::accept( cand );
   };
 
- private:
-
 };
 
 

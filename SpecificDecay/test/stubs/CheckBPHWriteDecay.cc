@@ -97,7 +97,7 @@ void CheckBPHWriteDecay::analyze( const edm::Event& ev,
     candsToken[il].get( ev, cands );
     int ic;
     int nc = cands->size();
-    for ( ic = 0; ic < nc; ++ ic ) {
+    for ( ic = 0; ic < nc; ++ic ) {
       os << "*********** " << candsLabel[il] << " " << ic << "/" << nc
          << " ***********"
          << endl;

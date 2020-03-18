@@ -80,7 +80,6 @@ class BPHPlusMinusVertex: public virtual BPHDecayVertex {
 
 };
 
-
 template<class T>
 bool BPHPlusMinusVertex::chkName( const T& cont,
                                   const std::string& name,
@@ -90,7 +89,6 @@ bool BPHPlusMinusVertex::chkName( const T& cont,
   return false;
 }
 
-
 template<class T>
 bool BPHPlusMinusVertex::chkSize( const T& cont,
                                   const std::string& msg ) {
@@ -99,7 +97,6 @@ bool BPHPlusMinusVertex::chkSize( const T& cont,
   edm::LogPrint( "WrongDataSize" ) << msg << ", size = " << n;
   return false;
 }
-
 
 #endif
 

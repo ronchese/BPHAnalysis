@@ -362,19 +362,19 @@ class BPHFittedBasicSelect: public BPHHistoSpecificDecay::CandidateSelect {
 };
 
 
-class BPHVertexSelect: public BPHHistoSpecificDecay::CandidateSelect {
+class BPHGenericVertexSelect: public BPHHistoSpecificDecay::CandidateSelect {
  public:
-  BPHVertexSelect( char vType,
-                   float probMin,
-                   float  cosMin = -2.0,
-                   float  sigMin = -1.0,
-                   char dMode = 'r' ): type( vType ),
-                                       pMin( probMin ),
-                                       cMin(  cosMin ),
-                                       sMin(  sigMin ),
-                                       mode(   dMode ) {
+  BPHGenericVertexSelect( char vType,
+                          float probMin,
+                          float  cosMin = -2.0,
+                          float  sigMin = -1.0,
+                          char dMode = 'r' ): type( vType ),
+                                              pMin( probMin ),
+                                              cMin(  cosMin ),
+                                              sMin(  sigMin ),
+                                              mode(   dMode ) {
   }
-  ~BPHVertexSelect() override {}
+  ~BPHGenericVertexSelect() override {}
   bool accept( const pat::CompositeCandidate& cand,
                const reco::Vertex* pvtx ) const override {
     if ( pvtx == nullptr ) return false;
@@ -686,7 +686,7 @@ BPHHistoSpecificDecay::BPHHistoSpecificDecay( const edm::ParameterSet& ps ) {
                            upsBMassMin,  upsBMassMax,
                            upsBPtMin  ,  upsBEtaMax ,  upsBYMax );
 //  oniaVertexSelect   = new BPHCompositeVertexSelect(
-  oniaVertexSelect   = new BPHVertexSelect( 'c',
+  oniaVertexSelect   = new BPHGenericVertexSelect( 'c',
                            oniaProbMin, oniaCosMin, oniaSigMin );
   oniaDaughterSelect = new BPHDaughterSelect(
                            oniaMuPtMinLoose , oniaMuPtMinTight ,
@@ -737,7 +737,7 @@ BPHHistoSpecificDecay::BPHHistoSpecificDecay( const edm::ParameterSet& ps ) {
   buIJPsiBasicSelect    = new BPHCompositeBasicSelect(
                               buIJPsiMassMin, buIJPsiMassMax,
                               buIJPsiPtMin  , buIJPsiEtaMax , buIJPsiYMax );
-  buIVertexSelect       = new BPHVertexSelect( 'f',
+  buIVertexSelect       = new BPHGenericVertexSelect( 'f',
                               buIProbMin, buICosMin, buISigMin );
   buIJPsiDaughterSelect = nullptr;
 //  buIJPsiDaughterSelect = new BPHDaughterSelect(
@@ -770,7 +770,7 @@ BPHHistoSpecificDecay::BPHHistoSpecificDecay( const edm::ParameterSet& ps ) {
   buDJPsiBasicSelect    = new BPHCompositeBasicSelect(
                               buDJPsiMassMin, buDJPsiMassMax,
                               buDJPsiPtMin  , buDJPsiEtaMax , buDJPsiYMax );
-  buDVertexSelect       = new BPHVertexSelect( 'f',
+  buDVertexSelect       = new BPHGenericVertexSelect( 'f',
                               buDProbMin, buDCosMin, buDSigMin );
   buDJPsiDaughterSelect = nullptr;
 //  buDJPsiDaughterSelect = new BPHDaughterSelect(
@@ -811,7 +811,7 @@ BPHHistoSpecificDecay::BPHHistoSpecificDecay( const edm::ParameterSet& ps ) {
   bdIKx0BasicSelect     = new BPHCompositeBasicSelect(
                               bdIKx0MassMin, bdIKx0MassMax,
                               bdIKx0PtMin  , bdIKx0EtaMax , bdIKx0YMax );
-  bdIVertexSelect       = new BPHVertexSelect( 'f',
+  bdIVertexSelect       = new BPHGenericVertexSelect( 'f',
                               bdIProbMin, bdICosMin, bdISigMin );
   bdIJPsiDaughterSelect = nullptr;
 //  bdIJPsiDaughterSelect = new BPHDaughterSelect(
@@ -850,7 +850,7 @@ BPHHistoSpecificDecay::BPHHistoSpecificDecay( const edm::ParameterSet& ps ) {
   bdDKx0BasicSelect     = new BPHCompositeBasicSelect(
                               bdDKx0MassMin, bdDKx0MassMax,
                               bdDKx0PtMin  , bdDKx0EtaMax , bdDKx0YMax );
-  bdDVertexSelect       = new BPHVertexSelect( 'f',
+  bdDVertexSelect       = new BPHGenericVertexSelect( 'f',
                               bdDProbMin, bdDCosMin, bdDSigMin );
   bdDJPsiDaughterSelect = nullptr;
 //  bdDJPsiDaughterSelect = new BPHDaughterSelect(
@@ -891,7 +891,7 @@ BPHHistoSpecificDecay::BPHHistoSpecificDecay( const edm::ParameterSet& ps ) {
   bsIPhiBasicSelect     = new BPHCompositeBasicSelect(
                               bsIPhiMassMin, bsIPhiMassMax,
                               bsIPhiPtMin  , bsIPhiEtaMax , bsIPhiYMax );
-  bsIVertexSelect       = new BPHVertexSelect( 'f',
+  bsIVertexSelect       = new BPHGenericVertexSelect( 'f',
                               bsIProbMin, bsICosMin, bsISigMin );
   bsIJPsiDaughterSelect = nullptr;
 //  bsIJPsiDaughterSelect = new BPHDaughterSelect(
@@ -930,7 +930,7 @@ BPHHistoSpecificDecay::BPHHistoSpecificDecay( const edm::ParameterSet& ps ) {
   bsDPhiBasicSelect     = new BPHCompositeBasicSelect(
                               bsDPhiMassMin, bsDPhiMassMax,
                               bsDPhiPtMin  , bsDPhiEtaMax , bsDPhiYMax );
-  bsDVertexSelect       = new BPHVertexSelect( 'f',
+  bsDVertexSelect       = new BPHGenericVertexSelect( 'f',
                               bsDProbMin, bsDCosMin, bsDSigMin );
   bsDJPsiDaughterSelect = nullptr;
 //  bsDJPsiDaughterSelect = new BPHDaughterSelect(
@@ -971,7 +971,7 @@ BPHHistoSpecificDecay::BPHHistoSpecificDecay( const edm::ParameterSet& ps ) {
   b0IK0sBasicSelect     = new BPHFittedBasicSelect(
                               b0IK0sMassMin, b0IK0sMassMax,
                               b0IK0sPtMin  , b0IK0sEtaMax , b0IK0sYMax );
-  b0IVertexSelect       = new BPHVertexSelect( 'f',
+  b0IVertexSelect       = new BPHGenericVertexSelect( 'f',
                               b0IProbMin, b0ICosMin, b0ISigMin );
   b0IJPsiDaughterSelect = nullptr;
 //  b0IJPsiDaughterSelect = new BPHDaughterSelect(
@@ -1010,7 +1010,7 @@ BPHHistoSpecificDecay::BPHHistoSpecificDecay( const edm::ParameterSet& ps ) {
   b0DK0sBasicSelect     = new BPHFittedBasicSelect(
                               b0DK0sMassMin, b0DK0sMassMax,
                               b0DK0sPtMin  , b0DK0sEtaMax , b0DK0sYMax );
-  b0DVertexSelect       = new BPHVertexSelect( 'f',
+  b0DVertexSelect       = new BPHGenericVertexSelect( 'f',
                               b0DProbMin, b0DCosMin, b0DSigMin );
   b0DJPsiDaughterSelect = nullptr;
 //  b0DJPsiDaughterSelect = new BPHDaughterSelect(
@@ -1052,7 +1052,7 @@ BPHHistoSpecificDecay::BPHHistoSpecificDecay( const edm::ParameterSet& ps ) {
                               lbILambda0MassMin, lbILambda0MassMax,
                               lbILambda0PtMin  , lbILambda0EtaMax ,
                               lbILambda0YMax );
-  lbIVertexSelect       = new BPHVertexSelect( 'f',
+  lbIVertexSelect       = new BPHGenericVertexSelect( 'f',
                               lbIProbMin, lbICosMin, lbISigMin );
   lbIJPsiDaughterSelect = nullptr;
 //  lbIJPsiDaughterSelect = new BPHDaughterSelect(
@@ -1092,7 +1092,7 @@ BPHHistoSpecificDecay::BPHHistoSpecificDecay( const edm::ParameterSet& ps ) {
                               lbDLambda0MassMin, lbDLambda0MassMax,
                               lbDLambda0PtMin  , lbDLambda0EtaMax ,
                               lbDLambda0YMax );
-  lbDVertexSelect       = new BPHVertexSelect( 'f',
+  lbDVertexSelect       = new BPHGenericVertexSelect( 'f',
                               lbDProbMin, lbDCosMin, lbDSigMin );
   lbDJPsiDaughterSelect = nullptr;
 //  lbDJPsiDaughterSelect = new BPHDaughterSelect(
@@ -1129,9 +1129,9 @@ BPHHistoSpecificDecay::BPHHistoSpecificDecay( const edm::ParameterSet& ps ) {
   bcIJPsiBasicSelect    = new BPHCompositeBasicSelect(
                               bcIJPsiMassMin, bcIJPsiMassMax,
                               bcIJPsiPtMin  , bcIJPsiEtaMax , bcIJPsiYMax );
-  bcIJPsiVertexSelect   = new BPHVertexSelect( 'c',
+  bcIJPsiVertexSelect   = new BPHGenericVertexSelect( 'c',
                               bcIJPsiProbMin );
-  bcIVertexSelect       = new BPHVertexSelect( 'f',
+  bcIVertexSelect       = new BPHGenericVertexSelect( 'f',
                               bcIProbMin, bcICosMin, bcISigMin, bcIDistMin );
   bcIJPsiDaughterSelect = nullptr;
 //  bcIJPsiDaughterSelect = new BPHDaughterSelect(
@@ -1166,9 +1166,9 @@ BPHHistoSpecificDecay::BPHHistoSpecificDecay( const edm::ParameterSet& ps ) {
   bcDJPsiBasicSelect    = new BPHCompositeBasicSelect(
                               bcDJPsiMassMin, bcDJPsiMassMax,
                               bcDJPsiPtMin  , bcDJPsiEtaMax , bcDJPsiYMax );
-  bcDJPsiVertexSelect   = new BPHVertexSelect( 'c',
+  bcDJPsiVertexSelect   = new BPHGenericVertexSelect( 'c',
                               bcDJPsiProbMin );
-  bcDVertexSelect       = new BPHVertexSelect( 'f',
+  bcDVertexSelect       = new BPHGenericVertexSelect( 'f',
                               bcDProbMin, bcDCosMin, bcDSigMin );
   bcDJPsiDaughterSelect = nullptr;
 //  bcDJPsiDaughterSelect = new BPHDaughterSelect(
@@ -1207,9 +1207,9 @@ BPHHistoSpecificDecay::BPHHistoSpecificDecay( const edm::ParameterSet& ps ) {
                                  x3872IJPsiMassMin, x3872IJPsiMassMax,
                                  x3872IJPsiPtMin  ,
                                  x3872IJPsiEtaMax , x3872IJPsiYMax );
-  x3872IJPsiVertexSelect   = new BPHVertexSelect( 'c',
+  x3872IJPsiVertexSelect   = new BPHGenericVertexSelect( 'c',
                                  x3872IJPsiProbMin );
-  x3872IVertexSelect       = new BPHVertexSelect( 'f',
+  x3872IVertexSelect       = new BPHGenericVertexSelect( 'f',
                                  x3872IProbMin,
                                  x3872ICosMin, x3872ISigMin, x3872IDistMin );
   x3872IJPsiDaughterSelect = nullptr;
@@ -1246,9 +1246,9 @@ BPHHistoSpecificDecay::BPHHistoSpecificDecay( const edm::ParameterSet& ps ) {
                                  x3872DJPsiMassMin, x3872DJPsiMassMax,
                                  x3872DJPsiPtMin  ,
                                  x3872DJPsiEtaMax , x3872DJPsiYMax );
-  x3872DJPsiVertexSelect   = new BPHVertexSelect( 'c',
+  x3872DJPsiVertexSelect   = new BPHGenericVertexSelect( 'c',
                                  x3872DJPsiProbMin );
-  x3872DVertexSelect       = new BPHVertexSelect( 'f',
+  x3872DVertexSelect       = new BPHGenericVertexSelect( 'f',
                                  x3872DProbMin, x3872DCosMin, x3872DSigMin );
   x3872DJPsiDaughterSelect = nullptr;
 //  x3872DJPsiDaughterSelect = new BPHDaughterSelect(

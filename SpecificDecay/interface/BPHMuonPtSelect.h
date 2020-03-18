@@ -52,8 +52,6 @@ class BPHMuonPtSelect: public BPHParticlePtSelect {
     return BPHParticlePtSelect::accept( cand );
   }
 
- private:
-
 };
 
 

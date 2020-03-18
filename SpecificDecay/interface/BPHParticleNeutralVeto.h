@@ -51,8 +51,6 @@ class BPHParticleNeutralVeto: public BPHRecoSelect {
     return ( cand.charge() != 0 );
   }
 
- private:
-
 };
 
 

@@ -103,10 +103,7 @@ class BPHRecoCandidate: public virtual BPHKinematicFit {
                     const BPHRecoBuilder& builder,
                     double mass = -1, double msig = -1 );
 
- private:
-
 };
-
 
 template <class T>
 void BPHRecoCandidate::fill( std::vector<

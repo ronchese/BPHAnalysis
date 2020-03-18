@@ -44,7 +44,7 @@ class BPHDecayVertex: public virtual BPHDecayMomentum {
 
  public:
 
-  /** Constructor is protected
+  /** Constructors are protected
    *  this object can exist only as part of a derived class
    */
   // deleted copy constructor and assignment operator

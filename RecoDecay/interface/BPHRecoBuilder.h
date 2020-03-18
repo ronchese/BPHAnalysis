@@ -239,14 +239,12 @@ class BPHRecoBuilder {
 
 };
 
-
 template <class T>
 BPHRecoBuilder::BPHGenericCollection* BPHRecoBuilder::createCollection(
                                       const edm::Handle<T>& collection,
                                       const std::string& list ) {
   return new BPHSpecificCollection<T>( *collection, list );
 }
-
 
 template <class T>
 void BPHRecoBuilder::add( const std::string& name,
@@ -258,7 +256,6 @@ void BPHRecoBuilder::add( const std::string& name,
                                            "cfhpmig" ), mass, msig );
   return;
 }
-
 
 template <class T>
 void BPHRecoBuilder::add( const std::string& name,
@@ -275,7 +272,6 @@ void BPHRecoBuilder::add( const std::string& name,
   add( name, *compCandList );
   return;
 }
-
 
 #endif
 
