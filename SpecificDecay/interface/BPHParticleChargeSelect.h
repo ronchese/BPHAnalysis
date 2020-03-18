@@ -38,12 +38,12 @@ class BPHParticleChargeSelect: public BPHRecoSelect {
 
   /** Destructor
    */
-  virtual ~BPHParticleChargeSelect() {}
+  ~BPHParticleChargeSelect() override {}
 
   /** Operations
    */
   /// select particle
-  virtual bool accept( const reco::Candidate& cand ) const {
+  bool accept( const reco::Candidate& cand ) const override {
     switch ( charge ) {
     default:
     case  0: return ( cand.charge() != 0 );

@@ -154,6 +154,7 @@ class BPHSoftMuonSelect {
    maxZ  ( maxDz            ),
    gM    ( goodMuon         ),
    hP    ( highPurity       ) {}
+  ~BPHSoftMuonSelect() {}
   bool accept( const reco::Candidate& cand,
                const reco::Vertex* pv ) const {
     const pat::Muon* p = dynamic_cast<const pat::Muon*>( &cand );
@@ -199,8 +200,9 @@ class BPHDaughterSelect: public BPHHistoSpecificDecay::CandidateSelect {
                                                    eTMax( etaMaxTight ),
                                                    sms( softMuonselector ) {
   }
+  ~BPHDaughterSelect() override {}
   bool accept( const pat::CompositeCandidate& cand,
-               const reco::Vertex* pv = nullptr ) const {
+               const reco::Vertex* pv = nullptr ) const override {
 /*
     const reco::Candidate* dptr0 = cand.daughter( 0 );
     const reco::Candidate* dptr1 = cand.daughter( 1 );
@@ -279,8 +281,9 @@ class BPHCompositeBasicSelect: public BPHHistoSpecificDecay::CandidateSelect {
                                                        eMax(      etaMax ),
                                                        yMax( rapidityMax ) {
   }
+  ~BPHCompositeBasicSelect() override {}
   bool accept( const pat::CompositeCandidate& cand,
-               const reco::Vertex* pv = nullptr ) const {
+               const reco::Vertex* pv = nullptr ) const override {
     if ( ( ( mMin > 0 ) && ( mMax < 0 ) ) ||
          ( ( mMin < 0 ) && ( mMax > 0 ) ) ||
          ( ( mMin > 0 ) && ( mMax > 0 ) && ( mMin < mMax ) ) ) {
@@ -318,8 +321,9 @@ class BPHFittedBasicSelect: public BPHHistoSpecificDecay::CandidateSelect {
                                                     eMax(      etaMax ),
                                                     yMax( rapidityMax ) {
   }
+  ~BPHFittedBasicSelect() override {}
   bool accept( const pat::CompositeCandidate& cand,
-               const reco::Vertex* pv = nullptr ) const {
+               const reco::Vertex* pv = nullptr ) const override {
     if ( !cand.hasUserFloat( "fitMass"     ) ) return false;
     float mass = cand.userFloat( "fitMass" );
     if ( ( ( mMin > 0 ) && ( mMax < 0 ) ) ||
@@ -370,8 +374,9 @@ class BPHVertexSelect: public BPHHistoSpecificDecay::CandidateSelect {
                                        sMin(  sigMin ),
                                        mode(   dMode ) {
   }
+  ~BPHVertexSelect() override {}
   bool accept( const pat::CompositeCandidate& cand,
-               const reco::Vertex* pvtx ) const {
+               const reco::Vertex* pvtx ) const override {
     if ( pvtx == nullptr ) return false;
     const reco::Vertex* svtx = nullptr;
     float px;
@@ -464,6 +469,7 @@ class BPHCompositeVertexSelect: public BPHHistoSpecificDecay::CandidateSelect {
                                                     cMin(  cosMin ),
                                                     sMin(  sigMin ) {
   }
+  ~BPHCompositeVertexSelect() override {}
   bool accept( const pat::CompositeCandidate& cand,
                const reco::Vertex* pvtx ) const {
     const reco::Vertex* svtx = BPHUserData::get
@@ -512,6 +518,7 @@ class BPHFittedVertexSelect: public BPHHistoSpecificDecay::CandidateSelect {
                                                  cMin(  cosMin ),
                                                  sMin(  sigMin ) {
   }
+  ~BPHFittedVertexSelect() override {}
   bool accept( const pat::CompositeCandidate& cand,
                const reco::Vertex* pvtx ) const {
     const reco::Vertex* svtx = BPHUserData::get

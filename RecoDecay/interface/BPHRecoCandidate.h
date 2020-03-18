@@ -58,7 +58,7 @@ class BPHRecoCandidate: public virtual BPHKinematicFit {
 
   /** Destructor
    */
-  virtual ~BPHRecoCandidate();
+  ~BPHRecoCandidate() override;
 
   /** Operations
    */
@@ -90,7 +90,7 @@ class BPHRecoCandidate: public virtual BPHKinematicFit {
 
  protected:
 
-  virtual void fill( BPHRecoCandidate* ptr, int level ) const;
+  void fill( BPHRecoCandidate* ptr, int level ) const override;
 
   // template function called by "build" to allow
   // the creation of derived objects

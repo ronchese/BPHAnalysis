@@ -32,8 +32,8 @@ class BPHPhiToKKBuilder::DZSelect: public BPHRecoSelect {
 				      max( mMax * mMax ),
                                       dzm ( dzMax ) {}
   virtual ~DZSelect() {}
-  virtual bool accept( const reco::Candidate& cand,
-                       const BPHRecoBuilder* build ) const {
+  bool accept( const reco::Candidate& cand,
+               const BPHRecoBuilder* build ) const override {
     const reco::Candidate& cpos = *get( name, build );
     const reco::Candidate::LorentzVector p4p = cpos.p4();
     const reco::Candidate::LorentzVector p4n = cand.p4();

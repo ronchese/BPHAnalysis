@@ -44,20 +44,20 @@ class BPHPlusMinusCandidate: public BPHRecoCandidate,
 
   /** Destructor
    */
-  virtual ~BPHPlusMinusCandidate();
+  ~BPHPlusMinusCandidate() override;
 
   /** Operations
    */
   /// add a simple particle giving it a name
   /// particles are cloned, eventually specifying a different mass
   /// particles can be added only up to two particles with opposite charge
-  virtual void add( const std::string& name,
-                    const reco::Candidate* daug, 
-                    double mass = -1.0, double sigma = -1.0 );
-  virtual void add( const std::string& name,
-                    const reco::Candidate* daug, 
-                    const std::string& searchList,
-                    double mass = -1.0, double sigma = -1.0 );
+  void add( const std::string& name,
+            const reco::Candidate* daug, 
+            double mass = -1.0, double sigma = -1.0 ) override;
+  void add( const std::string& name,
+            const reco::Candidate* daug, 
+            const std::string& searchList,
+            double mass = -1.0, double sigma = -1.0 ) override;
 
   /// look for candidates starting from particle collections as
   /// specified in the BPHRecoBuilder, with given names for 
@@ -72,10 +72,10 @@ class BPHPlusMinusCandidate: public BPHRecoCandidate,
 
   /// clone object, cloning daughters as well up to required depth
   /// level = -1 to clone all levels
-  virtual const BPHRecoCandidate* clone( int level = -1 ) const;
+  const BPHRecoCandidate* clone( int level = -1 ) const override;
 
   /// get a composite by the simple sum of simple particles
-  virtual const pat::CompositeCandidate& composite() const;
+  const pat::CompositeCandidate& composite() const override;
 
   /// get cowboy/sailor classification
   bool isCowboy() const;
@@ -84,7 +84,7 @@ class BPHPlusMinusCandidate: public BPHRecoCandidate,
  protected:
 
   // utility function used to cash reconstruction results
-  virtual void setNotUpdated() const { 
+  void setNotUpdated() const override {
     BPHKinematicFit::setNotUpdated();
     BPHPlusMinusVertex::setNotUpdated();
   }

@@ -65,7 +65,7 @@ class BPHMultiSelect: public T {
 
   /** Destructor
    */
-  virtual ~BPHMultiSelect() {}
+  ~BPHMultiSelect() override {}
 
   /** Operations
    */
@@ -82,12 +82,12 @@ class BPHMultiSelect: public T {
   unsigned int count() { return selectList.size(); }
 
   /// accept function
-  virtual bool accept( const reco::Candidate & cand,
-                       const BPHRecoBuilder*  build ) const { return false; }
-  virtual bool accept( const reco::Candidate & cand ) const { return false; }
-  virtual bool accept( const BPHDecayMomentum& cand ) const { return false; }
-  virtual bool accept( const BPHDecayVertex  & cand ) const { return false; }
-  virtual bool accept( const BPHKinematicFit & cand ) const { return false; }
+  bool accept( const reco::Candidate & cand,
+               const BPHRecoBuilder*  build ) const { return false; }
+  bool accept( const reco::Candidate & cand ) const { return false; }
+  bool accept( const BPHDecayMomentum& cand ) const { return false; }
+  bool accept( const BPHDecayVertex  & cand ) const { return false; }
+  bool accept( const BPHKinematicFit & cand ) const { return false; }
 
  private:
 
@@ -137,13 +137,13 @@ bool BPHMultiSelect<BPHRecoSelect    >::accept(
                                       const reco::Candidate& cand ) const;
 template<>
 bool BPHMultiSelect<BPHMomentumSelect>::accept(
-                                          const BPHDecayMomentum& cand ) const;
+                                      const BPHDecayMomentum& cand ) const;
 template<>
 bool BPHMultiSelect<BPHVertexSelect  >::accept(
-                                        const BPHDecayVertex& cand ) const;
+                                      const BPHDecayVertex& cand ) const;
 template<>
 bool BPHMultiSelect<BPHFitSelect     >::accept(
-                                        const BPHKinematicFit& cand ) const;
+                                      const BPHKinematicFit& cand ) const;
 
 #endif
 

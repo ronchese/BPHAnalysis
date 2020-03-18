@@ -39,12 +39,12 @@ class BPHChi2Select: public BPHVertexSelect {
 
   /** Destructor
    */
-  virtual ~BPHChi2Select() {}
+  ~BPHChi2Select() override {}
 
   /** Operations
    */
   /// select vertex
-  virtual bool accept( const BPHDecayVertex& cand ) const {
+  bool accept( const BPHDecayVertex& cand ) const override {
     if ( probMin < 0.0 ) return true;
     const reco::Vertex& v = cand.vertex();
     if ( v.isFake() ) return false;

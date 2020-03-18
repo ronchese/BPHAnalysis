@@ -35,8 +35,8 @@ class BPHKx0ToKPiBuilder::DZSelect: public BPHRecoSelect {
 				      max( mMax * mMax ),
                                       dzm ( dzMax ) {}
   virtual ~DZSelect() {}
-  virtual bool accept( const reco::Candidate& cand,
-                       const BPHRecoBuilder* build ) const {
+  bool accept( const reco::Candidate& cand,
+               const BPHRecoBuilder* build ) const override {
     const reco::Candidate& kaon = *get( name, build );
     const reco::Candidate::LorentzVector p4k = kaon.p4();
     const reco::Candidate::LorentzVector p4p = cand.p4();
