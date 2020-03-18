@@ -47,10 +47,10 @@ BPHDecayVertex::BPHDecayVertex( const edm::EventSetup* es ):
  oldTracks( true ),
  oldVertex( true ),
  validTks( false ),
- savedFitter( 0 ),
- savedBS( 0 ),
- savedPP( 0 ),
- savedPE( 0 ) {
+ savedFitter( nullptr ),
+ savedBS( nullptr ),
+ savedPP( nullptr ),
+ savedPE( nullptr ) {
 }
 
 
@@ -60,10 +60,10 @@ BPHDecayVertex::BPHDecayVertex( const BPHDecayVertex* ptr,
  oldTracks( true ),
  oldVertex( true ),
  validTks( false ),
- savedFitter( 0 ),
- savedBS( 0 ),
- savedPP( 0 ),
- savedPE( 0 ) {
+ savedFitter( nullptr ),
+ savedBS( nullptr ),
+ savedPP( nullptr ),
+ savedPE( nullptr ) {
   map<const reco::Candidate*,const reco::Candidate*> iMap;
   const vector<const reco::Candidate*>& daug = daughters();
   const vector<Component>& list = ptr->componentList();
@@ -111,10 +111,10 @@ const reco::Vertex& BPHDecayVertex::vertex( VertexFitter<5>* fitter,
                                     const reco::BeamSpot* bs,
                                     const GlobalPoint* priorPos,
                                     const GlobalError* priorError ) const {
-  if ( ( fitter     == 0 ) &&
-       ( bs         == 0 ) &&
-       ( priorPos   == 0 ) &&
-       ( priorError == 0 ) ) {
+  if ( ( fitter     == nullptr ) &&
+       ( bs         == nullptr ) &&
+       ( priorPos   == nullptr ) &&
+       ( priorError == nullptr ) ) {
     fitter     = savedFitter;
     bs         = savedBS;
     priorPos   = savedPP;
@@ -125,7 +125,7 @@ const reco::Vertex& BPHDecayVertex::vertex( VertexFitter<5>* fitter,
        ( bs         != savedBS     ) ||
        ( priorPos   != savedPP     ) ||
        ( priorError != savedPE     ) ) {
-    if ( fitter != 0 ) {
+    if ( fitter != nullptr ) {
       fitVertex( fitter, bs, priorPos, priorError );
     }
     else {
@@ -150,7 +150,7 @@ const reco::Track* BPHDecayVertex::getTrack(
       const reco::Track*>::const_iterator iter = tkMap.find( cand );
   map<const reco::Candidate*,
       const reco::Track*>::const_iterator iend = tkMap.end();
-  return ( iter != iend ? iter->second : 0 );
+  return ( iter != iend ? iter->second : nullptr );
 }
 
 
@@ -167,7 +167,7 @@ reco::TransientTrack* BPHDecayVertex::getTransientTrack(
             reco::TransientTrack*>::const_iterator iter = ttMap.find( cand );
   map<const reco::Candidate*,
             reco::TransientTrack*>::const_iterator iend = ttMap.end();
-  return ( iter != iend ? iter->second : 0 );
+  return ( iter != iend ? iter->second : nullptr );
 }
 
 
@@ -228,8 +228,8 @@ void BPHDecayVertex::tTracks() const {
   validTks = true;
   while ( n-- ) {
     const reco::Candidate* rp = dL[n];
-    tkMap[rp] = 0;
-    ttMap[rp] = 0;
+    tkMap[rp] = nullptr;
+    ttMap[rp] = nullptr;
     if ( !rp->charge() ) continue;
     const reco::Track* tp;
     const char* searchList = "cfhp";
@@ -237,7 +237,7 @@ void BPHDecayVertex::tTracks() const {
                                                        searchMap.find( rp );
     if ( iter != searchMap.end() ) searchList = iter->second.c_str();
     tp = BPHTrackReference::getTrack( *originalReco( rp ), searchList );
-    if ( tp == 0 ) {
+    if ( tp == nullptr ) {
       edm::LogPrint( "DataNotFound" )
                   << "BPHDecayVertex::tTracks: "
                   << "no track for reco::(PF)Candidate";
@@ -266,13 +266,13 @@ void BPHDecayVertex::fitVertex( VertexFitter<5>* fitter,
   if ( oldTracks ) tTracks();
   if ( trTracks.size() < 2 ) return;
   try {
-    if ( bs == 0 ) {
-      if ( priorPos == 0 ) {
+    if ( bs == nullptr ) {
+      if ( priorPos == nullptr ) {
         TransientVertex tv = fitter->vertex( trTracks );
         fittedVertex = tv;
       }
       else {
-        if ( priorError == 0 ) {
+        if ( priorError == nullptr ) {
           TransientVertex tv = fitter->vertex( trTracks, *priorPos );
           fittedVertex = tv;
         }

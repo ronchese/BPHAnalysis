@@ -3,8 +3,12 @@
 
 #include "BPHAnalysis/RecoDecay/interface/BPHGenericPtr.h"
 class BPHPlusMinusCandidate;
+typedef BPHGenericPtr<      BPHPlusMinusCandidate>
+                            BPHPlusMinusCandidateWrap;
 typedef BPHGenericPtr<      BPHPlusMinusCandidate>::type
                             BPHPlusMinusCandidatePtr;
+typedef BPHGenericPtr<const BPHPlusMinusCandidate>
+                            BPHPlusMinusConstCandWrap;
 typedef BPHGenericPtr<const BPHPlusMinusCandidate>::type
                             BPHPlusMinusConstCandPtr;
 

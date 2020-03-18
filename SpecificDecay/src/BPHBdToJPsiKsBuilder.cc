@@ -105,7 +105,7 @@ vector<BPHRecoConstCandPtr> BPHBdToJPsiKsBuilder::build() {
     cptr->resetKinematicFit();
     if ( !mFitSel->accept( *cptr ) ) continue;
     const RefCountedKinematicVertex tdv = cptr->topDecayVertex();
-    if ( tdv.get() == 0 ) continue;
+    if ( tdv.get() == nullptr ) continue;
     if ( !tdv->vertexIsValid() ) continue;
     reco::Vertex vtx( *tdv );
     if ( TMath::Prob( vtx.chi2(), lround( vtx.ndof() ) ) < probMin ) continue;

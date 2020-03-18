@@ -53,8 +53,8 @@ BPHK0sToPiPiBuilder::BPHK0sToPiPiBuilder(
   evSetup( &es ),
   pCollection( posCollection ),
   nCollection( negCollection ), 
-  vCollection( 0 ),
-  rCollection( 0 ),
+  vCollection( nullptr ),
+  rCollection( nullptr ),
   sList( "" ) {
     ptSel = new BPHParticlePtSelect (  0.7 );
    etaSel = new BPHParticleEtaSelect( 10.0 );
@@ -71,15 +71,15 @@ BPHK0sToPiPiBuilder::BPHK0sToPiPiBuilder(
   pionPosName( "PionPos" ),
   pionNegName( "PionNeg" ),
   evSetup( &es ),
-  pCollection( 0 ),
-  nCollection( 0 ), 
+  pCollection( nullptr ),
+  nCollection( nullptr ), 
   vCollection( v0Collection ),
-  rCollection( 0 ),
+  rCollection( nullptr ),
   sList( searchList )  {
     ptSel = new BPHParticlePtSelect (  0.0 );
    etaSel = new BPHParticleEtaSelect( 10.0 );
   massSel = new BPHMassSelect( 0.0, 2.0 ) ;
-  chi2Sel = 0;
+  chi2Sel = nullptr;
   updated = false;
 }
 
@@ -92,15 +92,15 @@ BPHK0sToPiPiBuilder::BPHK0sToPiPiBuilder(
   pionPosName( "PionPos" ),
   pionNegName( "PionNeg" ),
   evSetup( &es ),
-  pCollection( 0 ),
-  nCollection( 0 ), 
-  vCollection( 0 ),
+  pCollection( nullptr ),
+  nCollection( nullptr ), 
+  vCollection( nullptr ),
   rCollection( vpCollection ),
   sList( searchList )  {
     ptSel = new BPHParticlePtSelect (  0.0 );
    etaSel = new BPHParticleEtaSelect( 10.0 );
   massSel = new BPHMassSelect( 0.0, 2.0 ) ;
-  chi2Sel = 0;
+  chi2Sel = nullptr;
   updated = false;
 }
 
@@ -121,12 +121,12 @@ vector<BPHPlusMinusConstCandPtr> BPHK0sToPiPiBuilder::build(){
 
   if ( updated ) return k0sList;
   
-  if ( ( pCollection != 0 ) &&
-       ( nCollection != 0 ) ) buildFromBPHGenericCollection();
+  if ( ( pCollection != nullptr ) &&
+       ( nCollection != nullptr ) ) buildFromBPHGenericCollection();
   else
-  if (    vCollection != 0   ) buildFromV0( vCollection );
+  if (   vCollection != nullptr   ) buildFromV0( vCollection );
   else
-  if (    rCollection != 0   ) buildFromV0( rCollection );
+  if (   rCollection != nullptr   ) buildFromV0( rCollection );
 
   updated = true;
   return k0sList;
@@ -148,7 +148,7 @@ void BPHK0sToPiPiBuilder::buildFromBPHGenericCollection() {
   bK0s.filter( pionNegName, *etaSel );
 
   bK0s.filter( *massSel );
-  if ( chi2Sel != 0 )
+  if ( chi2Sel != nullptr )
   bK0s.filter( *chi2Sel );
 
   k0sList = BPHPlusMinusCandidate::build( bK0s, pionPosName, pionNegName );
@@ -180,7 +180,7 @@ void BPHK0sToPiPiBuilder::buildFromV0( const T* v0Collection ) {
     if( ! ptSel->accept( *kv0.daughter( 1 ) ) ) continue;
     if( !etaSel->accept( *kv0.daughter( 1 ) ) ) continue;
 
-    BPHPlusMinusCandidatePtr pk0( new BPHPlusMinusCandidate( evSetup ) );
+    BPHPlusMinusCandidatePtr pk0 = BPHPlusMinusCandidateWrap::create( evSetup );
     BPHPlusMinusCandidate* k0s = pk0.get();
 
     // check which daughter has positive/negative charge
@@ -199,7 +199,7 @@ void BPHK0sToPiPiBuilder::buildFromV0( const T* v0Collection ) {
 
     if ( k0s->daughters().size() != 2 ) continue;
     if ( !massSel->accept( *k0s ) ) continue;
-    if ( ( chi2Sel != 0 ) &&
+    if ( ( chi2Sel != nullptr ) &&
          ( !chi2Sel->accept( *k0s ) ) ) continue;
 
     const_cast<pat::CompositeCandidate&>( k0s->composite() ).
@@ -245,7 +245,7 @@ void BPHK0sToPiPiBuilder::setMassMax( double m ) {
 void BPHK0sToPiPiBuilder::setProbMin( double p ) {
   updated = false;
   delete chi2Sel;
-  chi2Sel = ( p < 0.0 ? 0 : new BPHChi2Select( p ) );
+  chi2Sel = ( p < 0.0 ? nullptr : new BPHChi2Select( p ) );
   return;
 }
 
@@ -279,7 +279,7 @@ double BPHK0sToPiPiBuilder::getMassMax() const {
 
 
 double BPHK0sToPiPiBuilder::getProbMin() const {
-  return ( chi2Sel == 0 ? -1.0 : chi2Sel->getProbMin() );
+  return ( chi2Sel == nullptr ? -1.0 : chi2Sel->getProbMin() );
 }
 
 

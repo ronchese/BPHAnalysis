@@ -53,8 +53,8 @@ BPHLambda0ToPPiBuilder::BPHLambda0ToPPiBuilder(
   evSetup( &es ),
   prCollection( protonCollection ),
   piCollection(   pionCollection ), 
-  vCollection( 0 ),
-  rCollection( 0 ),
+  vCollection( nullptr ),
+  rCollection( nullptr ),
   sList( "" ) {
     ptSel = new BPHParticlePtSelect (  0.7 );
    etaSel = new BPHParticleEtaSelect( 10.0 );
@@ -71,15 +71,15 @@ BPHLambda0ToPPiBuilder::BPHLambda0ToPPiBuilder(
   protonName( "Proton" ),
     pionName(   "Pion" ),
   evSetup( &es ),
-  prCollection( 0 ),
-  piCollection( 0 ), 
+  prCollection( nullptr ),
+  piCollection( nullptr ), 
    vCollection( v0Collection ),
-   rCollection( 0 ),
+   rCollection( nullptr ),
   sList( searchList )  {
     ptSel = new BPHParticlePtSelect (  0.0 );
    etaSel = new BPHParticleEtaSelect( 10.0 );
   massSel = new BPHMassSelect( 0.0, 3.0 ) ;
-  chi2Sel = 0;
+  chi2Sel = nullptr;
   updated = false;
 }
 
@@ -92,15 +92,15 @@ BPHLambda0ToPPiBuilder::BPHLambda0ToPPiBuilder(
   protonName( "Proton" ),
     pionName(   "Pion" ),
   evSetup( &es ),
-  prCollection( 0 ),
-  piCollection( 0 ), 
-   vCollection( 0 ),
+  prCollection( nullptr ),
+  piCollection( nullptr ), 
+   vCollection( nullptr ),
    rCollection( vpCollection ),
   sList( searchList )  {
     ptSel = new BPHParticlePtSelect (  0.0 );
    etaSel = new BPHParticleEtaSelect( 10.0 );
   massSel = new BPHMassSelect( 0.0, 3.0 ) ;
-  chi2Sel = 0;
+  chi2Sel = nullptr;
   updated = false;
 }
 
@@ -121,12 +121,12 @@ vector<BPHPlusMinusConstCandPtr> BPHLambda0ToPPiBuilder::build(){
 
   if ( updated ) return lambda0List;
   
-  if ( ( prCollection != 0 ) &&
-       ( piCollection != 0 ) ) buildFromBPHGenericCollection();
+  if ( ( prCollection != nullptr ) &&
+       ( piCollection != nullptr ) ) buildFromBPHGenericCollection();
   else
-  if (    vCollection != 0   ) buildFromV0( vCollection );
+  if (    vCollection != nullptr   ) buildFromV0( vCollection );
   else
-  if (    rCollection != 0   ) buildFromV0( rCollection );
+  if (    rCollection != nullptr   ) buildFromV0( rCollection );
 
   updated = true;
   return lambda0List;
@@ -148,7 +148,7 @@ void BPHLambda0ToPPiBuilder::buildFromBPHGenericCollection() {
   bLambda0.filter(   pionName, *etaSel );
 
   bLambda0.filter( *massSel );
-  if ( chi2Sel != 0 )
+  if ( chi2Sel != nullptr )
   bLambda0.filter( *chi2Sel );
 
   lambda0List = BPHPlusMinusCandidate::build( bLambda0, protonName, pionName );
@@ -179,8 +179,8 @@ void BPHLambda0ToPPiBuilder::buildFromV0( const T* v0Collection ) {
     if( !ptSel ->accept( *lv0.daughter( 1 ) ) ) continue;
     if( !etaSel->accept( *lv0.daughter( 1 ) ) ) continue;
 
-    BPHPlusMinusCandidatePtr plX( new BPHPlusMinusCandidate( evSetup ) );
-    BPHPlusMinusCandidatePtr plY( new BPHPlusMinusCandidate( evSetup ) );
+    BPHPlusMinusCandidatePtr plX = BPHPlusMinusCandidateWrap::create( evSetup );
+    BPHPlusMinusCandidatePtr plY = BPHPlusMinusCandidateWrap::create( evSetup );
     BPHPlusMinusCandidate* lambdaX = plX.get();
     BPHPlusMinusCandidate* lambdaY = plY.get();
     lambdaX->add( protonName, lv0.daughter( 0 ), sList,
@@ -193,7 +193,7 @@ void BPHLambda0ToPPiBuilder::buildFromV0( const T* v0Collection ) {
                   BPHParticleMasses::  pionMass );
     if ( lambdaX->daughters().size() != 2 ) continue;
     if ( lambdaY->daughters().size() != 2 ) continue;
-    BPHPlusMinusCandidatePtr* pp0 = 0;
+    BPHPlusMinusCandidatePtr* pp0( nullptr );
 
     // check which daughter has proton mass or choose the nearest V0 mass
     float mv0 = lv0.mass();
@@ -205,7 +205,7 @@ void BPHLambda0ToPPiBuilder::buildFromV0( const T* v0Collection ) {
 
     BPHPlusMinusCandidate* lambda0 = pp0->get();
     if ( !massSel->accept( *lambda0 ) ) continue;
-    if ( ( chi2Sel != 0 ) &&
+    if ( ( chi2Sel != nullptr ) &&
          ( !chi2Sel->accept( *lambda0 ) ) ) continue;
 
     const_cast<pat::CompositeCandidate&>( lambda0->composite() ).
@@ -251,7 +251,7 @@ void BPHLambda0ToPPiBuilder::setMassMax( double m ) {
 void BPHLambda0ToPPiBuilder::setProbMin( double p ) {
   updated = false;
   delete chi2Sel;
-  chi2Sel = ( p < 0.0 ? 0 : new BPHChi2Select( p ) );
+  chi2Sel = ( p < 0.0 ? nullptr : new BPHChi2Select( p ) );
   return;
 }
 
@@ -285,7 +285,7 @@ double BPHLambda0ToPPiBuilder::getMassMax() const {
 
 
 double BPHLambda0ToPPiBuilder::getProbMin() const {
-  return ( chi2Sel == 0 ? -1.0 : chi2Sel->getProbMin() );
+  return ( chi2Sel == nullptr ? -1.0 : chi2Sel->getProbMin() );
 }
 
 

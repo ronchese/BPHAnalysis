@@ -46,8 +46,8 @@ class BPHPhiToKKBuilder::DZSelect: public BPHRecoSelect {
     if ( m2 > max ) return false;
     const reco::Track* kn = BPHTrackReference::getTrack( cand, "cfhp" );
     const reco::Track* kp = BPHTrackReference::getTrack( cpos, "cfhp" );
-    if ( kn == 0 ) return false;
-    if ( kp == 0 ) return false;
+    if ( kn == nullptr ) return false;
+    if ( kp == nullptr ) return false;
     return ( fabs( kp->dz() - kn->dz() ) < dzm );
   }
   void setMassMin( float m ) { min = m * m; }
@@ -177,7 +177,7 @@ vector<BPHPlusMinusConstCandPtr> BPHPhiToKKBuilder::build() {
     if ( p4.pt () <  ptMin ) continue;
     if ( p4.eta() > etaMax ) continue;
     const reco::Track* tk = BPHTrackReference::getTrack( cand, "cfhp" );
-    if ( tk == 0 ) continue;
+    if ( tk == nullptr ) continue;
     double px = p4.px();
     double py = p4.py();
     double pz = p4.pz();
@@ -194,7 +194,7 @@ vector<BPHPlusMinusConstCandPtr> BPHPhiToKKBuilder::build() {
     if ( p4.pt () <  ptMin ) continue;
     if ( p4.eta() > etaMax ) continue;
     const reco::Track* tk = BPHTrackReference::getTrack( cand, "cfhp" );
-    if ( tk == 0 ) continue;
+    if ( tk == nullptr ) continue;
     double px = p4.px();
     double py = p4.py();
     double pz = p4.pz();
@@ -235,7 +235,7 @@ vector<BPHPlusMinusConstCandPtr> BPHPhiToKKBuilder::build() {
                        ( tz * tz ) );
       if ( m2 < mSqMin ) continue;
       if ( m2 > mSqMax ) continue;
-      BPHPlusMinusCandidatePtr phi( new BPHPlusMinusCandidate( evSetup ) );
+      BPHPlusMinusCandidatePtr phi = BPHPlusMinusCandidateWrap::create( evSetup );
       phi->add( kPosName, pc.cand, BPHParticleMasses::kaonMass );
       phi->add( kNegName, nc.cand, BPHParticleMasses::kaonMass );
       double mass = phi->composite().mass();

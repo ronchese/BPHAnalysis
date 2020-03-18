@@ -404,7 +404,7 @@ void BPHWriteSpecificDecay::fill( edm::Event& ev,
         const pat::Muon* mp = dynamic_cast<const pat::Muon*>( dp );
         iter = muonSet.begin();
         iend = muonSet.end();
-        bool add = ( mp != 0 ) && ( muonSet.find( mp ) == iend );
+        bool add = ( mp != nullptr ) && ( muonSet.find( mp ) == iend );
         while ( add && ( iter != iend ) ) {
           if ( BPHRecoBuilder::sameTrack( mp, *iter++, 1.0e-5 ) ) add = false;
         }
@@ -424,7 +424,7 @@ void BPHWriteSpecificDecay::fill( edm::Event& ev,
 
   // reconstruct quarkonia
 
-  BPHOniaToMuMuBuilder* onia = 0;
+  BPHOniaToMuMuBuilder* onia = nullptr;
   if ( recoOnia ) {
     if ( usePM ) onia = new BPHOniaToMuMuBuilder( es,
                         BPHRecoBuilder::createCollection( patMuon, "ingmcf" ),
@@ -435,7 +435,7 @@ void BPHWriteSpecificDecay::fill( edm::Event& ev,
                         BPHRecoBuilder::createCollection( muDaugs, "ingmcf" ) );
   }
 
-  if ( onia != 0 ) {
+  if ( onia != nullptr ) {
     while ( rIter != rIend ) {
       const map< recoType, map<parType,double> >::value_type& rEntry = *rIter++;
       recoType                   rType = rEntry.first;
@@ -484,7 +484,7 @@ void BPHWriteSpecificDecay::fill( edm::Event& ev,
   typedef mu_cc_map::const_iterator mu_cc_iter;
   for ( iFull = 0; iFull < nFull; ++iFull ) {
 
-    const reco::Vertex* pVtx = 0;
+    const reco::Vertex* pVtx = nullptr;
     int pvId = 0;
     const BPHPlusMinusCandidate* ptr = lFull[iFull].get();
     const std::vector<const reco::Candidate*>& daugs = ptr->daughters();
@@ -499,12 +499,12 @@ void BPHWriteSpecificDecay::fill( edm::Event& ev,
     mu_cc_iter iend0 = cc0.second;
     mu_cc_iter iter1 = cc1.first;
     mu_cc_iter iend1 = cc1.second;
-    while ( ( iter0 != iend0 ) && ( pVtx == 0 )  ) {
+    while ( ( iter0 != iend0 ) && ( pVtx == nullptr )  ) {
       const pat::CompositeCandidate* ccp = iter0++->second;
       while ( iter1 != iend1 ) {
         if ( ccp != iter1++->second ) continue;
         pVtx = ccp->userData<reco::Vertex>( "PVwithmuons" );
-        const reco::Vertex* sVtx = 0;
+        const reco::Vertex* sVtx = nullptr;
         const reco::Vertex::Point& pPos = pVtx->position();
         float dMin = 999999.;
         int ipv;
@@ -527,7 +527,7 @@ void BPHWriteSpecificDecay::fill( edm::Event& ev,
 
     // if not found, as for other type of input data, 
     // try to get the nearest primary vertex in z direction
-    if ( pVtx == 0 ) {
+    if ( pVtx == nullptr ) {
       const reco::Vertex::Point& sVtp = ptr->vertex().position();
       GlobalPoint  cPos( sVtp.x(), sVtp.y(), sVtp.z() );
       const pat::CompositeCandidate& sCC = ptr->composite();
@@ -589,7 +589,7 @@ void BPHWriteSpecificDecay::fill( edm::Event& ev,
 
   // build and dump Bu
 
-  BPHBuToJPsiKBuilder* bu = 0;
+  BPHBuToJPsiKBuilder* bu = nullptr;
   if ( recoBu ) {
     if ( usePF ) bu = new BPHBuToJPsiKBuilder( es, lJPsi,
                           BPHRecoBuilder::createCollection( pfCands ) );
@@ -601,7 +601,7 @@ void BPHWriteSpecificDecay::fill( edm::Event& ev,
                           BPHRecoBuilder::createCollection( gpCands ) );
   }
 
-  if ( bu != 0 ) {
+  if ( bu != nullptr ) {
     rIter = parMap.find( Bu );
     if ( rIter != rIend ) {
       const map<parType,double>& pMap = rIter->second;
@@ -634,7 +634,7 @@ void BPHWriteSpecificDecay::fill( edm::Event& ev,
   // build and dump Kx0
 
   vector<BPHPlusMinusConstCandPtr> lKx0;
-  BPHKx0ToKPiBuilder* kx0 = 0;
+  BPHKx0ToKPiBuilder* kx0 = nullptr;
   if ( recoKx0 ) {
     if ( usePF ) kx0 = new BPHKx0ToKPiBuilder( es,
                        BPHRecoBuilder::createCollection( pfCands ),
@@ -649,7 +649,7 @@ void BPHWriteSpecificDecay::fill( edm::Event& ev,
                        BPHRecoBuilder::createCollection( gpCands ) );
   }
 
-  if ( kx0 != 0 ) {
+  if ( kx0 != nullptr ) {
     rIter = parMap.find( Kx0 );
     if ( rIter != rIend ) {
       const map<parType,double>& pMap = rIter->second;
@@ -725,7 +725,7 @@ void BPHWriteSpecificDecay::fill( edm::Event& ev,
   // build and dump Phi
 
   vector<BPHPlusMinusConstCandPtr> lPhi;
-  BPHPhiToKKBuilder* phi = 0;
+  BPHPhiToKKBuilder* phi = nullptr;
   if ( recoPkk ) {
     if ( usePF ) phi = new BPHPhiToKKBuilder( es,
                        BPHRecoBuilder::createCollection( pfCands ),
@@ -740,7 +740,7 @@ void BPHWriteSpecificDecay::fill( edm::Event& ev,
                        BPHRecoBuilder::createCollection( gpCands ) );
   }
 
-  if ( phi != 0 ) {
+  if ( phi != nullptr ) {
     rIter = parMap.find( Pkk );
     if ( rIter != rIend ) {
       const map<parType,double>& pMap = rIter->second;
@@ -815,13 +815,13 @@ void BPHWriteSpecificDecay::fill( edm::Event& ev,
 
   // build K0
 
-  BPHK0sToPiPiBuilder* k0s = 0;
+  BPHK0sToPiPiBuilder* k0s = nullptr;
   if ( recoK0s ) {
     if ( useK0 ) k0s = new BPHK0sToPiPiBuilder( es, k0Cand.product(), "cfp" );
     else
     if ( useKS ) k0s = new BPHK0sToPiPiBuilder( es, kSCand.product(), "cfp" );
   }
-  if ( k0s != 0 ) {
+  if ( k0s != nullptr ) {
     rIter = parMap.find( K0s );
     if ( rIter != rIend ) {
       const map<parType,double>& pMap = rIter->second;
@@ -852,13 +852,13 @@ void BPHWriteSpecificDecay::fill( edm::Event& ev,
 
   // build Lambda0
 
-  BPHLambda0ToPPiBuilder* l0s = 0;
+  BPHLambda0ToPPiBuilder* l0s = nullptr;
   if ( recoLambda0 ) {
     if ( useL0 ) l0s = new BPHLambda0ToPPiBuilder( es, l0Cand.product(), "cfp" );
     else
     if ( useLS ) l0s = new BPHLambda0ToPPiBuilder( es, lSCand.product(), "cfp" );
   }
-  if ( l0s != 0 ) {
+  if ( l0s != nullptr ) {
     rIter = parMap.find( Lambda0 );
     if ( rIter != rIend ) {
       const map<parType,double>& pMap = rIter->second;
@@ -967,7 +967,7 @@ void BPHWriteSpecificDecay::fill( edm::Event& ev,
 
   // build and dump Bc
 
-  BPHBcToJPsiPiBuilder* bc = 0;
+  BPHBcToJPsiPiBuilder* bc = nullptr;
   if ( recoBc ) {
     if ( usePF ) bc = new BPHBcToJPsiPiBuilder( es, lJPsi,
                           BPHRecoBuilder::createCollection( pfCands ) );
@@ -979,7 +979,7 @@ void BPHWriteSpecificDecay::fill( edm::Event& ev,
                           BPHRecoBuilder::createCollection( gpCands ) );
   }
 
-  if ( bc != 0 ) {
+  if ( bc != nullptr ) {
     rIter = parMap.find( Bc );
     if ( rIter != rIend ) {
       const map<parType,double>& pMap = rIter->second;
@@ -1011,7 +1011,7 @@ void BPHWriteSpecificDecay::fill( edm::Event& ev,
 
   // build and dump X3872
 
-  BPHX3872ToJPsiPiPiBuilder* x3872 = 0;
+  BPHX3872ToJPsiPiPiBuilder* x3872 = nullptr;
   if ( recoX3872 ) {
     if ( usePF ) x3872 = new BPHX3872ToJPsiPiPiBuilder( es, lJPsi,
                              BPHRecoBuilder::createCollection( pfCands ),
@@ -1026,7 +1026,7 @@ void BPHWriteSpecificDecay::fill( edm::Event& ev,
                              BPHRecoBuilder::createCollection( gpCands ) );
   }
 
-  if ( x3872 != 0 ) {
+  if ( x3872 != nullptr ) {
     rIter = parMap.find( X3872 );
     if ( rIter != rIend ) {
       const map<parType,double>& pMap = rIter->second;

@@ -111,7 +111,7 @@ class BPHReco {
   void process() {
     map<string,OutList*>::const_iterator iter = ofMap.find( *recoName );
     map<string,OutList*>::const_iterator iend = ofMap.end();
-    ofstream* osPtr = 0;
+    ofstream* osPtr = nullptr;
     if ( iter != iend ) {
       const OutList* ol = iter->second;
       if ( ( recoErrT > 0.0 ) || !ol->printErrT ) {

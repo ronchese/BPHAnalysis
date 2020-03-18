@@ -49,8 +49,8 @@ class BPHKx0ToKPiBuilder::DZSelect: public BPHRecoSelect {
     if ( m2 > max ) return false;
     const reco::Track* kp = BPHTrackReference::getTrack( cand, "cfhp" );
     const reco::Track* kk = BPHTrackReference::getTrack( kaon, "cfhp" );
-    if ( kp == 0 ) return false;
-    if ( kk == 0 ) return false;
+    if ( kp == nullptr ) return false;
+    if ( kk == nullptr ) return false;
     return ( fabs( kk->dz() - kp->dz() ) < dzm );
   }
   void setMassMin( float m ) { min = m * m; }
@@ -144,7 +144,7 @@ vector<BPHPlusMinusConstCandPtr> BPHKx0ToKPiBuilder::build() {
   int nkx = tmpList.size();
   kx0List.clear();
   kx0List.reserve( nkx );
-  BPHPlusMinusConstCandPtr pxt( 0 );
+  BPHPlusMinusConstCandPtr pxt( nullptr );
   for ( ikx = 0; ikx < nkx; ++ikx ) {
     BPHPlusMinusConstCandPtr& px0 = tmpList[ikx];
     BPHPlusMinusCandidatePtr  pxb( new BPHPlusMinusCandidate( evSetup ) );
@@ -209,7 +209,7 @@ vector<BPHPlusMinusConstCandPtr> BPHKx0ToKPiBuilder::build() {
     if ( p4.pt () <  ptMin ) continue;
     if ( p4.eta() > etaMax ) continue;
     const reco::Track* tk = BPHTrackReference::getTrack( cand, "cfhp" );
-    if ( tk == 0 ) continue;
+    if ( tk == nullptr ) continue;
     double px = p4.px();
     double py = p4.py();
     double pz = p4.pz();
@@ -228,7 +228,7 @@ vector<BPHPlusMinusConstCandPtr> BPHKx0ToKPiBuilder::build() {
     if ( p4.pt () <  ptMin ) continue;
     if ( p4.eta() > etaMax ) continue;
     const reco::Track* tk = BPHTrackReference::getTrack( cand, "cfhp" );
-    if ( tk == 0 ) continue;
+    if ( tk == nullptr ) continue;
     double px = p4.px();
     double py = p4.py();
     double pz = p4.pz();
@@ -288,15 +288,15 @@ vector<BPHPlusMinusConstCandPtr> BPHKx0ToKPiBuilder::build() {
       else                                           mass = mb;
       if ( mass < mMin ) continue;
       if ( mass > mMax ) continue;
-      BPHPlusMinusCandidatePtr kx0( new BPHPlusMinusCandidate( evSetup ) );
+      BPHPlusMinusCandidatePtr kx0 = BPHPlusMinusCandidateWrap::create( evSetup );
       kx0->add( kaonName, pc.cand, BPHParticleMasses::kaonMass );
       kx0->add( pionName, nc.cand, BPHParticleMasses::pionMass );
       float massKx0 = kx0->composite().mass();
-      BPHPlusMinusCandidatePtr kxb( new BPHPlusMinusCandidate( evSetup ) );
+      BPHPlusMinusCandidatePtr kxb = BPHPlusMinusCandidateWrap::create( evSetup );
       kxb->add( kaonName, nc.cand, BPHParticleMasses::kaonMass );
       kxb->add( pionName, pc.cand, BPHParticleMasses::pionMass );
       float massKxb = kxb->composite().mass();
-      BPHPlusMinusCandidatePtr kxt( 0 );
+      BPHPlusMinusCandidatePtr kxt( nullptr );
       if ( fabs( massKx0 - BPHParticleMasses::kx0Mass ) <
            fabs( massKxb - BPHParticleMasses::kx0Mass ) ) {
         mass = massKx0;

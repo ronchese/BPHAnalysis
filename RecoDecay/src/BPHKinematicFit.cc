@@ -41,24 +41,24 @@ using namespace std;
 // Constructors --
 //----------------
 BPHKinematicFit::BPHKinematicFit():
- BPHDecayVertex( 0 ),
+ BPHDecayVertex( nullptr ),
  massConst( -1.0 ),
  massSigma( -1.0 ),
  oldKPs( true ),
  oldFit( true ),
  oldMom( true ),
- kinTree( 0 ) {
+ kinTree( nullptr ) {
 }
 
 
 BPHKinematicFit::BPHKinematicFit( const BPHKinematicFit* ptr ):
- BPHDecayVertex( ptr, 0 ),
+ BPHDecayVertex( ptr, nullptr ),
  massConst( -1.0 ),
  massSigma( -1.0 ),
  oldKPs( true ),
  oldFit( true ),
  oldMom( true ),
- kinTree( 0 ) {
+ kinTree( nullptr ) {
   map<const reco::Candidate*,const reco::Candidate*> iMap;
   const vector<const reco::Candidate*>& daug = daughters();
   const vector<Component>& list = ptr->componentList();
@@ -121,7 +121,7 @@ void BPHKinematicFit::setIndependentFit( const string& name, bool flag ) {
     return;
   }
   const BPHRecoCandidate* comp = getComp( name ).get();
-  if ( comp == 0 ) {
+  if ( comp == nullptr ) {
     edm::LogPrint( "ParticleNotFound" )
                 << "BPHKinematicFit::setIndependentFit: "
                 << name << " daughter not found";
@@ -189,7 +189,7 @@ const RefCountedKinematicTree& BPHKinematicFit::kinematicTree(
                                const string& name,
                                double mass ) const {
   if ( mass < 0 ) {
-    kinTree = RefCountedKinematicTree( 0 );
+    kinTree = RefCountedKinematicTree( nullptr );
     oldFit = false;
     return kinTree;
   }
@@ -208,7 +208,7 @@ const RefCountedKinematicTree& BPHKinematicFit::kinematicTree(
 
 const RefCountedKinematicTree& BPHKinematicFit::kinematicTree(
                                const string& name ) const {
-  KinematicConstraint* kc = 0;
+  KinematicConstraint* kc = nullptr;
   return kinematicTree( name, kc );
 }
 
@@ -216,7 +216,7 @@ const RefCountedKinematicTree& BPHKinematicFit::kinematicTree(
 const RefCountedKinematicTree& BPHKinematicFit::kinematicTree(
                                const string& name,
                                KinematicConstraint* kc ) const {
-  kinTree = RefCountedKinematicTree( 0 );
+  kinTree = RefCountedKinematicTree( nullptr );
   oldFit = false;
   kinParticles();
   if ( allParticles.size() != numParticles() ) return kinTree;
@@ -233,7 +233,7 @@ const RefCountedKinematicTree& BPHKinematicFit::kinematicTree(
     KinematicParticleVertexFitter vtxFitter;
     RefCountedKinematicTree compTree = vtxFitter.fit( kComp );
     if ( compTree->isEmpty() ) return kinTree;
-    if ( kc != 0 ) {
+    if ( kc != nullptr ) {
       KinematicParticleFitter kinFitter;
       compTree = kinFitter.fit( kc, compTree );
       if ( compTree->isEmpty() ) return kinTree;
@@ -253,7 +253,7 @@ const RefCountedKinematicTree& BPHKinematicFit::kinematicTree(
     edm::LogPrint( "FitFailed" )
                 << "BPHKinematicFit::kinematicTree: "
                 << "kin fit reset";
-    kinTree = RefCountedKinematicTree( 0 );
+    kinTree = RefCountedKinematicTree( nullptr );
   }
   return kinTree;
 }
@@ -262,7 +262,7 @@ const RefCountedKinematicTree& BPHKinematicFit::kinematicTree(
 const RefCountedKinematicTree& BPHKinematicFit::kinematicTree(
                                const string& name,
                                MultiTrackKinematicConstraint* kc ) const {
-  kinTree = RefCountedKinematicTree( 0 );
+  kinTree = RefCountedKinematicTree( nullptr );
   oldFit = false;
   kinParticles();
   if ( allParticles.size() != numParticles() ) return kinTree;
@@ -282,7 +282,7 @@ const RefCountedKinematicTree& BPHKinematicFit::kinematicTree(
     edm::LogPrint( "FitFailed" )
                 << "BPHKinematicFit::kinematicTree: "
                 << "kin fit reset";
-    kinTree = RefCountedKinematicTree( 0 );
+    kinTree = RefCountedKinematicTree( nullptr );
   }
   return kinTree;
 }
@@ -296,38 +296,38 @@ void BPHKinematicFit::resetKinematicFit() const {
 
 bool BPHKinematicFit::isEmpty() const {
   kinematicTree();
-  if ( kinTree.get() == 0 ) return true;
+  if ( kinTree.get() == nullptr ) return true;
   return kinTree->isEmpty();
 }
 
 
 bool BPHKinematicFit::isValidFit() const {
   const RefCountedKinematicParticle kPart = topParticle();
-  if ( kPart.get() == 0 ) return false;
+  if ( kPart.get() == nullptr ) return false;
   return kPart->currentState().isValid();
 }
 
 
 const RefCountedKinematicParticle BPHKinematicFit::currentParticle() const {
-  if ( isEmpty() ) return RefCountedKinematicParticle( 0 );
+  if ( isEmpty() ) return RefCountedKinematicParticle( nullptr );
   return kinTree->currentParticle();
 }
 
 
 const RefCountedKinematicVertex BPHKinematicFit::currentDecayVertex() const {
-  if ( isEmpty() ) return RefCountedKinematicVertex( 0 );
+  if ( isEmpty() ) return RefCountedKinematicVertex( nullptr );
   return kinTree->currentDecayVertex();
 }
 
 
 const RefCountedKinematicParticle BPHKinematicFit::topParticle() const {
-  if ( isEmpty() ) return RefCountedKinematicParticle( 0 );
+  if ( isEmpty() ) return RefCountedKinematicParticle( nullptr );
   return kinTree->topParticle();
 }
 
 
 const RefCountedKinematicVertex BPHKinematicFit::topDecayVertex() const {
-  if ( isEmpty() ) return RefCountedKinematicVertex( 0 );
+  if ( isEmpty() ) return RefCountedKinematicVertex( nullptr );
   kinTree->movePointerToTheTop();
   return kinTree->currentDecayVertex();
 }
@@ -335,7 +335,7 @@ const RefCountedKinematicVertex BPHKinematicFit::topDecayVertex() const {
 
 ParticleMass BPHKinematicFit::mass() const {
   const RefCountedKinematicParticle kPart = topParticle();
-  if ( kPart.get() == 0 ) return -1.0;
+  if ( kPart.get() == nullptr ) return -1.0;
   const KinematicState kStat = kPart->currentState();
   if ( kStat.isValid() ) return kStat.mass();
   return -1.0;
@@ -428,7 +428,7 @@ void BPHKinematicFit::addParticles(
     float sigma = dMSig.find( cand )->second;
     if ( sigma < 0 ) sigma = 1.0e-7;
     reco::TransientTrack* tt = getTransientTrack( cand );
-    if ( tt != 0 ) kl.push_back( km[cand] = pFactory.particle( *tt, 
+    if ( tt != nullptr ) kl.push_back( km[cand] = pFactory.particle( *tt, 
                                             mass, chi, ndf, sigma ) );
   }
   const vector<BPHRecoConstCandPtr>& comp = daughComp();
@@ -454,7 +454,7 @@ void BPHKinematicFit::getParticles( const string& moth, const string& daug,
                       vector<RefCountedKinematicParticle>& kl,
                       set   <RefCountedKinematicParticle>& ks ) const {
   const BPHRecoCandidate* cptr = getComp( moth ).get();
-  if ( cptr != 0 ) {
+  if ( cptr != nullptr ) {
     if ( cKinP.at( cptr ) ) {
       insertParticle( kCDMap[cptr], kl, ks );
     }
@@ -474,7 +474,7 @@ void BPHKinematicFit::getParticles( const string& moth, const string& daug,
     return;
   }
   const reco::Candidate* dptr = getDaug( moth );
-  if ( dptr != 0 ) {
+  if ( dptr != nullptr ) {
     insertParticle( kinMap[dptr], kl, ks );
     return;
   }
@@ -507,7 +507,7 @@ void BPHKinematicFit::getParticles( const string& moth, const
 
 unsigned int BPHKinematicFit::numParticles(
                               const BPHKinematicFit* cand ) const {
-  if ( cand == 0 ) cand = this;
+  if ( cand == nullptr ) cand = this;
   unsigned int n = cand->daughters().size();
   const vector<string>& cnames = cand->compNames();
   int i = cnames.size();
@@ -534,8 +534,8 @@ void BPHKinematicFit::splitKP( const string& name,
                       vector<RefCountedKinematicParticle>* kComp,
                       vector<RefCountedKinematicParticle>* kTail ) const {
   kComp->clear();
-  if ( kTail == 0 ) kTail = kComp;
-  else              kTail->clear();
+  if ( kTail == nullptr ) kTail = kComp;
+  else                    kTail->clear();
   kinParticles();
   if ( name == "" ) {
     *kComp = allParticles;
@@ -544,11 +544,11 @@ void BPHKinematicFit::splitKP( const string& name,
   const reco:: Candidate* daug = getDaug( name );
   const BPHRecoCandidate* comp = getComp( name ).get();
   int ns;
-  if ( daug != 0 ) {
+  if ( daug != nullptr ) {
     ns = 1;
   }
   else
-  if ( comp != 0 ) {
+  if ( comp != nullptr ) {
     ns = ( cKinP.at( comp ) ? 1 : numParticles( comp ) );
   }
   else {

@@ -209,7 +209,7 @@ class BPHWriteSpecificDecay:
       }
       const BPHPlusMinusCandidate* pmp =
             dynamic_cast<const BPHPlusMinusCandidate*>( ptr.get() );
-      if ( pmp != 0 ) {
+      if ( pmp != nullptr ) {
         cc.addUserData ( "cowboy", pmp->isCowboy  ()            );
 //        cc.addUserFloat(    "dca", pmp->cAppInRPhi().distance() );
       }

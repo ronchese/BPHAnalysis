@@ -167,13 +167,15 @@ class BPHKinematicFit: public virtual BPHDecayVertex {
                std::vector<std::string>& daug,
                std::vector<RefCountedKinematicParticle>& kl,
                std::set   <RefCountedKinematicParticle>& ks ) const;
-  virtual unsigned int numParticles( const BPHKinematicFit* cand = 0 ) const;
+  virtual unsigned int numParticles( const BPHKinematicFit* cand = nullptr )
+                                     const;
   static  void insertParticle( RefCountedKinematicParticle& kp,
                std::vector<RefCountedKinematicParticle>& kl,
                std::set   <RefCountedKinematicParticle>& ks );
   virtual void splitKP( const std::string& name,
                std::vector<RefCountedKinematicParticle>* kComp,
-               std::vector<RefCountedKinematicParticle>* kTail = 0 ) const;
+               std::vector<RefCountedKinematicParticle>* kTail = nullptr )
+               const;
   virtual void fitMomentum() const;
 
 };

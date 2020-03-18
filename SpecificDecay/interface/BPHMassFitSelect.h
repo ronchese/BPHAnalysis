@@ -83,32 +83,32 @@ class BPHMassFitSelect: public BPHFitSelect, public BPHMassCuts {
     cName  = ""  ;
     cMass  = -1.0;
     cSigma = -1.0;
-      kc   =  0  ;
-    mtkc   =  0  ;
+      kc   = nullptr;
+    mtkc   = nullptr;
   }
   void setFitConstraint( const std::string& name, double mass ) {
     type = mcst;
     cName  = name ;
     cMass  = mass ;
     cSigma = -1.0 ;
-      kc   =  0   ;
-    mtkc   =  0   ;
+      kc   = nullptr;
+    mtkc   = nullptr;
   }
   void setFitConstraint( const std::string& name, double mass, double sigma ) {
     type = mcss;
     cName  = name ;
     cMass  = mass ;
     cSigma = sigma;
-      kc   =  0   ;
-    mtkc   =  0   ;
+      kc   = nullptr;
+    mtkc   = nullptr;
   }
   void setFitConstraint( const std::string& name, KinematicConstraint* c ) {
     type = kf;
     cName  = name ;
     cMass  = -1.0 ;
     cSigma = -1.0 ;
-      kc   =  c   ;
-    mtkc   =  0   ;
+      kc   = c    ;
+    mtkc   = nullptr;
   }
   void setFitConstraint( const std::string& name, 
                                         MultiTrackKinematicConstraint* c ) {
@@ -116,8 +116,8 @@ class BPHMassFitSelect: public BPHFitSelect, public BPHMassCuts {
     cName  = name ;
     cMass  = -1.0 ;
     cSigma = -1.0 ;
-      kc   =  0   ;
-    mtkc   =  c   ;
+      kc   = nullptr;
+    mtkc   = c    ;
   }
 
   /// get fit constraint

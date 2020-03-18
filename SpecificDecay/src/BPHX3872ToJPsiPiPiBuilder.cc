@@ -118,7 +118,7 @@ vector<BPHRecoConstCandPtr> BPHX3872ToJPsiPiPiBuilder::build() {
     if ( p4.pt () <  ptMin ) continue;
     if ( p4.eta() > etaMax ) continue;
     const reco::Track* tk = BPHTrackReference::getTrack( cand, "cfhp" );
-    if ( tk == 0 ) continue;
+    if ( tk == nullptr ) continue;
     double px = p4.px();
     double py = p4.py();
     double pz = p4.pz();
@@ -135,7 +135,7 @@ vector<BPHRecoConstCandPtr> BPHX3872ToJPsiPiPiBuilder::build() {
     if ( p4.pt () <  ptMin ) continue;
     if ( p4.eta() > etaMax ) continue;
     const reco::Track* tk = BPHTrackReference::getTrack( cand, "cfhp" );
-    if ( tk == 0 ) continue;
+    if ( tk == nullptr ) continue;
     double px = p4.px();
     double py = p4.py();
     double pz = p4.pz();
@@ -213,7 +213,7 @@ vector<BPHRecoConstCandPtr> BPHX3872ToJPsiPiPiBuilder::build() {
       x3872->add( pionNegName, pp->negPion, BPHParticleMasses::pionMass,
                                             BPHParticleMasses::pionMSigma );
       if ( !massSel->accept( *x3872 ) ) continue;
-      if ( ( chi2Sel != 0 ) &&
+      if ( ( chi2Sel != nullptr ) &&
            !chi2Sel->accept( *x3872 ) ) continue;
       if ( !mFitSel->accept( *x3872 ) ) continue;
       x3872List.push_back( xPtr );
@@ -272,7 +272,7 @@ void BPHX3872ToJPsiPiPiBuilder::setMassMax( double m ) {
 void BPHX3872ToJPsiPiPiBuilder::setProbMin( double p ) {
   updated = false;
   delete chi2Sel;
-  chi2Sel = ( p < 0.0 ? 0 : new BPHChi2Select( p ) );
+  chi2Sel = ( p < 0.0 ? nullptr : new BPHChi2Select( p ) );
   return;
 }
 
@@ -329,7 +329,7 @@ double BPHX3872ToJPsiPiPiBuilder::getMassMax() const {
 
 
 double BPHX3872ToJPsiPiPiBuilder::getProbMin() const {
-  return ( chi2Sel == 0 ? -1.0 : chi2Sel->getProbMin() );
+  return ( chi2Sel == nullptr ? -1.0 : chi2Sel->getProbMin() );
 }
 
 

@@ -93,7 +93,7 @@ vector<BPHRecoConstCandPtr> BPHBcToJPsiPiBuilder::build() {
   bBc.filter( pionName, * etaSel );
 
   bBc.filter( *massSel );
-  if ( chi2Sel != 0 )
+  if ( chi2Sel != nullptr )
   bBc.filter( *chi2Sel );
   if ( massConstr ) bBc.filter( *mFitSel );
 
@@ -166,7 +166,7 @@ void BPHBcToJPsiPiBuilder::setMassMax( double m ) {
 void BPHBcToJPsiPiBuilder::setProbMin( double p ) {
   updated = false;
   delete chi2Sel;
-  chi2Sel = ( p < 0.0 ? 0 : new BPHChi2Select( p ) );
+  chi2Sel = ( p < 0.0 ? nullptr : new BPHChi2Select( p ) );
   return;
 }
 
@@ -223,7 +223,7 @@ double BPHBcToJPsiPiBuilder::getMassMax() const {
 
 
 double BPHBcToJPsiPiBuilder::getProbMin() const {
-  return ( chi2Sel == 0 ? -1.0 : chi2Sel->getProbMin() );
+  return ( chi2Sel == nullptr ? -1.0 : chi2Sel->getProbMin() );
 }
 
 

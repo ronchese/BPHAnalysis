@@ -60,10 +60,11 @@ class BPHDecayVertex: public virtual BPHDecayMomentum {
   virtual bool validVertex() const;
 
   /// get reconstructed vertex
-  virtual const reco::Vertex& vertex( VertexFitter<5>* fitter = 0,
-                                      const reco::BeamSpot* bs = 0,
-                                      const GlobalPoint* priorPos = 0,
-                                      const GlobalError* priorError = 0 ) const;
+  virtual const reco::Vertex& vertex( VertexFitter<5>* fitter = nullptr,
+                                      const reco::BeamSpot* bs = nullptr,
+                                      const GlobalPoint* priorPos = nullptr,
+                                      const GlobalError* priorError = nullptr )
+                                      const;
 
   /// get list of Tracks
   const std::vector<const reco::Track*>& tracks() const;

@@ -83,7 +83,7 @@ vector<BPHRecoConstCandPtr> BPHBdToJPsiKxBuilder::build() {
   bBd.filter(  kx0Name, *mkx0Sel );
 
   bBd.filter( *massSel );
-  if ( chi2Sel != 0 )
+  if ( chi2Sel != nullptr )
   bBd.filter( *chi2Sel );
   if ( massConstr ) bBd.filter( *mFitSel );
 
@@ -157,7 +157,7 @@ void BPHBdToJPsiKxBuilder::setMassMax( double m ) {
 void BPHBdToJPsiKxBuilder::setProbMin( double p ) {
   updated = false;
   delete chi2Sel;
-  chi2Sel = ( p < 0.0 ? 0 : new BPHChi2Select( p ) );
+  chi2Sel = ( p < 0.0 ? nullptr : new BPHChi2Select( p ) );
   return;
 }
 
@@ -214,7 +214,7 @@ double BPHBdToJPsiKxBuilder::getMassMax() const {
 
 
 double BPHBdToJPsiKxBuilder::getProbMin() const {
-  return ( chi2Sel == 0 ? -1.0 : chi2Sel->getProbMin() );
+  return ( chi2Sel == nullptr ? -1.0 : chi2Sel->getProbMin() );
 }
 
 

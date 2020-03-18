@@ -93,7 +93,7 @@ vector<BPHRecoConstCandPtr> BPHBuToJPsiKBuilder::build() {
   bBu.filter( kaonName, * etaSel );
 
   bBu.filter( *massSel );
-  if ( chi2Sel != 0 )
+  if ( chi2Sel != nullptr )
   bBu.filter( *chi2Sel );
   if ( massConstr ) bBu.filter( *mFitSel );
 
@@ -166,7 +166,7 @@ void BPHBuToJPsiKBuilder::setMassMax( double m ) {
 void BPHBuToJPsiKBuilder::setProbMin( double p ) {
   updated = false;
   delete chi2Sel;
-  chi2Sel = ( p < 0.0 ? 0 : new BPHChi2Select( p ) );
+  chi2Sel = ( p < 0.0 ? nullptr : new BPHChi2Select( p ) );
   return;
 }
 
@@ -223,7 +223,7 @@ double BPHBuToJPsiKBuilder::getMassMax() const {
 
 
 double BPHBuToJPsiKBuilder::getProbMin() const {
-  return ( chi2Sel == 0 ? -1.0 : chi2Sel->getProbMin() );
+  return ( chi2Sel == nullptr ? -1.0 : chi2Sel->getProbMin() );
 }
 
 
