@@ -12,7 +12,7 @@
 //----------------------
 // Base Class Headers --
 //----------------------
-
+#include "BPHAnalysis/SpecificDecay/interface/BPHDecayToResTrkBuilder.h"
 
 //------------------------------------
 // Collaborating Class Declarations --

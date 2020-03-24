@@ -12,13 +12,11 @@
 //----------------------
 // Base Class Headers --
 //----------------------
-
+#include "BPHAnalysis/RecoDecay/interface/BPHRecoBuilder.h"
 
 //------------------------------------
 // Collaborating Class Declarations --
 //------------------------------------
-class BPHRecoBuilder;
-
 namespace reco {
   class Candidate;
 }
