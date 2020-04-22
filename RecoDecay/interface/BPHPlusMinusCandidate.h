@@ -76,7 +76,7 @@ class BPHPlusMinusCandidate: public BPHRecoCandidate,
 
   /// clone object, cloning daughters as well up to required depth
   /// level = -1 to clone all levels
-  const BPHRecoCandidate* clone( int level = -1 ) const override;
+  BPHRecoCandidate* clone( int level = -1 ) const override;
 
   /// get a composite by the simple sum of simple particles
   const pat::CompositeCandidate& composite() const override;

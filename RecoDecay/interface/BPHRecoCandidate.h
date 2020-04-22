@@ -90,7 +90,7 @@ class BPHRecoCandidate: public virtual BPHKinematicFit {
 
   /// clone object, cloning daughters as well up to required depth
   /// level = -1 to clone all levels
-  virtual const BPHRecoCandidate* clone( int level = -1 ) const;
+  virtual BPHRecoCandidate* clone( int level = -1 ) const;
 
  protected:
 
