@@ -307,9 +307,9 @@ void BPHOniaToMuMuBuilder::extractList( oniaType type ) {
     if ( !par.chi2Sel->accept( *ptr   ) ) continue;
     BPHPlusMinusCandidate* np = new BPHPlusMinusCandidate( evSetup );
     np->add( "MuPos", muPos, ptr->getTrackSearchList( mcPos ),
-             BPHParticleMasses::muonMass );
+             BPHParticleMasses::muonMass, BPHParticleMasses::muonMSigma );
     np->add( "MuNeg", muNeg, ptr->getTrackSearchList( mcNeg ),
-             BPHParticleMasses::muonMass );
+             BPHParticleMasses::muonMass, BPHParticleMasses::muonMSigma );
     if ( par.mass > 0.0 )
     np->setConstraint( par.mass, par.sigma );
     list.push_back( BPHPlusMinusConstCandPtr( np ) );
