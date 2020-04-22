@@ -830,8 +830,6 @@ void BPHWriteSpecificDecay::fill( edm::Event& ev,
         case massMin    : k0s->setMassMin( pv ); break;
         case massMax    : k0s->setMassMax( pv ); break;
         case probMin    : k0s->setProbMin( pv ); break;
-        case constrMass : k0s->setConstr ( pv, k0s->getConstrSigma() ); break;
-        case constrSigma: k0s->setConstr ( k0s->getConstrMass() , pv ); break;
         case writeCandidate: writeK0s =  ( pv > 0 ); break;
         default: break;
         }
@@ -867,8 +865,6 @@ void BPHWriteSpecificDecay::fill( edm::Event& ev,
         case massMin    : l0s->setMassMin( pv ); break;
         case massMax    : l0s->setMassMax( pv ); break;
         case probMin    : l0s->setProbMin( pv ); break;
-        case constrMass : l0s->setConstr ( pv, l0s->getConstrSigma() ); break;
-        case constrSigma: l0s->setConstr ( l0s->getConstrMass() , pv ); break;
         case writeCandidate: writeLambda0 = ( pv > 0 ); break;
         default: break;
         }
