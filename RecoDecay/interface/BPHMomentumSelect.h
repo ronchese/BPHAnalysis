@@ -18,6 +18,7 @@
 // Collaborating Class Declarations --
 //------------------------------------
 class BPHDecayMomentum;
+class BPHRecoBuilder;
 
 //---------------
 // C++ Headers --
@@ -50,6 +51,10 @@ class BPHMomentumSelect {
    */
   /// accept function
   virtual bool accept( const BPHDecayMomentum& cand ) const = 0;
+  virtual bool accept( const BPHDecayMomentum& cand,
+                       const BPHRecoBuilder* builder ) const {
+    return accept( cand );
+  }
 
 };
 

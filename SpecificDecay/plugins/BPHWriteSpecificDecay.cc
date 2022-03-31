@@ -82,7 +82,7 @@ BPHWriteSpecificDecay::BPHWriteSpecificDecay( const edm::ParameterSet& ps ) {
   SET_PAR( bool, writeVertex  , ps );
 
   rMap["Onia"   ] = Onia;
-  rMap["PHiMuMu"] = Pmm;
+  rMap["PhiMuMu"] = Pmm;
   rMap["Psi1"   ] = Psi1;
   rMap["Psi2"   ] = Psi2;
   rMap["Ups"    ] = Ups;
@@ -306,6 +306,7 @@ void BPHWriteSpecificDecay::fill( edm::Event& ev,
   daughMap.clear();
   pvRefMap.clear();
   ccRefMap.clear();
+//  if ( ev.id().event() != 546360791 ) return;
 
   // get magnetic field
   edm::ESHandle<MagneticField> magneticField;

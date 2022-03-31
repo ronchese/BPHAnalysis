@@ -29,16 +29,25 @@
 
 using namespace std;
 
-#define SET_PAR(TYPE,NAME,PSET) ( NAME = PSET.getParameter< TYPE >( #NAME ) )
+#define GET_PAR(TYPE,NAME,PSET) PSET.getParameter< TYPE >( #NAME )
+// GET_PAR(string,xyz,ps);
+// is equivalent to
+// ps.getParameter< string >( "xyx" )
+#define SET_PAR(TYPE,NAME,PSET) ( NAME = GET_PAR(TYPE,NAME,PSET) )
 // SET_PAR(string,xyz,ps);
 // is equivalent to
+// ( xyz = GET_PAR(string,xyz,ps) )
+// i.e. is equivalent to
 // ( xyz = ps.getParameter< string >( "xyx" ) )
+#define GET_UTP(TYPE,NAME,PSET) PSET.getUntrackedParameter< TYPE >( #NAME )
+#define SET_UTP(TYPE,NAME,PSET) ( NAME = GET_UTP(TYPE,NAME,PSET) )
 
 CheckBPHWriteDecay::CheckBPHWriteDecay( const edm::ParameterSet& ps ) {
 
   SET_PAR(   unsigned int,  runNumber, ps );
   SET_PAR(   unsigned int,  evtNumber, ps );
   SET_PAR( vector<string>, candsLabel, ps );
+  SET_UTP(           bool,   writePtr, ps );
 
   int i;
   int n =
@@ -48,7 +57,7 @@ CheckBPHWriteDecay::CheckBPHWriteDecay( const edm::ParameterSet& ps ) {
         consume< vector<pat::CompositeCandidate> >( candsToken[i],
                                                     candsLabel[i] );
 
-  string fileName = ps.getParameter<string>( "fileName" );
+  string fileName = GET_UTP( string, fileName, ps );
   if ( fileName.empty() ) osPtr = &cout;
   else                    osPtr = new ofstream( fileName.c_str() );
 
@@ -66,7 +75,8 @@ void CheckBPHWriteDecay::fillDescriptions(
    desc.add< vector<string> >( "candsLabel", v );
    desc.add<unsigned int>( "runNumber", 0 );
    desc.add<unsigned int>( "evtNumber", 0 );
-   desc.add<string>( "fileName", "" );
+   desc.addUntracked<string>( "fileName", "" );
+   desc.addUntracked<bool>( "writePtr", false );
    descriptions.add( "checkBPHWriteDecay", desc );
    return;
 }
@@ -92,19 +102,29 @@ void CheckBPHWriteDecay::analyze( const edm::Event& ev,
   int il;
   int nl =
   candsLabel.size();
+  vector< edm::Handle< vector<pat::CompositeCandidate> > > clist( nl );
   for ( il = 0; il < nl; ++il ) {
-    edm::Handle< vector<pat::CompositeCandidate> > cands;
+    edm::Handle< vector<pat::CompositeCandidate> >& cands = clist[il];
     candsToken[il].get( ev, cands );
     int ic;
     int nc = cands->size();
+    vector<const pat::CompositeCandidate*> csort( nc );
+    for ( ic = 0; ic < nc; ++ic ) csort[ic] = &cands->at( ic );
+    sort( csort.begin(), csort.end(),
+          []( const pat::CompositeCandidate* lc,
+              const pat::CompositeCandidate* rc ) {
+            return lc->pt() < rc->pt();
+          } );
     for ( ic = 0; ic < nc; ++ic ) {
       os << "*********** " << candsLabel[il] << " " << ic << "/" << nc
          << " ***********"
          << endl;
-      const pat::CompositeCandidate& cand = cands->at( ic );
-      dump( os, cand );
+      const pat::CompositeCandidate* cand = csort[ic];
+      dump( os, *cand );
+      idMap[cand] = ic;
     }
   }
+  idMap.clear();
   return;
 
 }
@@ -115,69 +135,79 @@ void CheckBPHWriteDecay::endJob() {
 }
 
 
-void CheckBPHWriteDecay::dump( std::ostream& os,
+void CheckBPHWriteDecay::dump( ostream& os,
                                const pat::CompositeCandidate& cand ) {
 
   float mfit = ( cand.hasUserFloat( "fitMass" ) ?
                  cand.   userFloat( "fitMass" ) : -1 );
-  os << &cand
-     << " mass : " << cand.mass() << " " << mfit << " "
-     << (   cand.hasUserData      ( "cowboy" ) ?
-          ( cand.   userData<bool>( "cowboy" ) ? "cowboy" : "sailor" )
-                                                   : "" ) << endl;
-  writeMomentum( os, "cmom ", cand, false );
-  writePosition( os, " xyz ", cand.momentum() );
+  if ( writePtr )
+  os << &cand;
+  os << " mass : " << cand.mass() << " " << mfit
+     << ( cand.hasUserInt( "cowboy" ) ?
+        ( cand.   userInt( "cowboy" ) > 0 ?
+          " cowboy" : " sailor" ) : "" ) << endl;
+  writeCylindric( os, "cmom ", cand, false );
+  writeCartesian( os, " xyz ", cand.momentum() );
   const reco::Vertex* vptr = 
         ( cand.hasUserData              ( "vertex" ) ? 
           cand.   userData<reco::Vertex>( "vertex" ) : nullptr );
   if ( vptr != nullptr ) {
-    writePosition( os, "vpos : ", *vptr, false );
+    writeCartesian( os, "vpos : ", *vptr, false );
     os << " --- " << vptr->chi2() << " / " << vptr->ndof()
        << " ( " << ChiSquaredProbability( vptr->chi2(),
-                                            vptr->ndof() ) << " ) " << endl;
+                                            vptr->ndof() ) << " )" << endl;
   }
   const reco::Vertex* vfit = 
         ( cand.hasUserData              ( "fitVertex" ) ? 
           cand.   userData<reco::Vertex>( "fitVertex" ) : nullptr );
   if ( vfit != nullptr ) {
-    writePosition( os, "vfit : ", *vfit, false );
+    writeCartesian( os, "vfit : ", *vfit, false );
     os << " --- "  << vfit->chi2() << " / " << vfit->ndof()
        << " ( " << ChiSquaredProbability( vfit->chi2(),
-                                            vfit->ndof() ) << " ) " << endl;
+                                            vfit->ndof() ) << " )" << endl;
   }
   if ( cand.hasUserData( "fitMomentum" ) )
-       writePosition( os, "fmom : ",
+       writeCartesian( os, "fmom : ",
       *cand.   userData< Vector3DBase<float,GlobalTag> >( "fitMomentum" ) );
 
   if ( cand.hasUserData( "primaryVertex" ) ) {
     const vertex_ref* pvr = cand.userData<vertex_ref>( "primaryVertex" );
     if ( pvr->isNonnull() ) {
       const reco::Vertex* pvtx = pvr->get();
-      if ( pvtx != nullptr ) writePosition( os, "ppos ", *pvtx );
+      if ( pvtx != nullptr ) writeCartesian( os, "ppos ", *pvtx );
     }
   }
   int i;
   int n = cand.numberOfDaughters();
   for ( i = 0; i < n; ++i ) {
     const reco::Candidate* dptr = cand.daughter( i );
-    os << "daug " << i << "/" << n << " : " << dptr;
-    writeMomentum( os, " == ", *dptr, false );
-    os << " " << dptr->mass() << endl;
+    os << "daug " << i << "/" << n;
+    if ( writePtr ) os << " : " << dptr;
+    writeCylindric( os, " == ", *dptr, false );
+    os << " " << dptr->mass() << " " << dptr->charge() << endl;
     const pat::Muon* mptr = dynamic_cast<const pat::Muon*>( dptr );
-    os << "muon " << i << "/" << n << " : " << mptr << endl;
+    os << "muon " << i << "/" << n << " : " << ( mptr == nullptr ? 'N' : 'Y' ) << endl;
     const reco::Track* tptr = BPHTrackReference::getTrack( *dptr, "cfhpmnigs" );
-    os << "trk  " << i << "/" << n << " : " << tptr;
-    if ( tptr != nullptr ) writeMomentum( os, " == ", *tptr );
+    os << "trk  " << i << "/" << n ;
+    if ( writePtr ) os << " : " << tptr;
+    if ( tptr != nullptr ) writeCylindric( os, " == ", *tptr );
     else                   os << "no track" << endl;
   }
   const vector<string>& names = cand.userDataNames();
+  map<const pat::CompositeCandidate*,int>::const_iterator iter;
+  map<const pat::CompositeCandidate*,int>::const_iterator iend = idMap.end();
   int j;
   int m = names.size();
   for ( j = 0; j < m; ++j ) {
     const string& dname = names[j];
     if ( dname.substr( 0, 5 ) != "refTo" ) continue;
     const compcc_ref* ref = cand.userData<compcc_ref>( dname );
-    os << dname << " : " << ref->get() << endl;
+    const pat::CompositeCandidate* cptr = ref->get();
+    os << dname << " : " << ( cptr == nullptr ? -2 :
+                            ( ( iter = idMap.find( cptr ) ) == iend ?
+                            -1 : iter->second ) );
+    if ( writePtr ) os << " : " << cptr;
+    os << endl;
   }
 
   return;

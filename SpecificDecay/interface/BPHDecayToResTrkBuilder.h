@@ -3,8 +3,8 @@
 /** \class BPHDecayToResTrkBuilder
  *
  *  Description: 
- *     Class to build a particle decaying to a resonance, decaying itself
- *     to an opposite charged particles pair, and an additional track
+ *     Class to build a particle decaying to a particle, decaying itself
+ *     in cascade, and an additional track, for generic particle types
  *
  *  \author Paolo Ronchese INFN Padova
  *
@@ -13,7 +13,9 @@
 //----------------------
 // Base Class Headers --
 //----------------------
+#include "BPHAnalysis/SpecificDecay/interface/BPHDecayToResTrkBuilderBase.h"
 #include "BPHAnalysis/SpecificDecay/interface/BPHDecayConstrainedBuilder.h"
+#include "BPHAnalysis/SpecificDecay/interface/BPHDecaySpecificBuilder.h"
 
 //------------------------------------
 // Collaborating Class Declarations --
@@ -21,11 +23,7 @@
 #include "BPHAnalysis/SpecificDecay/interface/BPHParticlePtSelect.h"
 #include "BPHAnalysis/SpecificDecay/interface/BPHParticleEtaSelect.h"
 
-#include "BPHAnalysis/RecoDecay/interface/BPHRecoBuilder.h"
-#include "BPHAnalysis/RecoDecay/interface/BPHRecoCandidate.h"
-#include "BPHAnalysis/RecoDecay/interface/BPHPlusMinusCandidate.h"
-
-#include "FWCore/Framework/interface/Event.h"
+#include "FWCore/Framework/interface/EventSetup.h"
 
 class BPHParticleNeutralVeto;
 
@@ -39,17 +37,30 @@ class BPHParticleNeutralVeto;
 //              -- Class Interface --
 //              ---------------------
 
-class BPHDecayToResTrkBuilder: public BPHDecayConstrainedBuilder {
+template <class ProdType, class ResType>
+class BPHDecayToResTrkBuilder:
+      public BPHDecayToResTrkBuilderBase,
+      public BPHDecayConstrainedBuilder<ProdType,ResType>,
+      public BPHDecaySpecificBuilder<ProdType> {
 
  public:
+
+  using typename BPHDecayGenericBuilder    <ProdType        >::prod_ptr;
+  using typename BPHDecayConstrainedBuilder<ProdType,ResType>:: res_ptr;
 
   /** Constructor
    */
   BPHDecayToResTrkBuilder( const edm::EventSetup& es,
       const std::string& resName, double resMass, double resWidth,
-      const std::vector<BPHPlusMinusConstCandPtr>& resCollection,
+      const std::vector<res_ptr>& resCollection,
       const std::string& trkName, double trkMass, double trkSigma,
-      const BPHRecoBuilder::BPHGenericCollection*  trkCollection );
+      const BPHRecoBuilder::BPHGenericCollection* trkCollection ):
+   BPHDecayGenericBuilderBase( es, nullptr ),
+   BPHDecayConstrainedBuilderBase( resName, resMass, resWidth ),
+   BPHDecayToResTrkBuilderBase( trkName, trkMass, trkSigma, trkCollection ),
+   BPHDecayConstrainedBuilder<ProdType,
+                              ResType>( resCollection ) {
+  }
 
   // deleted copy constructor and assignment operator
   BPHDecayToResTrkBuilder           ( const BPHDecayToResTrkBuilder& x )
@@ -59,34 +70,18 @@ class BPHDecayToResTrkBuilder: public BPHDecayConstrainedBuilder {
 
   /** Destructor
    */
-  ~BPHDecayToResTrkBuilder() override;
+  ~BPHDecayToResTrkBuilder() override {}
 
-  /** Operations
-   */
-  /// build candidates
-  std::vector<BPHRecoConstCandPtr> build();
+ protected:
 
-  /// set cuts
-  void setTrkPtMin  ( double pt  );
-  void setTrkEtaMax ( double eta );
-
-  /// get current cuts
-  double getTrkPtMin  () const { return  ptSel->getPtMin (); }
-  double getTrkEtaMax () const { return etaSel->getEtaMax(); }
-
- private:
-
-  std::string tName;
-  double tMass;
-  double tSigma;
-
-  const BPHRecoBuilder::BPHGenericCollection*  tCollection;
-
-  BPHParticleNeutralVeto* tknVeto;
-  BPHParticlePtSelect   *   ptSel;
-  BPHParticleEtaSelect  *  etaSel;
-
-  std::vector<BPHRecoConstCandPtr> recList;
+  BPHDecayToResTrkBuilder(
+      const std::vector<res_ptr>& resCollection,
+      const std::string& trkName, double trkMass, double trkSigma,
+      const BPHRecoBuilder::BPHGenericCollection* trkCollection ):
+   BPHDecayToResTrkBuilderBase( trkName, trkMass, trkSigma, trkCollection ),
+   BPHDecayConstrainedBuilder<ProdType,
+                              ResType>( resCollection ) {
+  }
 
 };
 

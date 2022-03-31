@@ -38,7 +38,8 @@ class BPHMassCuts {
   /** Constructor
    */
   BPHMassCuts( double minMass, double maxMass ): mMin( minMass ),
-                                                 mMax( maxMass ) {}
+                                                 mMax( maxMass ) {
+  }
 
   // deleted copy constructor and assignment operator
   BPHMassCuts           ( const BPHMassCuts& x ) = delete;

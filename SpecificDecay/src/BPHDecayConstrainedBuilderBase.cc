@@ -8,7 +8,7 @@
 //-----------------------
 // This Class' Header --
 //-----------------------
-#include "BPHAnalysis/SpecificDecay/interface/BPHDecayConstrainedBuilder.h"
+#include "BPHAnalysis/SpecificDecay/interface/BPHDecayConstrainedBuilderBase.h"
 
 //-------------------------------
 // Collaborating Class Headers --
@@ -20,6 +20,7 @@
 //---------------
 // C++ Headers --
 //---------------
+#include <iostream>
 using namespace std;
 
 //-------------------
@@ -30,23 +31,33 @@ using namespace std;
 //----------------
 // Constructors --
 //----------------
-BPHDecayConstrainedBuilder::BPHDecayConstrainedBuilder( const edm::EventSetup& es,
-    const std::string& resName, double resMass, double resWidth,
-    const std::vector<BPHPlusMinusConstCandPtr>& resCollection ):
- BPHDecayGenericBuilder( es, new BPHMassFitSelect( resName, resMass, resWidth,
-                                                   -2.0e+06, -1.0e+06 ) ),
+BPHDecayConstrainedBuilderBase::BPHDecayConstrainedBuilderBase(
+    const edm::EventSetup& es,
+    const string& resName, double resMass, double resWidth ):
+ BPHDecayConstrainedBuilderBase( resName, resMass, resWidth ) {
+  evSetup = &es;
+}
+
+
+BPHDecayConstrainedBuilderBase::BPHDecayConstrainedBuilderBase(
+    const string& resName, double resMass, double resWidth ):
  rName( resName ),
  rMass( resMass ),
  rWidth( resWidth ),
- rCollection( &resCollection ),
  resoSel( new BPHMassSelect( -2.0e+06, -1.0e+06 ) ),
  massConstr( true ) {
+  mFitSel = new BPHMassFitSelect( resName, resMass, resWidth,
+                                  -2.0e+06, -1.0e+06 );
+}
+
+
+BPHDecayConstrainedBuilderBase::BPHDecayConstrainedBuilderBase() {
 }
 
 //--------------
 // Destructor --
 //--------------
-BPHDecayConstrainedBuilder::~BPHDecayConstrainedBuilder() {
+BPHDecayConstrainedBuilderBase::~BPHDecayConstrainedBuilderBase() {
   delete resoSel;
 }
 
@@ -54,30 +65,30 @@ BPHDecayConstrainedBuilder::~BPHDecayConstrainedBuilder() {
 // Operations --
 //--------------
 /// set cuts
-void BPHDecayConstrainedBuilder::setResMassMin( double m ) {
-  updated = false;
+void BPHDecayConstrainedBuilderBase::setResMassMin( double m ) {
+  outdated = true;
   resoSel->setMassMin( m );
   return;
 }
 
 
-void BPHDecayConstrainedBuilder::setResMassMax( double m ) {
-  updated = false;
+void BPHDecayConstrainedBuilderBase::setResMassMax( double m ) {
+  outdated = true;
   resoSel->setMassMax( m );
   return;
 }
 
 
-void BPHDecayConstrainedBuilder::setResMassRange( double mMin, double mMax ) {
-  updated = false;
+void BPHDecayConstrainedBuilderBase::setResMassRange( double mMin, double mMax ) {
+  outdated = true;
   resoSel->setMassMin( mMin );
   resoSel->setMassMax( mMax );
   return;
 }
 
 
-void BPHDecayConstrainedBuilder::setConstr( bool flag ) {
-  updated = false;
+void BPHDecayConstrainedBuilderBase::setConstr( bool flag ) {
+  outdated = true;
   if ( flag == massConstr ) return;
   double mMin = mFitSel->getMassMin();
   double mMax = mFitSel->getMassMax();

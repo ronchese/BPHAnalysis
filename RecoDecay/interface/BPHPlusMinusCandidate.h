@@ -13,6 +13,7 @@
 //----------------------
 // Base Class Headers --
 //----------------------
+#include "BPHAnalysis/RecoDecay/interface/BPHPlusMinusCandidatePtr.h"
 #include "BPHAnalysis/RecoDecay/interface/BPHRecoCandidate.h"
 #include "BPHAnalysis/RecoDecay/interface/BPHPlusMinusVertex.h"
 
@@ -37,6 +38,9 @@ class BPHPlusMinusCandidate: public BPHRecoCandidate,
   friend class BPHRecoCandidate;
 
  public:
+
+  typedef BPHPlusMinusCandidatePtr       pointer;
+  typedef BPHPlusMinusConstCandPtr const_pointer;
 
   /** Constructor
    */
@@ -67,6 +71,18 @@ class BPHPlusMinusCandidate: public BPHRecoCandidate,
   /// specified in the BPHRecoBuilder, with given names for 
   /// positive and negative particle
   /// charge selection is applied inside
+  struct BuilderParameters {
+    const std::string* posName;
+    const std::string* negName;
+    double constrMass;
+    double constrSigma;
+  };
+  static std::vector<BPHPlusMinusConstCandPtr> build(
+                                               const BPHRecoBuilder& builder,
+                                               const BuilderParameters& par ) {
+    return build( builder, *par.posName,   *par.negName,
+                            par.constrMass, par.constrSigma );
+  }
   static std::vector<BPHPlusMinusConstCandPtr> build(
                                                const BPHRecoBuilder& builder,
                                                const std::string& nPos,

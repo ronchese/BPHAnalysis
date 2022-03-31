@@ -13,14 +13,15 @@
 //-------------------------------
 // Collaborating Class Headers --
 //-------------------------------
-#include "BPHAnalysis/RecoDecay/interface/BPHRecoBuilder.h"
-#include "BPHAnalysis/RecoDecay/interface/BPHPlusMinusCandidate.h"
-#include "BPHAnalysis/RecoDecay/interface/BPHTrackReference.h"
+#include "BPHAnalysis/SpecificDecay/interface/BPHDecayGenericBuilderBase.h"
 #include "BPHAnalysis/SpecificDecay/interface/BPHParticlePtSelect.h"
 #include "BPHAnalysis/SpecificDecay/interface/BPHParticleEtaSelect.h"
 #include "BPHAnalysis/SpecificDecay/interface/BPHMassSelect.h"
 #include "BPHAnalysis/SpecificDecay/interface/BPHChi2Select.h"
 #include "BPHAnalysis/SpecificDecay/interface/BPHParticleMasses.h"
+#include "BPHAnalysis/RecoDecay/interface/BPHRecoBuilder.h"
+#include "BPHAnalysis/RecoDecay/interface/BPHPlusMinusCandidate.h"
+#include "BPHAnalysis/RecoDecay/interface/BPHTrackReference.h"
 #include "DataFormats/Candidate/interface/Candidate.h"
 #include "DataFormats/Math/interface/LorentzVector.h"
 
@@ -39,20 +40,20 @@ using namespace std;
 //----------------
 BPHDecayToChargedXXbarBuilder::BPHDecayToChargedXXbarBuilder(
                const edm::EventSetup& es,
-               const std::string& dPosName, const std::string& dNegName,
+               const string& dPosName, const string& dNegName,
                double daugMass, double daugSigma,
                const BPHRecoBuilder::BPHGenericCollection* posCollection,
                const BPHRecoBuilder::BPHGenericCollection* negCollection ):
- BPHDecayGenericBuilder( es ),
+ BPHDecayGenericBuilderBase( es ),
+ ptMin ( -1.0 ),
+ etaMax( 10.0 ),
+ dzMax( 1.0 ),
  pName ( dPosName  ),
  nName ( dNegName  ),
  dMass ( daugMass  ),
  dSigma( daugSigma ),
  pCollection( posCollection ),
- nCollection( negCollection ),
- ptMin ( -1.0 ),
- etaMax( 10.0 ),
- dzMax( 1.0 ) {
+ nCollection( negCollection ) {
 }
 
 //--------------
@@ -64,11 +65,30 @@ BPHDecayToChargedXXbarBuilder::~BPHDecayToChargedXXbarBuilder() {
 //--------------
 // Operations --
 //--------------
-vector<BPHPlusMinusConstCandPtr> BPHDecayToChargedXXbarBuilder::build() {
 
-  if ( updated ) return recList;
+/// set cuts
+void BPHDecayToChargedXXbarBuilder::setPtMin( double pt ) {
+  outdated = true;
+  ptMin = pt;
+  return;
+}
 
-  recList.clear();
+
+void BPHDecayToChargedXXbarBuilder::setEtaMax( double eta ) {
+  outdated = true;
+  etaMax = eta;
+  return;
+}
+
+
+void BPHDecayToChargedXXbarBuilder::setDzMax( double dz ) {
+  outdated = true;
+  dzMax = dz;
+  return;
+}
+
+/// build candidates
+void BPHDecayToChargedXXbarBuilder::fillRecList() {
 
   // extract basic informations from input collections
 
@@ -126,30 +146,8 @@ vector<BPHPlusMinusConstCandPtr> BPHDecayToChargedXXbarBuilder::build() {
   for ( iPos = 0; iPos < nPos; ++iPos ) delete pList[iPos];
   for ( iNeg = 0; iNeg < nNeg; ++iNeg ) delete nList[iNeg];
 
-  updated = true;
-  return recList;
-
-}
-
-/// set cuts
-void BPHDecayToChargedXXbarBuilder::setPtMin( double pt ) {
-  updated = false;
-  ptMin = pt;
   return;
-}
 
-
-void BPHDecayToChargedXXbarBuilder::setEtaMax( double eta ) {
-  updated = false;
-  etaMax = eta;
-  return;
-}
-
-
-void BPHDecayToChargedXXbarBuilder::setDzMax( double dz ) {
-  updated = false;
-  dzMax = dz;
-  return;
 }
 
 
@@ -162,8 +160,8 @@ void BPHDecayToChargedXXbarBuilder::addParticle(
   for ( i = 0; i < n; ++i ) {
     const reco::Candidate& cand = collection->get( i );
     int q = cand.charge();
-    if ( ( charge > 0 ) && ( q <= 0 )  ) continue;
-    if ( ( charge < 0 ) && ( q >= 0 )  ) continue;
+    if ( ( charge > 0 ) && ( q <= 0 ) ) continue;
+    if ( ( charge < 0 ) && ( q >= 0 ) ) continue;
     const reco::Candidate::LorentzVector p4 = cand.p4();
     if ( p4.pt () <  ptMin ) continue;
     if ( p4.eta() > etaMax ) continue;

@@ -112,19 +112,19 @@ class BPHKinematicFit: public virtual BPHDecayVertex {
   // pointer used to retrieve informations from other bases
   BPHKinematicFit( const BPHKinematicFit* ptr );
 
-  /// add a simple particle giving it a name
-  /// particles are cloned, eventually specifying a different mass
-  /// and a sigma
+  // add a simple particle giving it a name
+  // particles are cloned, eventually specifying a different mass
+  // and a sigma
   virtual void addK( const std::string& name,
                      const reco::Candidate* daug,
                      double mass = -1.0, double sigma = -1.0 );
-  /// add a simple particle and specify a criterion to search for
-  /// the associated track
+  // add a simple particle and specify a criterion to search for
+  // the associated track
   virtual void addK( const std::string& name,
                      const reco::Candidate* daug,
                      const std::string& searchList,
                      double mass = -1.0, double sigma = -1.0 );
-  /// add a previously reconstructed particle giving it a name
+  // add a previously reconstructed particle giving it a name
   virtual void addK( const std::string& name,
                      const BPHRecoConstCandPtr& comp );
 

@@ -55,8 +55,7 @@ class BPHPlusMinusVertex: public virtual BPHDecayVertex {
 
   BPHPlusMinusVertex( const edm::EventSetup* es );
 
-  // utility functions to check/enforce the number of decay particles
-  // at 2
+  // utility functions to check/enforce the number of decay particles at 2
   template<class T> static
   bool chkName( const T& cont,
                 const std::string& name,

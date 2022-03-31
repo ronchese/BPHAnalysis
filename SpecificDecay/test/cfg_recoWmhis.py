@@ -3,7 +3,7 @@ import FWCore.ParameterSet.Config as cms
 process = cms.Process("bphAnalysis")
 
 #process.maxEvents = cms.untracked.PSet( input = cms.untracked.int32(-1) )
-process.maxEvents = cms.untracked.PSet( input = cms.untracked.int32(10000) )
+process.maxEvents = cms.untracked.PSet( input = cms.untracked.int32(100) )
 #filename = open('/lustre/cmswork/ronchese/pat_ntu/cmssw910/chkMini02/src/PDAnalysis/EDM/prod/datafiles_Vmini/mc/BsToJpsiPhi_BMuonFilter_TuneCUEP8M1_13TeV-pythia8-evtgen_mini910/BsToJpsiPhi_BMuonFilter_TuneCUEP8M1_13TeV-pythia8-evtgen_mini910_020.list', 'r')
 #fileList = cms.untracked.vstring( filename.readlines() )
 
@@ -35,7 +35,8 @@ process.patSelectedTracks = patGenericParticles.clone(src=cms.InputTag("Candidat
 
 process.source = cms.Source ("PoolSource", 
 # Charmonium
-    fileNames = cms.untracked.vstring('file:/lustre/cmswork/cmsdata/ronchese/store/data/Run2018A/Charmonium/MINIAOD/PromptReco-v2/000/316/239/00000/08BFAB4F-1359-E811-B01F-FA163E5285EC.root')
+    fileNames = cms.untracked.vstring('file:/lustre/cmswork/cmsdata/ronchese/store/data/Run2018D/Charmonium/MINIAOD/UL2018_MiniAODv2-v1/240003/5CB07A3C-D621-254F-B307-B0D3746904A2.root')
+#    fileNames = cms.untracked.vstring('file:/lustre/cmswork/cmsdata/ronchese/store/data/Run2018A/Charmonium/MINIAOD/PromptReco-v2/000/316/239/00000/08BFAB4F-1359-E811-B01F-FA163E5285EC.root')
 # DoubleMuon
 #    fileNames = cms.untracked.vstring('file:/lustre/cmswork/cmsdata/ronchese/store/data/Run2018A/DoubleMuon/MINIAOD/PromptReco-v2/000/316/239/00000/3AC438F4-1859-E811-8996-FA163ECC1FE3.root')
 # DoubleMuonLowMass
@@ -53,6 +54,18 @@ process.GlobalTag = GlobalTag(process.GlobalTag, 'auto:run2_data', '')
 #process.GlobalTag = GlobalTag(process.GlobalTag, '101X_dataRun2_Prompt_v9', '')
 
 from BPHAnalysis.SpecificDecay.recoSelectForWrite_cfi import recoSelect
+#from BPHAnalysis.SpecificDecay.recoSelectForWrite_cfi import Kx0_pset
+#Kx0_pset.writeCandidate = cms.bool( False )
+#from BPHAnalysis.SpecificDecay.recoSelectForWrite_cfi import Bu_pset
+#Bu_pset.writeCandidate = cms.bool( False )
+#from BPHAnalysis.SpecificDecay.recoSelectForWrite_cfi import Bs_pset
+#Bs_pset.massFitMax = cms.double( -6.00 )
+#from BPHAnalysis.SpecificDecay.recoSelectForWrite_cfi import X3872_pset
+#X3872_pset.massMin = cms.double( -7.00 )
+#X3872_pset.massMax = cms.double( -6.00 )
+#X3872_pset.probMin = cms.double( -1.00 )
+#X3872_pset.massFitMin = cms.double( -7.00 )
+#X3872_pset.massFitMax = cms.double( -6.00 )
 
 process.bphWriteSpecificDecay = cms.EDProducer('BPHWriteSpecificDecay',
     pVertexLabel = cms.string('offlineSlimmedPrimaryVertices'),
@@ -62,9 +75,9 @@ process.bphWriteSpecificDecay = cms.EDProducer('BPHWriteSpecificDecay',
 #    ccCandsLabel = cms.string('onia2MuMuPAT::RECO'),
 # for MiniAOD input
     patMuonLabel = cms.string('slimmedMuons'),
-    pcCandsLabel = cms.string('packedPFCandidates::RECO'),
-    kSCandsLabel = cms.string('slimmedKshortVertices::RECO'),
-    lSCandsLabel = cms.string('slimmedLambdaVertices::RECO'),
+    pcCandsLabel = cms.string('packedPFCandidates::PAT'),
+    kSCandsLabel = cms.string('slimmedKshortVertices::PAT'),
+    lSCandsLabel = cms.string('slimmedLambdaVertices::PAT'),
     oniaName  = cms.string('oniaFitted'),
     sdName    = cms.string('kx0Cand'),
     ssName    = cms.string('phiCand'),
@@ -102,6 +115,7 @@ process.bphHistoSpecificDecay = cms.EDAnalyzer('BPHHistoSpecificDecay',
     bcCandsLabel = cms.string('bphWriteSpecificDecay:bcFitted:bphAnalysis'),
     x3872CandsLabel = cms.string('bphWriteSpecificDecay:x3872Fitted:bphAnalysis')
 )
+
 
 process.out = cms.OutputModule(
     "PoolOutputModule",

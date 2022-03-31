@@ -40,12 +40,12 @@ using namespace std;
 //----------------
 BPHDecayToTkpTknSymChargeBuilder::BPHDecayToTkpTknSymChargeBuilder(
        const edm::EventSetup& es,
-       const std::string& daug1Name, double daug1Mass, double daug1Sigma,
-       const std::string& daug2Name, double daug2Mass, double daug2Sigma,
+       const string& daug1Name, double daug1Mass, double daug1Sigma,
+       const string& daug2Name, double daug2Mass, double daug2Sigma,
        const BPHRecoBuilder::BPHGenericCollection* posCollection,
        const BPHRecoBuilder::BPHGenericCollection* negCollection,
        double expectedMass ):
- BPHDecayGenericBuilder( es ),
+ BPHDecayGenericBuilderBase( es ),
  d1Name ( daug1Name  ),
  d1Mass ( daug1Mass  ),
  d1Sigma( daug1Sigma ),
@@ -71,11 +71,7 @@ BPHDecayToTkpTknSymChargeBuilder::~BPHDecayToTkpTknSymChargeBuilder() {
 //--------------
 // Operations --
 //--------------
-vector<BPHPlusMinusConstCandPtr> BPHDecayToTkpTknSymChargeBuilder::build() {
-
-  if ( updated ) return recList;
-
-  recList.clear();
+void BPHDecayToTkpTknSymChargeBuilder::fillRecList() {
 
   // extract basic informations from input collections
 
@@ -170,42 +166,41 @@ vector<BPHPlusMinusConstCandPtr> BPHDecayToTkpTknSymChargeBuilder::build() {
   for ( iPos = 0; iPos < nPos; ++iPos ) delete pList[iPos];
   for ( iNeg = 0; iNeg < nNeg; ++iNeg ) delete nList[iNeg];
 
-  updated = true;
-  return recList;
+  return;
 
 }
 
 /// set cuts
 void BPHDecayToTkpTknSymChargeBuilder::setTrk1PtMin( double pt ) {
-  updated = false;
+  outdated = true;
   pt1Min = pt;
   return;
 }
 
 
 void BPHDecayToTkpTknSymChargeBuilder::setTrk2PtMin( double pt ) {
-  updated = false;
+  outdated = true;
   pt2Min = pt;
   return;
 }
 
 
 void BPHDecayToTkpTknSymChargeBuilder::setTrk1EtaMax( double eta ) {
-  updated = false;
+  outdated = true;
   eta1Max = eta;
   return;
 }
 
 
 void BPHDecayToTkpTknSymChargeBuilder::setTrk2EtaMax( double eta ) {
-  updated = false;
+  outdated = true;
   eta2Max = eta;
   return;
 }
 
 
 void BPHDecayToTkpTknSymChargeBuilder::setDzMax( double dz ) {
-  updated = false;
+  outdated = true;
   dzMax = dz;
   return;
 }

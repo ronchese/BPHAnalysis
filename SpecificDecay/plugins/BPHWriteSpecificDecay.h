@@ -208,7 +208,7 @@ class BPHWriteSpecificDecay:
       const BPHPlusMinusCandidate* pmp =
             dynamic_cast<const BPHPlusMinusCandidate*>( ptr.get() );
       if ( pmp != nullptr ) {
-        cc.addUserData ( "cowboy", pmp->isCowboy  ()            );
+        cc.addUserInt( "cowboy", ( pmp->isCowboy() ? +1 : -1 )  );
 //        cc.addUserFloat(    "dca", pmp->cAppInRPhi().distance() );
       }
       if ( writeVertex ) cc.addUserData( "vertex" , ptr->vertex() );

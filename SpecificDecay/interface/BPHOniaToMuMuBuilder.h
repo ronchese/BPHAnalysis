@@ -12,7 +12,8 @@
 //----------------------
 // Base Class Headers --
 //----------------------
-
+#include "BPHAnalysis/SpecificDecay/interface/BPHDecayGenericBuilderBase.h"
+#include "BPHAnalysis/SpecificDecay/interface/BPHDecayGenericBuilder.h"
 
 //------------------------------------
 // Collaborating Class Declarations --
@@ -21,7 +22,7 @@
 #include "BPHAnalysis/RecoDecay/interface/BPHRecoCandidate.h"
 #include "BPHAnalysis/RecoDecay/interface/BPHPlusMinusCandidate.h"
 
-#include "FWCore/Framework/interface/Event.h"
+#include "FWCore/Framework/interface/EventSetup.h"
 
 class BPHMuonPtSelect;
 class BPHMuonEtaSelect;
@@ -42,11 +43,13 @@ class BPHVertexSelect;
 //              -- Class Interface --
 //              ---------------------
 
-class BPHOniaToMuMuBuilder {
+class BPHOniaToMuMuBuilder:
+      public virtual BPHDecayGenericBuilderBase,
+      public virtual BPHDecayGenericBuilder<BPHPlusMinusCandidate> {
 
  public:
 
-  enum oniaType { Phi , Psi1, Psi2, Ups , Ups1, Ups2, Ups3 };
+  enum oniaType { NRes, Phi , Psi1, Psi2, Ups , Ups1, Ups2, Ups3 };
 
   /** Constructor
    */
@@ -66,7 +69,7 @@ class BPHOniaToMuMuBuilder {
   /** Operations
    */
   /// build resonance candidates
-  std::vector<BPHPlusMinusConstCandPtr> build();
+  void fillRecList() override;
 
   /// extract list of candidates of specific type
   /// candidates are rebuilt applying corresponding mass constraint
@@ -103,7 +106,6 @@ class BPHOniaToMuMuBuilder {
   std::string muPosName;
   std::string muNegName;
 
-  const edm::EventSetup* evSetup;
   const BPHRecoBuilder::BPHGenericCollection* posCollection;
   const BPHRecoBuilder::BPHGenericCollection* negCollection;
 
@@ -114,13 +116,11 @@ class BPHOniaToMuMuBuilder {
     BPHChi2Select   * chi2Sel;
     double mass;
     double sigma;
-    bool updated;
+    bool outdated;
   };
-  bool updated;
 
   std::map< oniaType, OniaParameters > oniaPar;
   std::map< oniaType, std::vector<BPHPlusMinusConstCandPtr> > oniaList;
-  std::vector<BPHPlusMinusConstCandPtr> fullList;
 
   void setNotUpdated();
   void setParameters( oniaType type,

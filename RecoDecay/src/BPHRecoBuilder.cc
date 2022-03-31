@@ -216,6 +216,20 @@ const edm::EventSetup* BPHRecoBuilder::eventSetup() const {
 }
 
 
+const reco::Candidate* BPHRecoBuilder::getDaug( const string& name ) const {
+  map<string,const reco::Candidate*>::const_iterator iter =
+                                                     daugMap.find( name );
+  return ( iter == daugMap.end() ? nullptr : iter->second );
+}
+
+
+BPHRecoConstCandPtr BPHRecoBuilder::getComp( const string& name ) const {
+  map<string,BPHRecoConstCandPtr>::const_iterator iter =
+                                                  compMap.find( name );
+  return ( iter == compMap.end() ? nullptr : iter->second );
+}
+
+
 bool BPHRecoBuilder::sameTrack( const reco::Candidate* lCand,
                                 const reco::Candidate* rCand,
                                 double minPDifference ) {
@@ -270,17 +284,17 @@ void BPHRecoBuilder::build( vector<ComponentSet>& compList,
       if ( contained( compSet, cand ) ) continue;
       m = momSelector.size();
       for ( j = 0; j < m; ++j ) {
-        if ( !momSelector[j]->accept( *cand ) ) { skip = true; break; }
+        if ( !momSelector[j]->accept( *cand, this ) ) { skip = true; break; }
       }
       if ( skip ) continue;
       m = vtxSelector.size();
       for ( j = 0; j < m; ++j ) {
-        if ( !vtxSelector[j]->accept( *cand ) ) { skip = true; break; }
+        if ( !vtxSelector[j]->accept( *cand, this ) ) { skip = true; break; }
       }
       if ( skip ) continue;
       m = fitSelector.size();
       for ( j = 0; j < m; ++j ) {
-        if ( !fitSelector[j]->accept( *cand ) ) { skip = true; break; }
+        if ( !fitSelector[j]->accept( *cand, this ) ) { skip = true; break; }
       }
       if ( skip ) continue;
       compMap[*source->name] = cand;

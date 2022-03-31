@@ -8,7 +8,7 @@
 //-----------------------
 // This Class' Header --
 //-----------------------
-#include "BPHAnalysis/SpecificDecay/interface/BPHDecayGenericBuilder.h"
+#include "BPHAnalysis/SpecificDecay/interface/BPHDecayGenericBuilderBase.h"
 
 //-------------------------------
 // Collaborating Class Headers --
@@ -18,6 +18,7 @@
 //---------------
 // C++ Headers --
 //---------------
+#include <iostream>
 using namespace std;
 
 //-------------------
@@ -28,22 +29,28 @@ using namespace std;
 //----------------
 // Constructors --
 //----------------
-BPHDecayGenericBuilder::BPHDecayGenericBuilder( const edm::EventSetup& es,
-                                                BPHMassFitSelect* mfs ):
- evSetup( &es ),
+BPHDecayGenericBuilderBase::BPHDecayGenericBuilderBase():
+ evSetup( nullptr ),
  massSel( new BPHMassSelect( -2.0e+06, -1.0e+06 ) ),
  chi2Sel( new BPHChi2Select( -1.0 ) ),
- mFitSel( mfs ),
+ mFitSel( nullptr ),
  minPDiff( 1.0e-4 ),
- updated( false ) {
-  if ( mFitSel == nullptr )
-  mFitSel = new BPHMassFitSelect( -2.0e+06, -1.0e+06 );
+ outdated( true ) {
+}
+
+
+BPHDecayGenericBuilderBase::BPHDecayGenericBuilderBase(
+                            const edm::EventSetup& es,
+                            BPHMassFitSelect* mfs ):
+ BPHDecayGenericBuilderBase() {
+  evSetup = &es;
+  mFitSel = mfs;
 }
 
 //--------------
 // Destructor --
 //--------------
-BPHDecayGenericBuilder::~BPHDecayGenericBuilder() {
+BPHDecayGenericBuilderBase::~BPHDecayGenericBuilderBase() {
   delete massSel;
   delete chi2Sel;
   delete mFitSel;
@@ -53,51 +60,51 @@ BPHDecayGenericBuilder::~BPHDecayGenericBuilder() {
 // Operations --
 //--------------
 /// set cuts
-void BPHDecayGenericBuilder::setMassMin( double m ) {
-  updated = false;
+void BPHDecayGenericBuilderBase::setMassMin( double m ) {
+  outdated = true;
   massSel->setMassMin( m );
   return;
 }
 
 
-void BPHDecayGenericBuilder::setMassMax( double m ) {
-  updated = false;
+void BPHDecayGenericBuilderBase::setMassMax( double m ) {
+  outdated = true;
   massSel->setMassMax( m );
   return;
 }
 
 
-void BPHDecayGenericBuilder::setMassRange( double mMin, double mMax ) {
-  updated = false;
+void BPHDecayGenericBuilderBase::setMassRange( double mMin, double mMax ) {
+  outdated = true;
   massSel->setMassMin( mMin );
   massSel->setMassMax( mMax );
   return;
 }
 
 
-void BPHDecayGenericBuilder::setProbMin( double p ) {
-  updated = false;
+void BPHDecayGenericBuilderBase::setProbMin( double p ) {
+  outdated = true;
   chi2Sel->setProbMin ( p );
   return;
 }
 
 
-void BPHDecayGenericBuilder::setMassFitMin( double m ) {
-  updated = false;
+void BPHDecayGenericBuilderBase::setMassFitMin( double m ) {
+  outdated = true;
   mFitSel->setMassMin( m );
   return;
 }
 
 
-void BPHDecayGenericBuilder::setMassFitMax( double m ) {
-  updated = false;
+void BPHDecayGenericBuilderBase::setMassFitMax( double m ) {
+  outdated = true;
   mFitSel->setMassMax( m );
   return;
 }
 
 
-void BPHDecayGenericBuilder::setMassFitRange( double mMin, double mMax ) {
-  updated = false;
+void BPHDecayGenericBuilderBase::setMassFitRange( double mMin, double mMax ) {
+  outdated = true;
   mFitSel->setMassMin( mMin );
   mFitSel->setMassMax( mMax );
   return;

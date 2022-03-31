@@ -17,12 +17,13 @@
 //------------------------------------
 // Collaborating Class Declarations --
 //------------------------------------
+#include "BPHAnalysis/SpecificDecay/interface/BPHDecayGenericBuilderBase.h"
+#include "BPHAnalysis/SpecificDecay/interface/BPHParticleMasses.h"
 #include "BPHAnalysis/RecoDecay/interface/BPHRecoBuilder.h"
 #include "BPHAnalysis/RecoDecay/interface/BPHRecoCandidate.h"
 #include "BPHAnalysis/RecoDecay/interface/BPHPlusMinusCandidate.h"
-#include "BPHAnalysis/SpecificDecay/interface/BPHParticleMasses.h"
 
-#include "FWCore/Framework/interface/Event.h"
+#include "FWCore/Framework/interface/EventSetup.h"
 
 //---------------
 // C++ Headers --
@@ -43,15 +44,13 @@ class BPHKx0ToKPiBuilder: public BPHDecayToTkpTknSymChargeBuilder {
   BPHKx0ToKPiBuilder( const edm::EventSetup& es,
        const BPHRecoBuilder::BPHGenericCollection* posCollection,
        const BPHRecoBuilder::BPHGenericCollection* negCollection ):
-   BPHDecayToTkpTknSymChargeBuilder( es,
-                            "Kaon", 
-                            BPHParticleMasses::pionMass,
-                            BPHParticleMasses::pionMass,
-                            "Pion",
-                            BPHParticleMasses::kaonMass,
-                            BPHParticleMasses::kaonMSigma,
-                            posCollection, negCollection,
-                            BPHParticleMasses::kx0Mass ) {
+   BPHDecayGenericBuilderBase( es ),
+   BPHDecayToTkpTknSymChargeBuilder( es, "Kaon", BPHParticleMasses::kaonMass,
+                                                 BPHParticleMasses::kaonMSigma,
+                                         "Pion", BPHParticleMasses::pionMass,
+                                                 BPHParticleMasses::pionMSigma,
+                                     posCollection, negCollection,
+                                     BPHParticleMasses::kx0Mass ) {
     setTrk1PtMin (  0.7 );
     setTrk2PtMin (  0.7 );
     setTrk1EtaMax( 10.0 );
@@ -71,11 +70,11 @@ class BPHKx0ToKPiBuilder: public BPHDecayToTkpTknSymChargeBuilder {
   /** Operations
    */
   /// set cuts
-  void setPiPtMin ( double pt  ) { setTrk1PtMin (  pt ); }
+  void setPiPtMin ( double  pt ) { setTrk1PtMin (  pt ); }
   void setPiEtaMax( double eta ) { setTrk1EtaMax( eta ); }
-  void setKPtMin  ( double pt  ) { setTrk2PtMin (  pt ); }
+  void setKPtMin  ( double  pt ) { setTrk2PtMin (  pt ); }
   void setKEtaMax ( double eta ) { setTrk2EtaMax( eta ); }
-  void setPtMin   ( double pt  ) { setTrk1PtMin (  pt );
+  void setPtMin   ( double  pt ) { setTrk1PtMin (  pt );
                                    setTrk2PtMin (  pt ); }
   void setEtaMax  ( double eta ) { setTrk1EtaMax( eta );
                                    setTrk2EtaMax( eta ); }

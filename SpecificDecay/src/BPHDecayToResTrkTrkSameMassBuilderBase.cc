@@ -1,0 +1,116 @@
+/*
+ *  See header file for a description of this class.
+ *
+ *  \author Paolo Ronchese INFN Padova
+ *
+ */
+
+//-----------------------
+// This Class' Header --
+//-----------------------
+#include "BPHAnalysis/SpecificDecay/interface/BPHDecayToResTrkTrkSameMassBuilderBase.h"
+
+//-------------------------------
+// Collaborating Class Headers --
+//-------------------------------
+#include "BPHAnalysis/SpecificDecay/interface/BPHDecayGenericBuilderBase.h"
+#include "BPHAnalysis/SpecificDecay/interface/BPHDecayToChargedXXbarBuilder.h"
+#include "BPHAnalysis/SpecificDecay/interface/BPHParticleNeutralVeto.h"
+#include "BPHAnalysis/RecoDecay/interface/BPHRecoBuilder.h"
+#include "BPHAnalysis/RecoDecay/interface/BPHPlusMinusCandidate.h"
+#include "BPHAnalysis/RecoDecay/interface/BPHRecoCandidate.h"
+
+//---------------
+// C++ Headers --
+//---------------
+using namespace std;
+
+//-------------------
+// Initializations --
+//-------------------
+
+
+//----------------
+// Constructors --
+//----------------
+BPHDecayToResTrkTrkSameMassBuilderBase::BPHDecayToResTrkTrkSameMassBuilderBase(
+    const edm::EventSetup& es,
+    const string& resName, double resMass, double resWidth,
+    const string& posName, const std::string& negName,
+    double trkMass, double trkSigma,
+    const BPHRecoBuilder::BPHGenericCollection* posCollection,
+    const BPHRecoBuilder::BPHGenericCollection* negCollection ):
+ BPHDecayGenericBuilderBase( es, nullptr ),
+ BPHDecayConstrainedBuilderBase( resName, resMass, resWidth ),
+ pName( posName ),
+ nName( negName ),
+ tMass( trkMass ),
+ tSigma( trkSigma ),
+ pCollection( posCollection ),
+ nCollection( negCollection ),
+ ptMin (   0.0 ),
+ etaMax( 100.0 ) {
+}
+
+BPHDecayToResTrkTrkSameMassBuilderBase::BPHDecayToResTrkTrkSameMassBuilderBase(
+    const string& posName, const std::string& negName,
+    double trkMass, double trkSigma,
+    const BPHRecoBuilder::BPHGenericCollection* posCollection,
+    const BPHRecoBuilder::BPHGenericCollection* negCollection ):
+ pName( posName ),
+ nName( negName ),
+ tMass( trkMass ),
+ tSigma( trkSigma ),
+ pCollection( posCollection ),
+ nCollection( negCollection ),
+ ptMin (   0.0 ),
+ etaMax( 100.0 ) {
+}
+
+//--------------
+// Destructor --
+//--------------
+BPHDecayToResTrkTrkSameMassBuilderBase::~BPHDecayToResTrkTrkSameMassBuilderBase() {
+}
+
+//--------------
+// Operations --
+//--------------
+void BPHDecayToResTrkTrkSameMassBuilderBase::fillTrkTrkList() {
+
+  double mTotMax = massSel->getMassMax();
+  double mTpnMax = mTotMax - ( 0.8 * rMass );
+
+  BPHDecayToChargedXXbarBuilder ttBuilder( *evSetup, pName, nName,
+                                           tMass, tSigma,
+                                           pCollection, nCollection );
+  ttBuilder.setPtMin (  ptMin );
+  ttBuilder.setEtaMax( etaMax );
+  ttBuilder.setDzMax ( 1.0 );
+  ttBuilder.setMassMin( 0.0 );
+  if ( mTotMax >= 0.0 )
+  ttBuilder.setMassMax( mTpnMax );
+  else
+  ttBuilder.setMassMax( -1.0 );
+  ttBuilder.setMinPDiff( minPDiff );
+
+  ttPairs = ttBuilder.build();
+
+  return;
+
+}
+
+/// set cuts
+void BPHDecayToResTrkTrkSameMassBuilderBase::setTrkPtMin( double pt ) {
+  outdated = true;
+  ptMin = pt;
+  return;
+}
+
+
+void BPHDecayToResTrkTrkSameMassBuilderBase::setTrkEtaMax( double eta ) {
+  outdated = true;
+  etaMax = eta;
+  return;
+}
+

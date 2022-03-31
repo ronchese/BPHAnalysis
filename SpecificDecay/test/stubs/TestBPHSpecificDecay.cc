@@ -318,13 +318,13 @@ void TestBPHSpecificDecay::analyze( const edm::Event& ev,
 
   outF << "build and dump Bu" << endl;
   BPHBuToJPsiKBuilder* bu = nullptr;
-  if ( usePF ) bu = new BPHBuToJPsiKBuilder( es, lJPsi,//lFull,//lPsi1,
+  if ( usePF ) bu = new BPHBuToJPsiKBuilder( es, lJPsi,
                         BPHRecoBuilder::createCollection( pfCands ) );
   else
-  if ( usePC ) bu = new BPHBuToJPsiKBuilder( es, lJPsi,//lFull,//lPsi1,
+  if ( usePC ) bu = new BPHBuToJPsiKBuilder( es, lJPsi,
                         BPHRecoBuilder::createCollection( pcCands ) );
   else
-  if ( useGP ) bu = new BPHBuToJPsiKBuilder( es, lJPsi,//lFull,//lPsi1,
+  if ( useGP ) bu = new BPHBuToJPsiKBuilder( es, lJPsi,
                         BPHRecoBuilder::createCollection( gpCands ) );
 
   vector<BPHRecoConstCandPtr> lBu = bu->build();

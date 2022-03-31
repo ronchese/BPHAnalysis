@@ -14,15 +14,15 @@
 // Base Class Headers --
 //----------------------
 #include "BPHAnalysis/SpecificDecay/interface/BPHDecayGenericBuilder.h"
+#include "BPHAnalysis/SpecificDecay/interface/BPHDecayConstrainedBuilderBase.h"
 
 //------------------------------------
 // Collaborating Class Declarations --
 //------------------------------------
-#include "BPHAnalysis/RecoDecay/interface/BPHRecoBuilder.h"
 #include "BPHAnalysis/RecoDecay/interface/BPHRecoCandidate.h"
 #include "BPHAnalysis/RecoDecay/interface/BPHPlusMinusCandidate.h"
 
-#include "FWCore/Framework/interface/Event.h"
+#include "FWCore/Framework/interface/EventSetup.h"
 
 //---------------
 // C++ Headers --
@@ -34,15 +34,27 @@
 //              -- Class Interface --
 //              ---------------------
 
-class BPHDecayConstrainedBuilder: public BPHDecayGenericBuilder {
+template <class ProdType, class ResType>
+class BPHDecayConstrainedBuilder:
+      public virtual BPHDecayConstrainedBuilderBase,
+      public virtual BPHDecayGenericBuilder<ProdType> {
 
  public:
+
+  using typename BPHDecayGenericBuilder<ProdType>::prod_ptr;
+  typedef typename ResType::const_pointer res_ptr;
 
   /** Constructor
    */
   BPHDecayConstrainedBuilder( const edm::EventSetup& es,
       const std::string& resName, double resMass, double resWidth,
-      const std::vector<BPHPlusMinusConstCandPtr>& resCollection );
+      const std::vector<res_ptr>& resCollection ):
+   BPHDecayGenericBuilderBase( es ),
+   BPHDecayConstrainedBuilderBase( resName, resMass, resWidth ),
+   BPHDecayGenericBuilder<ProdType>( es, new BPHMassFitSelect(
+                                         resName, resMass, resWidth,
+                                         -2.0e+06, -1.0e+06 ) ),
+   rCollection( &resCollection ) {}
 
   // deleted copy constructor and assignment operator
   BPHDecayConstrainedBuilder           ( const BPHDecayConstrainedBuilder& x )
@@ -52,32 +64,32 @@ class BPHDecayConstrainedBuilder: public BPHDecayGenericBuilder {
 
   /** Destructor
    */
-  ~BPHDecayConstrainedBuilder() override;
-
-  /** Operations
-   */
-  /// set cuts
-  void setResMassMin( double m  );
-  void setResMassMax( double m  );
-  void setResMassRange( double mMin, double mMax );
-  void setConstr    ( bool flag );
-
-  /// get current cuts
-  double getResMassMin() const { return resoSel->getMassMin(); }
-  double getResMassMax() const { return resoSel->getMassMax(); }
-  bool   getConstr    () const { return massConstr; }
+  ~BPHDecayConstrainedBuilder() override {}
 
  protected:
 
-  std::string rName;
-  double rMass;
-  double rWidth;
+  BPHDecayConstrainedBuilder( const std::vector<res_ptr>& resCollection ):
+   rCollection( &resCollection ) {
+  }
 
-  const std::vector<BPHPlusMinusConstCandPtr>* rCollection;
+  const std::vector<res_ptr>* rCollection;
 
-  BPHMassSelect* resoSel;
+  void addResCollection( BPHRecoBuilder& brb ) override {
+    const std::vector<res_ptr>& rc = *this->rCollection;
+    if ( resoSel->getMassMax() > 0.0 ) {
+      rCollectSel.clear();
+      rCollectSel.reserve( rc.size() );
+      for ( const res_ptr& r: rc ) {
+        if ( resoSel->accept( *r ) ) rCollectSel.push_back( r );
+      }
+      brb.add( rName, rCollectSel );
+    } else
+    brb.add( rName, *this->rCollection );
+  }
 
-  bool massConstr;
+ private:
+
+  std::vector<res_ptr> rCollectSel;
 
 };
 

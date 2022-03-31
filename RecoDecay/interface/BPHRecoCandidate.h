@@ -23,7 +23,7 @@
 // Collaborating Class Declarations --
 //------------------------------------
 #include "BPHAnalysis/RecoDecay/interface/BPHRecoBuilder.h"
-#include "BPHAnalysis/RecoDecay/interface/BPHGenericPtr.h"
+#include "BPHAnalysis/RecoDecay/interface/BPHRecoCandidatePtr.h"
 #include "DataFormats/PatCandidates/interface/CompositeCandidate.h"
 
 namespace edm {
@@ -47,12 +47,15 @@ class BPHRecoCandidate: public virtual BPHKinematicFit {
 
  public:
 
+  typedef BPHRecoCandidatePtr       pointer;
+  typedef BPHRecoConstCandPtr const_pointer;
+
   /** Constructor
    */
   /// create an "empty" object to add daughters later
   /// (see BPHDecayMomentum)
   BPHRecoCandidate( const edm::EventSetup* es );
-  // create an object with daughters as specified in the ComponentSet
+  /// create an object with daughters as specified in the ComponentSet
   BPHRecoCandidate( const edm::EventSetup* es,
                     const BPHRecoBuilder::ComponentSet& compSet );
 
@@ -84,6 +87,14 @@ class BPHRecoCandidate: public virtual BPHKinematicFit {
 
   /// look for candidates starting from particle collections as
   /// specified in the BPHRecoBuilder
+  struct BuilderParameters {
+    double constrMass;
+    double constrSigma;
+  };
+  static std::vector<BPHRecoConstCandPtr> build(                                                                          const BPHRecoBuilder& builder,
+                                          const BuilderParameters& par ) {
+    return build( builder, par.constrMass, par.constrSigma );
+  }
   static std::vector<BPHRecoConstCandPtr> build( const BPHRecoBuilder& builder,
                                                  double mass = -1,
                                                  double msig = -1 );

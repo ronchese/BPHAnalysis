@@ -17,12 +17,13 @@
 //------------------------------------
 // Collaborating Class Declarations --
 //------------------------------------
+#include "BPHAnalysis/SpecificDecay/interface/BPHDecayGenericBuilderBase.h"
+#include "BPHAnalysis/SpecificDecay/interface/BPHParticleMasses.h"
 #include "BPHAnalysis/RecoDecay/interface/BPHRecoBuilder.h"
 #include "BPHAnalysis/RecoDecay/interface/BPHRecoCandidate.h"
 #include "BPHAnalysis/RecoDecay/interface/BPHPlusMinusCandidate.h"
-#include "BPHAnalysis/SpecificDecay/interface/BPHParticleMasses.h"
 
-#include "FWCore/Framework/interface/Event.h"
+#include "FWCore/Framework/interface/EventSetup.h"
 
 //---------------
 // C++ Headers --
@@ -43,6 +44,7 @@ class BPHK0sToPiPiBuilder: public BPHDecayToV0SameMassBuilder {
   BPHK0sToPiPiBuilder( const edm::EventSetup& es,
        const BPHRecoBuilder::BPHGenericCollection* posCollection,
        const BPHRecoBuilder::BPHGenericCollection* negCollection ):
+   BPHDecayGenericBuilderBase( es ),
    BPHDecayToV0SameMassBuilder( es, "PionPos", "PionNeg",
                                 BPHParticleMasses::pionMass,
                                 BPHParticleMasses::pionMSigma,
@@ -51,24 +53,16 @@ class BPHK0sToPiPiBuilder: public BPHDecayToV0SameMassBuilder {
     setEtaMax( 10.0 );
     setMassRange( 0.40, 0.60 );
   }
+
+  template<class V0VertexType>
   BPHK0sToPiPiBuilder( const edm::EventSetup& es,
-       const std::vector<reco::VertexCompositeCandidate   >* v0Collection,
+       const std::vector<V0VertexType>* v0Collection,
        const std::string& searchList = "cfp" ):
+   BPHDecayGenericBuilderBase( es ),
    BPHDecayToV0SameMassBuilder( es, "PionPos", "PionNeg",
                                 BPHParticleMasses::pionMass,
                                 BPHParticleMasses::pionMSigma,
                                 v0Collection, searchList ) {
-    setPtMin( 0.0 );
-    setEtaMax( 10.0 );
-    setMassRange( 0.00, 2.00 );
-  }
-  BPHK0sToPiPiBuilder( const edm::EventSetup& es,
-       const std::vector<reco::VertexCompositePtrCandidate>* vpCollection,
-       const std::string& searchList = "cfp" ):
-   BPHDecayToV0SameMassBuilder( es, "PionPos", "PionNeg",
-                                BPHParticleMasses::pionMass,
-                                BPHParticleMasses::pionMSigma,
-                                vpCollection, searchList ) {
     setPtMin( 0.0 );
     setEtaMax( 10.0 );
     setMassRange( 0.00, 2.00 );

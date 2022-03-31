@@ -345,7 +345,7 @@ double BPHKinematicFit::getMassSigma( const reco::Candidate* cand ) const {
 
 
 /// retrieve independent fit flag
-bool BPHKinematicFit::getIndependentFit( const std::string& name ) const {
+bool BPHKinematicFit::getIndependentFit( const string& name ) const {
   const BPHRecoCandidate* comp = getComp( name ).get();
   map<const BPHRecoCandidate*,FlyingParticle>::const_iterator iter =
                                                cKinP.find( comp );

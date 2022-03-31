@@ -17,12 +17,14 @@
 //------------------------------------
 // Collaborating Class Declarations --
 //------------------------------------
+#include "BPHAnalysis/SpecificDecay/interface/BPHDecayGenericBuilderBase.h"
+#include "BPHAnalysis/SpecificDecay/interface/BPHDecayConstrainedBuilderBase.h"
+#include "BPHAnalysis/SpecificDecay/interface/BPHParticleMasses.h"
 #include "BPHAnalysis/RecoDecay/interface/BPHRecoBuilder.h"
 #include "BPHAnalysis/RecoDecay/interface/BPHRecoCandidate.h"
 #include "BPHAnalysis/RecoDecay/interface/BPHPlusMinusCandidate.h"
-#include "BPHAnalysis/SpecificDecay/interface/BPHParticleMasses.h"
 
-#include "FWCore/Framework/interface/Event.h"
+#include "FWCore/Framework/interface/EventSetup.h"
 
 class BPHParticleNeutralVeto;
 class BPHParticlePtSelect;
@@ -41,7 +43,9 @@ class BPHMassFitSelect;
 //              -- Class Interface --
 //              ---------------------
 
-class BPHBcToJPsiPiBuilder: public BPHDecayToResTrkBuilder {
+class BPHBcToJPsiPiBuilder:
+      public BPHDecayToResTrkBuilder<BPHRecoCandidate,
+                                     BPHPlusMinusCandidate> {
 
  public:
 
@@ -50,10 +54,10 @@ class BPHBcToJPsiPiBuilder: public BPHDecayToResTrkBuilder {
   BPHBcToJPsiPiBuilder( const edm::EventSetup& es,
       const std::vector<BPHPlusMinusConstCandPtr>& jpsiCollection,
       const BPHRecoBuilder::BPHGenericCollection*  pionCollection ):
-   BPHDecayToResTrkBuilder( es,
-                            "JPsi", 
-                            BPHParticleMasses::jPsiMass,
-                            BPHParticleMasses::jPsiMWidth, jpsiCollection,
+   BPHDecayGenericBuilderBase( es, nullptr ),//, false ),
+   BPHDecayConstrainedBuilderBase( "JPsi", BPHParticleMasses::jPsiMass,
+                                           BPHParticleMasses::jPsiMWidth ),
+   BPHDecayToResTrkBuilder( jpsiCollection,
                             "Pion",
                             BPHParticleMasses::pionMass,
                             BPHParticleMasses::pionMSigma, pionCollection ) {
@@ -77,16 +81,19 @@ class BPHBcToJPsiPiBuilder: public BPHDecayToResTrkBuilder {
   /** Operations
    */
   /// set cuts
-  void setPiPtMin    ( double pt  ) { setTrkPtMin  (  pt ); }
+  void setPiPtMin    ( double  pt ) { setTrkPtMin  (  pt ); }
   void setPiEtaMax   ( double eta ) { setTrkEtaMax ( eta ); }
-  void setJPsiMassMin( double m   ) { setResMassMin(   m ); }
-  void setJPsiMassMax( double m   ) { setResMassMax(   m ); }
+  void setJPsiMassMin( double   m ) { setResMassMin(   m ); }
+  void setJPsiMassMax( double   m ) { setResMassMax(   m ); }
 
   /// get current cuts
   double getPiPtMin    () const { return getTrkPtMin  (); }
   double getPiEtaMax   () const { return getTrkEtaMax (); }
   double getJPsiMassMin() const { return getResMassMin(); }
   double getJPsiMassMax() const { return getResMassMax(); }
+
+  /// setup parameters for BPHRecoBuilder
+  void setup( void* parameters ) override {}
 
 };
 

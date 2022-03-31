@@ -95,13 +95,13 @@ class BPHDecayVertex: public virtual BPHDecayMomentum {
   BPHDecayVertex( const BPHDecayVertex* ptr,
                   const edm::EventSetup* es );
 
-  /// add a simple particle giving it a name and specifying an option list 
-  /// to search for the associated track
+  // add a simple particle giving it a name and specifying an option list 
+  // to search for the associated track
   virtual void addV( const std::string& name,
                      const reco::Candidate* daug, 
                      const std::string& searchList,
                      double mass );
-  /// add a previously reconstructed particle giving it a name
+  // add a previously reconstructed particle giving it a name
   virtual void addV( const std::string& name,
                      const BPHRecoConstCandPtr& comp );
 

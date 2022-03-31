@@ -57,20 +57,8 @@ class BPHRecoSelect {
   /// to the builder)
   virtual bool accept( const reco::Candidate& cand ) const = 0;
   virtual bool accept( const reco::Candidate& cand,
-                       const BPHRecoBuilder* build ) const {
+                       const BPHRecoBuilder* builder ) const {
     return accept( cand );
-  }
-
- protected:
-
-  // function to get other particles pointers
-  const reco::Candidate* get( const std::string& name,
-                              const BPHRecoBuilder* build ) const {
-    if ( build == nullptr ) return nullptr;
-    std::map<std::string, const reco::Candidate*>& cMap = build->daugMap;
-    std::map<std::string, const reco::Candidate*>::iterator iter =
-                                                            cMap.find( name );
-    return ( iter != cMap.end() ? iter->second : nullptr );
   }
 
 };

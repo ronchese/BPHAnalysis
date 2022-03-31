@@ -17,12 +17,15 @@
 //------------------------------------
 // Collaborating Class Declarations --
 //------------------------------------
+#include "BPHAnalysis/SpecificDecay/interface/BPHDecayGenericBuilderBase.h"
+#include "BPHAnalysis/SpecificDecay/interface/BPHDecayConstrainedBuilderBase.h"
+#include "BPHAnalysis/SpecificDecay/interface/BPHDecayToFlyingCascadeBuilderBase.h"
+#include "BPHAnalysis/SpecificDecay/interface/BPHParticleMasses.h"
 #include "BPHAnalysis/RecoDecay/interface/BPHRecoBuilder.h"
 #include "BPHAnalysis/RecoDecay/interface/BPHRecoCandidate.h"
 #include "BPHAnalysis/RecoDecay/interface/BPHPlusMinusCandidate.h"
-#include "BPHAnalysis/SpecificDecay/interface/BPHParticleMasses.h"
 
-#include "FWCore/Framework/interface/Event.h"
+#include "FWCore/Framework/interface/EventSetup.h"
 
 //---------------
 // C++ Headers --
@@ -34,7 +37,10 @@
 //              -- Class Interface --
 //              ---------------------
 
-class BPHBdToJPsiKsBuilder: public BPHDecayToResFlyingBuilder {
+class BPHBdToJPsiKsBuilder:
+      public BPHDecayToResFlyingBuilder<BPHRecoCandidate,
+                                        BPHPlusMinusCandidate,
+                                        BPHPlusMinusCandidate> {
 
  public:
 
@@ -43,13 +49,14 @@ class BPHBdToJPsiKsBuilder: public BPHDecayToResFlyingBuilder {
   BPHBdToJPsiKsBuilder( const edm::EventSetup& es,
       const std::vector<BPHPlusMinusConstCandPtr>& jpsiCollection,
       const std::vector<BPHPlusMinusConstCandPtr>&  k0sCollection ):
-   BPHDecayToResFlyingBuilder( es,
-                               "JPsi",
-                               BPHParticleMasses::jPsiMass,
-                               BPHParticleMasses::jPsiMWidth, jpsiCollection,
-                               "K0s",
-                               BPHParticleMasses:: k0sMass,
-                               BPHParticleMasses:: k0sMSigma,  k0sCollection ) {
+   BPHDecayGenericBuilderBase( es, nullptr ),
+   BPHDecayConstrainedBuilderBase( "JPsi", BPHParticleMasses::jPsiMass,
+                                           BPHParticleMasses::jPsiMWidth ),
+   BPHDecayToFlyingCascadeBuilderBase( "K0s",
+                                       BPHParticleMasses:: k0sMass,
+                                       BPHParticleMasses:: k0sMSigma ),
+   BPHDecayToResFlyingBuilder( jpsiCollection,
+                               k0sCollection ) {
     setResMassRange   ( 2.80, 3.40 );
     setFlyingMassRange( 0.00, 2.00 );
     setMassRange      ( 3.50, 8.00 );
@@ -79,6 +86,9 @@ class BPHBdToJPsiKsBuilder: public BPHDecayToResFlyingBuilder {
   double getJPsiMassMax() const { return getResMassMax   (); }
   double getK0MassMin  () const { return getFlyingMassMin(); }
   double getK0MassMax  () const { return getFlyingMassMax(); }
+
+  /// setup parameters for BPHRecoBuilder
+  void setup( void* parameters ) override {}
 
 };
 

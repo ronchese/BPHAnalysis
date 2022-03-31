@@ -18,6 +18,7 @@
 // Collaborating Class Declarations --
 //------------------------------------
 class BPHKinematicFit;
+class BPHRecoBuilder;
 
 //---------------
 // C++ Headers --
@@ -50,6 +51,10 @@ class BPHFitSelect {
    */
   /// accept function
   virtual bool accept( const BPHKinematicFit& cand ) const = 0;
+  virtual bool accept( const BPHKinematicFit& cand,
+                       const BPHRecoBuilder* builder ) const {
+    return accept( cand );
+  }
 
 };
 

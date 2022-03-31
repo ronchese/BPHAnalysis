@@ -36,7 +36,8 @@ class BPHMassSelect: public BPHMomentumSelect, public BPHMassCuts {
   /** Constructor
    */
   BPHMassSelect( double minMass, double maxMass ): BPHMassCuts( minMass,
-                                                                maxMass ) {}
+                                                                maxMass ) {
+  }
 
   // deleted copy constructor and assignment operator
   BPHMassSelect           ( const BPHMassSelect& x ) = delete;

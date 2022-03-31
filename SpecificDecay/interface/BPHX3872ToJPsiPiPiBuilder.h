@@ -12,23 +12,19 @@
 //----------------------
 // Base Class Headers --
 //----------------------
-
+#include "BPHAnalysis/SpecificDecay/interface/BPHDecayToResTrkTrkSameMassBuilder.h"
 
 //------------------------------------
 // Collaborating Class Declarations --
 //------------------------------------
+#include "BPHAnalysis/SpecificDecay/interface/BPHDecayGenericBuilderBase.h"
+#include "BPHAnalysis/SpecificDecay/interface/BPHDecayConstrainedBuilderBase.h"
+#include "BPHAnalysis/SpecificDecay/interface/BPHParticleMasses.h"
 #include "BPHAnalysis/RecoDecay/interface/BPHRecoBuilder.h"
 #include "BPHAnalysis/RecoDecay/interface/BPHRecoCandidate.h"
 #include "BPHAnalysis/RecoDecay/interface/BPHPlusMinusCandidate.h"
 
-#include "FWCore/Framework/interface/Event.h"
-
-class BPHParticleChargeSelect;
-class BPHParticlePtSelect;
-class BPHParticleEtaSelect;
-class BPHMassSelect;
-class BPHChi2Select;
-class BPHMassFitSelect;
+#include "FWCore/Framework/interface/EventSetup.h"
 
 //---------------
 // C++ Headers --
@@ -40,7 +36,9 @@ class BPHMassFitSelect;
 //              -- Class Interface --
 //              ---------------------
 
-class BPHX3872ToJPsiPiPiBuilder {
+class BPHX3872ToJPsiPiPiBuilder:
+      public BPHDecayToResTrkTrkSameMassBuilder<BPHRecoCandidate,
+                                                BPHPlusMinusCandidate> {
 
  public:
 
@@ -49,7 +47,22 @@ class BPHX3872ToJPsiPiPiBuilder {
   BPHX3872ToJPsiPiPiBuilder( const edm::EventSetup& es,
       const std::vector<BPHPlusMinusConstCandPtr>& jpsiCollection,
       const BPHRecoBuilder::BPHGenericCollection*   posCollection,
-      const BPHRecoBuilder::BPHGenericCollection*   negCollection );
+      const BPHRecoBuilder::BPHGenericCollection*   negCollection ):
+   BPHDecayGenericBuilderBase( es, nullptr ),
+   BPHDecayConstrainedBuilderBase( "JPsi", BPHParticleMasses::jPsiMass,
+                                           BPHParticleMasses::jPsiMWidth ),
+   BPHDecayToResTrkTrkSameMassBuilder( jpsiCollection,
+                                       "PionPos", "PionNeg",
+                                       BPHParticleMasses::pionMass,
+                                       BPHParticleMasses::pionMSigma,
+                                       posCollection, negCollection ) {
+    setResMassRange( 2.80, 3.40 );
+    setTrkPtMin    (  1.0 );
+    setTrkEtaMax   ( 10.0 );
+    setMassRange   ( 3.00, 4.50 );
+    setProbMin     ( 0.02 );
+    setMassFitRange( 3.50, 4.20 );
+  }
 
   // deleted copy constructor and assignment operator
   BPHX3872ToJPsiPiPiBuilder           ( const BPHX3872ToJPsiPiPiBuilder& x ) = delete;
@@ -57,61 +70,22 @@ class BPHX3872ToJPsiPiPiBuilder {
 
   /** Destructor
    */
-  virtual ~BPHX3872ToJPsiPiPiBuilder();
+  ~BPHX3872ToJPsiPiPiBuilder() override {}
 
   /** Operations
    */
-  /// build X3872 candidates
-  std::vector<BPHRecoConstCandPtr> build();
 
   /// set cuts
-  void setPiPtMin    ( double pt  );
-  void setPiEtaMax   ( double eta );
-  void setJPsiMassMin( double m   );
-  void setJPsiMassMax( double m   );
-  void setMassMin    ( double m   );
-  void setMassMax    ( double m   );
-  void setProbMin    ( double p   );
-  void setMassFitMin ( double m   );
-  void setMassFitMax ( double m   );
-  void setConstr     ( bool flag  );
+  void setPiPtMin    ( double pt  ) { setTrkPtMin  (  pt ); }
+  void setPiEtaMax   ( double eta ) { setTrkEtaMax ( eta ); }
+  void setJPsiMassMin( double m   ) { setResMassMin(   m ); }
+  void setJPsiMassMax( double m   ) { setResMassMax(   m ); }
 
   /// get current cuts
-  double getPiPtMin    () const;
-  double getPiEtaMax   () const;
-  double getJPsiMassMin() const;
-  double getJPsiMassMax() const;
-  double getMassMin    () const;
-  double getMassMax    () const;
-  double getProbMin    () const;
-  double getMassFitMin () const;
-  double getMassFitMax () const;
-  bool   getConstr     () const;
-
- private:
-
-  std::string    jPsiName;
-  std::string pionPosName;
-  std::string pionNegName;
-
-  const edm::EventSetup* evSetup;
-  const std::vector<BPHPlusMinusConstCandPtr>* jCollection;
-  const BPHRecoBuilder::BPHGenericCollection*  pCollection;
-  const BPHRecoBuilder::BPHGenericCollection*  nCollection;
-
-  BPHMassSelect          * jpsiSel;
-  double ptMin;
-  double etaMax;
-
-  BPHMassSelect          * massSel;
-  BPHChi2Select          * chi2Sel;
-  BPHMassFitSelect       * mFitSel;
-
-  bool massConstr;
-  float minPDiff;
-  bool updated;
-
-  std::vector<BPHRecoConstCandPtr> x3872List;
+  double getPiPtMin    () const { return getTrkPtMin  (); }
+  double getPiEtaMax   () const { return getTrkEtaMax (); }
+  double getJPsiMassMin() const { return getResMassMin(); }
+  double getJPsiMassMax() const { return getResMassMax(); }
 
 };
 

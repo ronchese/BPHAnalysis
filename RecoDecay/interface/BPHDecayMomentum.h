@@ -101,6 +101,14 @@ class BPHDecayMomentum {
   /// return null pointer if not found
   virtual BPHRecoConstCandPtr getComp( const std::string& name ) const;
 
+  const std::map<std::string,const reco::Candidate*>& daugMap() const {
+   return dMap;
+  }
+
+  const std::map<std::string,BPHRecoConstCandPtr>& compMap() const {
+   return cMap;
+  }
+
  protected:
 
   struct Component {
@@ -120,11 +128,11 @@ class BPHDecayMomentum {
   // to be used in the creation of other bases of BPHRecoCandidate
   const std::vector<Component>& componentList() const;
 
-  /// add a simple particle giving it a name
-  /// particles are cloned, eventually specifying a different mass
+  // add a simple particle giving it a name
+  // particles are cloned, eventually specifying a different mass
   virtual void addP( const std::string& name,
                      const reco::Candidate* daug, double mass = -1.0 );
-  /// add a previously reconstructed particle giving it a name
+  // add a previously reconstructed particle giving it a name
   virtual void addP( const std::string& name,
                      const BPHRecoConstCandPtr& comp );
 

@@ -17,12 +17,14 @@
 //------------------------------------
 // Collaborating Class Declarations --
 //------------------------------------
+#include "BPHAnalysis/SpecificDecay/interface/BPHDecayGenericBuilderBase.h"
+#include "BPHAnalysis/SpecificDecay/interface/BPHDecayConstrainedBuilderBase.h"
+#include "BPHAnalysis/SpecificDecay/interface/BPHParticleMasses.h"
 #include "BPHAnalysis/RecoDecay/interface/BPHRecoBuilder.h"
 #include "BPHAnalysis/RecoDecay/interface/BPHRecoCandidate.h"
 #include "BPHAnalysis/RecoDecay/interface/BPHPlusMinusCandidate.h"
-#include "BPHAnalysis/SpecificDecay/interface/BPHParticleMasses.h"
 
-#include "FWCore/Framework/interface/Event.h"
+#include "FWCore/Framework/interface/EventSetup.h"
 
 //---------------
 // C++ Headers --
@@ -34,7 +36,9 @@
 //              -- Class Interface --
 //              ---------------------
 
-class BPHBuToJPsiKBuilder: public BPHDecayToResTrkBuilder {
+class BPHBuToJPsiKBuilder:
+      public BPHDecayToResTrkBuilder<BPHRecoCandidate,
+                                     BPHPlusMinusCandidate> {
 
  public:
 
@@ -43,10 +47,10 @@ class BPHBuToJPsiKBuilder: public BPHDecayToResTrkBuilder {
   BPHBuToJPsiKBuilder( const edm::EventSetup& es,
       const std::vector<BPHPlusMinusConstCandPtr>& jpsiCollection,
       const BPHRecoBuilder::BPHGenericCollection*  kaonCollection ):
-   BPHDecayToResTrkBuilder( es,
-                            "JPsi", 
-                            BPHParticleMasses::jPsiMass,
-                            BPHParticleMasses::jPsiMWidth, jpsiCollection,
+   BPHDecayGenericBuilderBase( es, nullptr ),
+   BPHDecayConstrainedBuilderBase( "JPsi", BPHParticleMasses::jPsiMass,
+                                           BPHParticleMasses::jPsiMWidth ),
+   BPHDecayToResTrkBuilder( jpsiCollection,
                             "Kaon",
                             BPHParticleMasses::kaonMass,
                             BPHParticleMasses::kaonMSigma, kaonCollection ) {
@@ -70,16 +74,19 @@ class BPHBuToJPsiKBuilder: public BPHDecayToResTrkBuilder {
   /** Operations
    */
   /// set cuts
-  void setKPtMin     ( double pt  ) { setTrkPtMin  (  pt ); }
+  void setKPtMin     ( double  pt ) { setTrkPtMin  (  pt ); }
   void setKEtaMax    ( double eta ) { setTrkEtaMax ( eta ); }
-  void setJPsiMassMin( double m   ) { setResMassMin(   m ); }
-  void setJPsiMassMax( double m   ) { setResMassMax(   m ); }
+  void setJPsiMassMin( double   m ) { setResMassMin(   m ); }
+  void setJPsiMassMax( double   m ) { setResMassMax(   m ); }
 
   /// get current cuts
   double getKPtMin     () const { return getTrkPtMin  (); }
   double getKEtaMax    () const { return getTrkEtaMax (); }
   double getJPsiMassMin() const { return getResMassMin(); }
   double getJPsiMassMax() const { return getResMassMax(); }
+
+  /// setup parameters for BPHRecoBuilder
+  void setup( void* parameters ) override {}
 
 };
 

@@ -1,0 +1,94 @@
+#ifndef BPHAnalysis_SpecificDecay_BPHDecayGenericBuilderBase_h
+#define BPHAnalysis_SpecificDecay_BPHDecayGenericBuilderBase_h
+/** \class BPHDecayGenericBuilderBase
+ *
+ *  Description: 
+ *     Class to build a generic decay applying selections to the
+ *     reconstructed particle
+ *
+ *  \author Paolo Ronchese INFN Padova
+ *
+ */
+
+//----------------------
+// Base Class Headers --
+//----------------------
+
+
+//------------------------------------
+// Collaborating Class Declarations --
+//------------------------------------
+#include "BPHAnalysis/SpecificDecay/interface/BPHMassSelect.h"
+#include "BPHAnalysis/SpecificDecay/interface/BPHChi2Select.h"
+#include "BPHAnalysis/SpecificDecay/interface/BPHMassFitSelect.h"
+
+#include "FWCore/Framework/interface/EventSetup.h"
+
+//---------------
+// C++ Headers --
+//---------------
+//#include <string>
+//#include <vector>
+
+//              ---------------------
+//              -- Class Interface --
+//              ---------------------
+
+class BPHDecayGenericBuilderBase {
+
+ public:
+
+  /** Constructor
+   */
+  BPHDecayGenericBuilderBase();
+  BPHDecayGenericBuilderBase( const edm::EventSetup& es,
+       BPHMassFitSelect* mfs = new BPHMassFitSelect( -2.0e+06, -1.0e+06 ) );
+
+  // deleted copy constructor and assignment operator
+  BPHDecayGenericBuilderBase           ( const BPHDecayGenericBuilderBase& x ) = delete;
+  BPHDecayGenericBuilderBase& operator=( const BPHDecayGenericBuilderBase& x ) = delete;
+
+  /** Destructor
+   */
+  virtual ~BPHDecayGenericBuilderBase();
+
+  /** Operations
+   */
+  /// set cuts
+  void setMassMin   ( double m );
+  void setMassMax   ( double m );
+  void setMassRange ( double mMin, double mMax );
+  void setProbMin   ( double p );
+  void setMassFitMin( double m );
+  void setMassFitMax( double m );
+  void setMassFitRange( double mMin, double mMax );
+
+  /// get current cuts
+  double getMassMin   () const { return massSel->getMassMin(); }
+  double getMassMax   () const { return massSel->getMassMax(); }
+  double getProbMin   () const { return chi2Sel->getProbMin(); }
+  double getMassFitMin() const { return mFitSel->getMassMin(); }
+  double getMassFitMax() const { return mFitSel->getMassMax(); }
+
+  /// track min p difference
+  void   setMinPDiff( double mpd ) { minPDiff = mpd; }
+  double getMinPDiff() { return minPDiff; }
+
+ protected:
+
+  const edm::EventSetup* evSetup;
+
+  BPHMassSelect   * massSel;
+  BPHChi2Select   * chi2Sel;
+  BPHMassFitSelect* mFitSel;
+
+  double minPDiff;
+  bool outdated;
+
+  virtual void fillRecList() = 0;
+
+};
+
+
+#endif
+

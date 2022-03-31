@@ -111,7 +111,7 @@ class BPHUserData {
   static const T* getByRef( const pat::CompositeCandidate& cand,
                             const string& name ) {
     if ( cand.hasUserData( name ) ) {
-      typedef edm::Ref< std::vector<T> > objRef;
+      typedef edm::Ref< vector<T> > objRef;
       const objRef* ref = cand.userData<objRef>( name );
       if ( ref == nullptr ) return nullptr;
       if ( ref->isNull()  ) return nullptr;

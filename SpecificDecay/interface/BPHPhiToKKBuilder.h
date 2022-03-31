@@ -17,12 +17,13 @@
 //------------------------------------
 // Collaborating Class Declarations --
 //------------------------------------
+#include "BPHAnalysis/SpecificDecay/interface/BPHDecayGenericBuilderBase.h"
+#include "BPHAnalysis/SpecificDecay/interface/BPHParticleMasses.h"
 #include "BPHAnalysis/RecoDecay/interface/BPHRecoBuilder.h"
 #include "BPHAnalysis/RecoDecay/interface/BPHRecoCandidate.h"
 #include "BPHAnalysis/RecoDecay/interface/BPHPlusMinusCandidate.h"
-#include "BPHAnalysis/SpecificDecay/interface/BPHParticleMasses.h"
 
-#include "FWCore/Framework/interface/Event.h"
+#include "FWCore/Framework/interface/EventSetup.h"
 
 //---------------
 // C++ Headers --
@@ -43,12 +44,11 @@ class BPHPhiToKKBuilder: public BPHDecayToChargedXXbarBuilder {
   BPHPhiToKKBuilder( const edm::EventSetup& es,
        const BPHRecoBuilder::BPHGenericCollection* posCollection,
        const BPHRecoBuilder::BPHGenericCollection* negCollection ):
-   BPHDecayToChargedXXbarBuilder( es,
-                            "KPos", 
-                            "KNeg",
-                            BPHParticleMasses::kaonMass,
-                            BPHParticleMasses::kaonMSigma,
-                            posCollection, negCollection ) {
+   BPHDecayGenericBuilderBase( es ),
+   BPHDecayToChargedXXbarBuilder( es, "KPos", "KNeg",
+                                  BPHParticleMasses::kaonMass,
+                                  BPHParticleMasses::kaonMSigma,
+                                  posCollection, negCollection ) {
     setPtMin (  0.7 );
     setEtaMax( 10.0 );
     setMassRange ( 1.00, 1.04 );

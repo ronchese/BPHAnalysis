@@ -15,6 +15,7 @@
 #include "DataFormats/PatCandidates/interface/CompositeCandidate.h"
 
 #include <vector>
+#include <map>
 #include <string>
 #include <iostream>
 #include <fstream>
@@ -41,32 +42,34 @@ class CheckBPHWriteDecay:
   std::ostream* osPtr;
   unsigned int runNumber;
   unsigned int evtNumber;
+  bool writePtr;
 
   std::vector<std::string> candsLabel;
   std::vector< BPHTokenWrapper< std::vector<pat::CompositeCandidate> > >
                            candsToken;
+  std::map<const pat::CompositeCandidate*,int> idMap;
 
   typedef edm::Ref< std::vector<reco::Vertex> > vertex_ref;
   typedef edm::Ref< pat::CompositeCandidateCollection > compcc_ref;
 
-  static void dump( std::ostream& os, const pat::CompositeCandidate& cand );
+  void dump( std::ostream& os, const pat::CompositeCandidate& cand );
   template<class T>
-    static void writePosition( std::ostream& os,
-                               const std::string& s, const T& p,
+    static void writeCartesian( std::ostream& os,
+                               const std::string& s, const T& v,
                                bool endLine = true ) {
-    os << s << p.x() << " "
-            << p.y() << " "
-            << p.z();
+    os << s << v.x() << " "
+            << v.y() << " "
+            << v.z();
     if ( endLine ) os << std::endl;
     return;
   }
   template<class T>
-  static void writeMomentum( std::ostream& os,
-                               const std::string& s, const T& p,
+  static void writeCylindric( std::ostream& os,
+                               const std::string& s, const T& v,
                                bool endLine = true ) {
-    os << s << p. pt() << " "
-            << p.eta() << " "
-            << p.phi();
+    os << s << v. pt() << " "
+            << v.eta() << " "
+            << v.phi();
     if ( endLine ) os << std::endl;
     return;
   }

@@ -38,7 +38,8 @@ class BPHMassSymSelect: public BPHMomentumSelect {
    */
   BPHMassSymSelect( const std::string& np, const std::string& nn,
                     const BPHMassSelect* ms ): nPos( np ), nNeg( nn ),
-                                               mSel( ms ) {}
+                                               mSel( ms ) {
+  }
 
   // deleted copy constructor and assignment operator
   BPHMassSymSelect           ( const BPHMassSymSelect& x ) = delete;

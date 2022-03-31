@@ -15,6 +15,7 @@
 // Base Class Headers --
 //----------------------
 #include "BPHAnalysis/SpecificDecay/interface/BPHDecayToV0Builder.h"
+#include "BPHAnalysis/SpecificDecay/interface/BPHDecayToTkpTknSymChargeBuilder.h"
 
 //------------------------------------
 // Collaborating Class Declarations --
@@ -23,7 +24,7 @@
 #include "BPHAnalysis/RecoDecay/interface/BPHRecoCandidate.h"
 #include "BPHAnalysis/RecoDecay/interface/BPHPlusMinusCandidate.h"
 
-#include "FWCore/Framework/interface/Event.h"
+#include "FWCore/Framework/interface/EventSetup.h"
 
 //---------------
 // C++ Headers --
@@ -36,27 +37,28 @@
 //              -- Class Interface --
 //              ---------------------
 
-class BPHDecayToV0DiffMassBuilder: public BPHDecayToV0Builder {
+class BPHDecayToV0DiffMassBuilder: public BPHDecayToV0Builder,
+                                   public BPHDecayToTkpTknSymChargeBuilder {
 
  public:
 
   /** Constructor
    */
   BPHDecayToV0DiffMassBuilder( const edm::EventSetup& es,
-       const std::string& d1Name, double d1Mass, double d1Sigma,
-       const std::string& d2Name, double d2Mass, double d2Sigma,
+       const std::string& daug1Name, double daug1Mass, double daug1Sigma,
+       const std::string& daug2Name, double daug2Mass, double daug2Sigma,
        const BPHRecoBuilder::BPHGenericCollection* posCollection,
        const BPHRecoBuilder::BPHGenericCollection* negCollection,
        double expectedMass );
   BPHDecayToV0DiffMassBuilder( const edm::EventSetup& es,
-       const std::string& d1Name, double d1Mass, double d1Sigma,
-       const std::string& d2Name, double d2Mass, double d2Sigma,
+       const std::string& daug1Name, double daug1Mass, double daug1Sigma,
+       const std::string& daug2Name, double daug2Mass, double daug2Sigma,
        const std::vector<reco::VertexCompositeCandidate   >* v0Collection,
        double expectedMass,
        const std::string& searchList = "cfp" );
   BPHDecayToV0DiffMassBuilder( const edm::EventSetup& es,
-       const std::string& d1Name, double d1Mass, double d1Sigma,
-       const std::string& d2Name, double d2Mass, double d2Sigma,
+       const std::string& daug1Name, double daug1Mass, double daug1Sigma,
+       const std::string& daug2Name, double daug2Mass, double daug2Sigma,
        const std::vector<reco::VertexCompositePtrCandidate>* vpCollection,
        double expectedMass,
        const std::string& searchList = "cfp" );
@@ -68,6 +70,19 @@ class BPHDecayToV0DiffMassBuilder: public BPHDecayToV0Builder {
   /** Destructor
    */
   ~BPHDecayToV0DiffMassBuilder() override;
+
+  /** Operations
+   */
+
+  /// set cuts
+  void setPtMin   ( double  pt ) {
+    setTrk1PtMin( pt );
+    setTrk2PtMin( pt );
+  }
+  void setEtaMax  ( double eta ) {
+    setTrk1EtaMax( eta );
+    setTrk2EtaMax( eta );
+  }
 
  protected:
 
@@ -83,6 +98,11 @@ class BPHDecayToV0DiffMassBuilder: public BPHDecayToV0Builder {
                            const reco::Candidate* c1,
                            const reco::Candidate* c2,
                            const void* v0, v0Type type ) override;
+
+ private:
+
+  /// build candidates
+  void fillRecList() override { BPHDecayToV0Builder::fillRecList(); }
 
 };
 

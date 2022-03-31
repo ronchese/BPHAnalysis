@@ -13,6 +13,7 @@
 //----------------------
 // Base Class Headers --
 //----------------------
+#include "BPHAnalysis/SpecificDecay/interface/BPHDecayGenericBuilderBase.h"
 #include "BPHAnalysis/SpecificDecay/interface/BPHDecayGenericBuilder.h"
 
 //------------------------------------
@@ -22,7 +23,7 @@
 #include "BPHAnalysis/RecoDecay/interface/BPHRecoCandidate.h"
 #include "BPHAnalysis/RecoDecay/interface/BPHPlusMinusCandidate.h"
 
-#include "FWCore/Framework/interface/Event.h"
+#include "FWCore/Framework/interface/EventSetup.h"
 
 class BPHParticlePtSelect;
 class BPHParticleEtaSelect;
@@ -39,7 +40,9 @@ class BPHMassSelect;
 //              -- Class Interface --
 //              ---------------------
 
-class BPHDecayToChargedXXbarBuilder: public BPHDecayGenericBuilder {
+class BPHDecayToChargedXXbarBuilder:
+      public virtual BPHDecayGenericBuilderBase,
+      public virtual BPHDecayGenericBuilder<BPHPlusMinusCandidate> {
 
  public:
 
@@ -61,20 +64,27 @@ class BPHDecayToChargedXXbarBuilder: public BPHDecayGenericBuilder {
 
   /** Operations
    */
-  /// build Phi candidates
-  std::vector<BPHPlusMinusConstCandPtr> build();
 
   /// set cuts
-  void setPtMin  ( double pt  );
-  void setEtaMax ( double eta );
-  void setDzMax  ( double dz  );
+  void setPtMin ( double  pt );
+  void setEtaMax( double eta );
+  void setDzMax ( double  dz );
 
   /// get current cuts
-  double getPtMin  () const;
-  double getEtaMax () const;
-  double getDzMax  () const { return dzMax; }
+  double getPtMin () const { return  ptMin; }
+  double getEtaMax() const { return etaMax; }
+  double getDzMax () const { return  dzMax; }
 
- private:
+ protected:
+
+  double  ptMin;
+  double etaMax;
+  double  dzMax;
+
+  /// build candidates
+  void fillRecList() override;
+
+ protected:
 
   std::string pName;
   std::string nName;
@@ -84,11 +94,7 @@ class BPHDecayToChargedXXbarBuilder: public BPHDecayGenericBuilder {
   const BPHRecoBuilder::BPHGenericCollection* pCollection;
   const BPHRecoBuilder::BPHGenericCollection* nCollection;
 
-  double  ptMin;
-  double etaMax;
-  double  dzMax;
-
-  std::vector<BPHPlusMinusConstCandPtr> recList;
+ private:
 
   class Particle {
    public:
@@ -98,7 +104,8 @@ class BPHDecayToChargedXXbarBuilder: public BPHDecayGenericBuilder {
               double y,
               double z,
               double e ): cand( c ), track( tk ),
-                          px( x ), py( y ), pz( z ), en( e ) {}
+                          px( x ), py( y ), pz( z ), en( e ) {
+    }
     const reco::Candidate* cand;
     const reco::Track* track;
     double px;

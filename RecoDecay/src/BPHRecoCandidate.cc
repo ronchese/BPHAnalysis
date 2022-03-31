@@ -73,7 +73,7 @@ BPHRecoCandidate* BPHRecoCandidate::clone( int level ) const {
 // copy stable particles and clone cascade decays up to chosen level
 void BPHRecoCandidate::fill( BPHRecoCandidate* ptr, int level ) const {
   ptr->setConstraint( constrMass(), constrSigma() );
-  const std::vector<std::string>& nDaug = daugNames();
+  const vector<string>& nDaug = daugNames();
   int id;
   int nd = nDaug.size();
   for ( id = 0; id < nd; ++id ) {
@@ -82,7 +82,7 @@ void BPHRecoCandidate::fill( BPHRecoCandidate* ptr, int level ) const {
     ptr->add( n, originalReco( d ), getTrackSearchList( d ),
               d->mass(), getMassSigma( d ) );
   }
-  const std::vector<std::string>& nComp = compNames();
+  const vector<string>& nComp = compNames();
   int ic;
   int nc = nComp.size();
   for ( ic = 0; ic < nc; ++ic ) {

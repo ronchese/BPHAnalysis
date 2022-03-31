@@ -17,12 +17,14 @@
 //------------------------------------
 // Collaborating Class Declarations --
 //------------------------------------
+#include "BPHAnalysis/SpecificDecay/interface/BPHDecayGenericBuilderBase.h"
+#include "BPHAnalysis/SpecificDecay/interface/BPHDecayConstrainedBuilderBase.h"
+#include "BPHAnalysis/SpecificDecay/interface/BPHParticleMasses.h"
 #include "BPHAnalysis/RecoDecay/interface/BPHRecoBuilder.h"
 #include "BPHAnalysis/RecoDecay/interface/BPHRecoCandidate.h"
 #include "BPHAnalysis/RecoDecay/interface/BPHPlusMinusCandidate.h"
-#include "BPHAnalysis/SpecificDecay/interface/BPHParticleMasses.h"
 
-#include "FWCore/Framework/interface/Event.h"
+#include "FWCore/Framework/interface/EventSetup.h"
 
 //---------------
 // C++ Headers --
@@ -34,7 +36,10 @@
 //              -- Class Interface --
 //              ---------------------
 
-class BPHBsToJPsiPhiBuilder: public BPHDecayToResResBuilder {
+class BPHBsToJPsiPhiBuilder:
+      public BPHDecayToResResBuilder<BPHRecoCandidate,
+                                     BPHPlusMinusCandidate,
+                                     BPHPlusMinusCandidate> {
 
  public:
 
@@ -43,11 +48,11 @@ class BPHBsToJPsiPhiBuilder: public BPHDecayToResResBuilder {
   BPHBsToJPsiPhiBuilder( const edm::EventSetup& es,
       const std::vector<BPHPlusMinusConstCandPtr>& jpsiCollection,
       const std::vector<BPHPlusMinusConstCandPtr>&  phiCollection ):
-   BPHDecayToResResBuilder( es,
-                            "JPsi", 
-                            BPHParticleMasses::jPsiMass,
-                            BPHParticleMasses::jPsiMWidth, jpsiCollection,
-                            "Phi",                          phiCollection ) {
+   BPHDecayGenericBuilderBase( es, nullptr ),
+   BPHDecayConstrainedBuilderBase( "JPsi", BPHParticleMasses::jPsiMass,
+                                           BPHParticleMasses::jPsiMWidth ),
+   BPHDecayToResResBuilder( jpsiCollection,
+                            "Phi", phiCollection ) {
     setRes1MassRange( 2.80, 3.40 );
     setRes2MassRange( 1.005, 1.035 );
     setMassRange    ( 3.50, 8.00 );
@@ -77,6 +82,9 @@ class BPHBsToJPsiPhiBuilder: public BPHDecayToResResBuilder {
   double getJPsiMassMax() const { return getRes1MassMax(); }
   double getPhiMassMin () const { return getRes2MassMin(); }
   double getPhiMassMax () const { return getRes2MassMax(); }
+
+  /// setup parameters for BPHRecoBuilder
+  void setup( void* parameters ) override {}
 
 };
 

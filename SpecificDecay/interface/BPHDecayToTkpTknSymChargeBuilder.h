@@ -14,6 +14,7 @@
 //----------------------
 // Base Class Headers --
 //----------------------
+#include "BPHAnalysis/SpecificDecay/interface/BPHDecayGenericBuilderBase.h"
 #include "BPHAnalysis/SpecificDecay/interface/BPHDecayGenericBuilder.h"
 
 //------------------------------------
@@ -23,7 +24,7 @@
 #include "BPHAnalysis/RecoDecay/interface/BPHRecoCandidate.h"
 #include "BPHAnalysis/RecoDecay/interface/BPHPlusMinusCandidate.h"
 
-#include "FWCore/Framework/interface/Event.h"
+#include "FWCore/Framework/interface/EventSetup.h"
 
 class BPHParticlePtSelect;
 class BPHParticleEtaSelect;
@@ -40,7 +41,9 @@ class BPHMassSelect;
 //              -- Class Interface --
 //              ---------------------
 
-class BPHDecayToTkpTknSymChargeBuilder: public BPHDecayGenericBuilder {
+class BPHDecayToTkpTknSymChargeBuilder:
+      public virtual BPHDecayGenericBuilderBase,
+      public virtual BPHDecayGenericBuilder<BPHPlusMinusCandidate> {
 
  public:
 
@@ -63,15 +66,13 @@ class BPHDecayToTkpTknSymChargeBuilder: public BPHDecayGenericBuilder {
 
   /** Operations
    */
-  /// build candidates
-  std::vector<BPHPlusMinusConstCandPtr> build();
 
   /// set cuts
-  void setTrk1PtMin ( double pt  );
-  void setTrk2PtMin ( double pt  );
+  void setTrk1PtMin ( double  pt );
+  void setTrk2PtMin ( double  pt );
   void setTrk1EtaMax( double eta );
   void setTrk2EtaMax( double eta );
-  void setDzMax     ( double dz  );
+  void setDzMax     ( double  dz );
 
   /// get current cuts
   double getTrk1PtMin () const { return  pt1Min; }
@@ -99,8 +100,6 @@ class BPHDecayToTkpTknSymChargeBuilder: public BPHDecayGenericBuilder {
   double eta2Max;
   double   dzMax;
 
-  std::vector<BPHPlusMinusConstCandPtr> recList;
-
   class Particle {
    public:
     Particle( const reco::Candidate* c,
@@ -110,7 +109,8 @@ class BPHDecayToTkpTknSymChargeBuilder: public BPHDecayGenericBuilder {
               double z,
               double f,
               double g ): cand( c ), track( tk ),
-                          px( x ), py( y ), pz( z ), e1( f ), e2( g ) {}
+                          px( x ), py( y ), pz( z ), e1( f ), e2( g ) {
+    }
     const reco::Candidate* cand;
     const reco::Track* track;
     double px;
@@ -121,6 +121,9 @@ class BPHDecayToTkpTknSymChargeBuilder: public BPHDecayGenericBuilder {
   };
   void addParticle( const BPHRecoBuilder::BPHGenericCollection* collection,
                     int charge, std::vector<Particle*>& list );
+
+  /// build candidates
+  void fillRecList() override;
 
 };
 
