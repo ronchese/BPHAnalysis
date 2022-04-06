@@ -13,15 +13,15 @@
 //-------------------------------
 // Collaborating Class Headers --
 //-------------------------------
-#include "BPHAnalysis/RecoDecay/interface/BPHRecoBuilder.h"
-#include "BPHAnalysis/RecoDecay/interface/BPHPlusMinusCandidate.h"
-#include "BPHAnalysis/RecoDecay/interface/BPHTrackReference.h"
 #include "BPHAnalysis/SpecificDecay/interface/BPHParticlePtSelect.h"
 #include "BPHAnalysis/SpecificDecay/interface/BPHParticleEtaSelect.h"
 #include "BPHAnalysis/SpecificDecay/interface/BPHMassSelect.h"
 #include "BPHAnalysis/SpecificDecay/interface/BPHMassSymSelect.h"
 #include "BPHAnalysis/SpecificDecay/interface/BPHChi2Select.h"
 #include "BPHAnalysis/SpecificDecay/interface/BPHParticleMasses.h"
+#include "BPHAnalysis/RecoDecay/interface/BPHRecoBuilder.h"
+#include "BPHAnalysis/RecoDecay/interface/BPHPlusMinusCandidate.h"
+#include "BPHAnalysis/RecoDecay/interface/BPHTrackReference.h"
 #include "DataFormats/Candidate/interface/Candidate.h"
 #include "DataFormats/Math/interface/LorentzVector.h"
 
@@ -39,7 +39,7 @@ using namespace std;
 // Constructors --
 //----------------
 BPHDecayToTkpTknSymChargeBuilder::BPHDecayToTkpTknSymChargeBuilder(
-       const edm::EventSetup& es,
+       const BPHEventSetupWrapper& es,
        const string& daug1Name, double daug1Mass, double daug1Sigma,
        const string& daug2Name, double daug2Mass, double daug2Sigma,
        const BPHRecoBuilder::BPHGenericCollection* posCollection,
@@ -120,10 +120,6 @@ void BPHDecayToTkpTknSymChargeBuilder::fillRecList() {
                           ( ( tx * tx ) +
                             ( ty * ty ) +
                             ( tz * tz ) ) : -1.0 );
-//      if ( ma > 0.0 ) ma = sqrt( ma );
-//      else            ma = -1.0;
-//      if ( mb > 0.0 ) mb = sqrt( mb );
-//      else            mb = -1.0;
       if ( ( ( ma < mSqMin ) || ( ma > mSqMax ) ) &&
            ( ( mb < mSqMin ) || ( mb > mSqMax ) ) ) continue;
       BPHPlusMinusCandidatePtr rc( nullptr );

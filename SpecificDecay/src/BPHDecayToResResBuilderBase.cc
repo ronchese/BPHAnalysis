@@ -33,7 +33,7 @@ using namespace std;
 // Constructors --
 //----------------
 BPHDecayToResResBuilderBase::BPHDecayToResResBuilderBase(
-    const edm::EventSetup& es,
+    const BPHEventSetupWrapper& es,
     const string& res1Name, double res1Mass, double res1Width,
     const string& res2Name ):
  BPHDecayGenericBuilderBase( es, nullptr ),

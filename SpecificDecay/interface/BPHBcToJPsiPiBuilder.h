@@ -26,6 +26,7 @@
 
 #include "FWCore/Framework/interface/EventSetup.h"
 
+class BPHEventSetupWrapper;
 class BPHParticleNeutralVeto;
 class BPHParticlePtSelect;
 class BPHParticleEtaSelect;
@@ -51,7 +52,7 @@ class BPHBcToJPsiPiBuilder:
 
   /** Constructor
    */
-  BPHBcToJPsiPiBuilder( const edm::EventSetup& es,
+  BPHBcToJPsiPiBuilder( const BPHEventSetupWrapper& es,
       const std::vector<BPHPlusMinusConstCandPtr>& jpsiCollection,
       const BPHRecoBuilder::BPHGenericCollection*  pionCollection ):
    BPHDecayGenericBuilderBase( es, nullptr ),//, false ),

@@ -25,6 +25,8 @@
 
 #include "FWCore/Framework/interface/EventSetup.h"
 
+class BPHEventSetupWrapper;
+
 //---------------
 // C++ Headers --
 //---------------
@@ -41,7 +43,7 @@ class BPHKx0ToKPiBuilder: public BPHDecayToTkpTknSymChargeBuilder {
 
   /** Constructor
    */
-  BPHKx0ToKPiBuilder( const edm::EventSetup& es,
+  BPHKx0ToKPiBuilder( const BPHEventSetupWrapper& es,
        const BPHRecoBuilder::BPHGenericCollection* posCollection,
        const BPHRecoBuilder::BPHGenericCollection* negCollection ):
    BPHDecayGenericBuilderBase( es ),

@@ -24,6 +24,7 @@
 
 #include "FWCore/Framework/interface/EventSetup.h"
 
+class BPHEventSetupWrapper;
 class BPHMassSelect;
 class BPHChi2Select;
 class BPHMassFitSelect;
@@ -46,7 +47,7 @@ class BPHBdToKxMuMuBuilder:
 
   /** Constructor
    */
-  BPHBdToKxMuMuBuilder( const edm::EventSetup& es,
+  BPHBdToKxMuMuBuilder( const BPHEventSetupWrapper& es,
       const std::vector<BPHPlusMinusConstCandPtr>& oniaCollection,
       const std::vector<BPHPlusMinusConstCandPtr>&  kx0Collection ):
   BPHDecayGenericBuilderBase( es, nullptr ),
@@ -99,7 +100,6 @@ class BPHBdToKxMuMuBuilder:
   std::string oniaName;
   std::string  kx0Name;
 
-  const edm::EventSetup* evSetup;
   const std::vector<BPHPlusMinusConstCandPtr>* oCollection;
   const std::vector<BPHPlusMinusConstCandPtr>* kCollection;
 

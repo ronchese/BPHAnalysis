@@ -39,7 +39,7 @@ using namespace std;
 // Constructors --
 //----------------
 BPHDecayToChargedXXbarBuilder::BPHDecayToChargedXXbarBuilder(
-               const edm::EventSetup& es,
+               const BPHEventSetupWrapper& es,
                const string& dPosName, const string& dNegName,
                double daugMass, double daugSigma,
                const BPHRecoBuilder::BPHGenericCollection* posCollection,

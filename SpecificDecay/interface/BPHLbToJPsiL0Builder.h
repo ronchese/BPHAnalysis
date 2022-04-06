@@ -27,6 +27,8 @@
 
 #include "FWCore/Framework/interface/EventSetup.h"
 
+class BPHEventSetupWrapper;
+
 //---------------
 // C++ Headers --
 //---------------
@@ -46,7 +48,7 @@ class BPHLbToJPsiL0Builder:
 
   /** Constructor
    */
-  BPHLbToJPsiL0Builder( const edm::EventSetup& es,
+  BPHLbToJPsiL0Builder( const BPHEventSetupWrapper& es,
       const std::vector<BPHPlusMinusConstCandPtr>& jpsiCollection,
       const std::vector<BPHPlusMinusConstCandPtr>&   l0Collection ):
    BPHDecayGenericBuilderBase( es, nullptr ),

@@ -26,7 +26,6 @@
 //---------------
 // C++ Headers --
 //---------------
-#include <iostream>
 using namespace std;
 
 //-------------------
@@ -38,7 +37,7 @@ using namespace std;
 // Constructors --
 //----------------
 BPHOniaToMuMuBuilder::BPHOniaToMuMuBuilder(
-    const edm::EventSetup& es,
+    const BPHEventSetupWrapper& es,
     const BPHRecoBuilder::BPHGenericCollection* muPosCollection,
     const BPHRecoBuilder::BPHGenericCollection* muNegCollection ):
  BPHDecayGenericBuilderBase( es ),

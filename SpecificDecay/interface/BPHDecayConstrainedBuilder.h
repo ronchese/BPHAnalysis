@@ -24,6 +24,8 @@
 
 #include "FWCore/Framework/interface/EventSetup.h"
 
+class BPHEventSetupWrapper;
+
 //---------------
 // C++ Headers --
 //---------------
@@ -46,7 +48,7 @@ class BPHDecayConstrainedBuilder:
 
   /** Constructor
    */
-  BPHDecayConstrainedBuilder( const edm::EventSetup& es,
+  BPHDecayConstrainedBuilder( const BPHEventSetupWrapper& es,
       const std::string& resName, double resMass, double resWidth,
       const std::vector<res_ptr>& resCollection ):
    BPHDecayGenericBuilderBase( es ),

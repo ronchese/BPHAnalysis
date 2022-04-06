@@ -24,7 +24,7 @@
 #include "BPHAnalysis/RecoDecay/interface/BPHRecoCandidate.h"
 #include "BPHAnalysis/RecoDecay/interface/BPHPlusMinusCandidate.h"
 
-#include "FWCore/Framework/interface/EventSetup.h"
+class BPHEventSetupWrapper;
 
 //---------------
 // C++ Headers --
@@ -44,19 +44,19 @@ class BPHDecayToV0DiffMassBuilder: public BPHDecayToV0Builder,
 
   /** Constructor
    */
-  BPHDecayToV0DiffMassBuilder( const edm::EventSetup& es,
+  BPHDecayToV0DiffMassBuilder( const BPHEventSetupWrapper& es,
        const std::string& daug1Name, double daug1Mass, double daug1Sigma,
        const std::string& daug2Name, double daug2Mass, double daug2Sigma,
        const BPHRecoBuilder::BPHGenericCollection* posCollection,
        const BPHRecoBuilder::BPHGenericCollection* negCollection,
        double expectedMass );
-  BPHDecayToV0DiffMassBuilder( const edm::EventSetup& es,
+  BPHDecayToV0DiffMassBuilder( const BPHEventSetupWrapper& es,
        const std::string& daug1Name, double daug1Mass, double daug1Sigma,
        const std::string& daug2Name, double daug2Mass, double daug2Sigma,
        const std::vector<reco::VertexCompositeCandidate   >* v0Collection,
        double expectedMass,
        const std::string& searchList = "cfp" );
-  BPHDecayToV0DiffMassBuilder( const edm::EventSetup& es,
+  BPHDecayToV0DiffMassBuilder( const BPHEventSetupWrapper& es,
        const std::string& daug1Name, double daug1Mass, double daug1Sigma,
        const std::string& daug2Name, double daug2Mass, double daug2Sigma,
        const std::vector<reco::VertexCompositePtrCandidate>* vpCollection,

@@ -28,6 +28,8 @@
 
 #include "FWCore/Framework/interface/EventSetup.h"
 
+class BPHEventSetupWrapper;
+
 //---------------
 // C++ Headers --
 //---------------
@@ -44,7 +46,7 @@ class BPHLambda0ToPPiBuilder: public BPHDecayToV0DiffMassBuilder {
 
   /** Constructor
    */
-  BPHLambda0ToPPiBuilder( const edm::EventSetup& es,
+  BPHLambda0ToPPiBuilder( const BPHEventSetupWrapper& es,
        const BPHRecoBuilder::BPHGenericCollection* protonCollection,
        const BPHRecoBuilder::BPHGenericCollection*   pionCollection ):
    BPHDecayGenericBuilderBase( es ),
@@ -63,7 +65,7 @@ class BPHLambda0ToPPiBuilder: public BPHDecayToV0DiffMassBuilder {
   }
 
   template<class V0VertexType>
-  BPHLambda0ToPPiBuilder( const edm::EventSetup& es,
+  BPHLambda0ToPPiBuilder( const BPHEventSetupWrapper& es,
        const std::vector<V0VertexType>* v0Collection,
        const std::string& searchList = "cfp" ):
    BPHDecayGenericBuilderBase( es ),

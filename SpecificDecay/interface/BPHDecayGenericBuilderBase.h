@@ -22,13 +22,12 @@
 #include "BPHAnalysis/SpecificDecay/interface/BPHChi2Select.h"
 #include "BPHAnalysis/SpecificDecay/interface/BPHMassFitSelect.h"
 
-#include "FWCore/Framework/interface/EventSetup.h"
+class BPHEventSetupWrapper;
 
 //---------------
 // C++ Headers --
 //---------------
-//#include <string>
-//#include <vector>
+
 
 //              ---------------------
 //              -- Class Interface --
@@ -41,7 +40,7 @@ class BPHDecayGenericBuilderBase {
   /** Constructor
    */
   BPHDecayGenericBuilderBase();
-  BPHDecayGenericBuilderBase( const edm::EventSetup& es,
+  BPHDecayGenericBuilderBase( const BPHEventSetupWrapper& es,
        BPHMassFitSelect* mfs = new BPHMassFitSelect( -2.0e+06, -1.0e+06 ) );
 
   // deleted copy constructor and assignment operator
@@ -76,7 +75,7 @@ class BPHDecayGenericBuilderBase {
 
  protected:
 
-  const edm::EventSetup* evSetup;
+  const BPHEventSetupWrapper* evSetup;
 
   BPHMassSelect   * massSel;
   BPHChi2Select   * chi2Sel;

@@ -25,6 +25,7 @@
 
 #include "FWCore/Framework/interface/EventSetup.h"
 
+class BPHEventSetupWrapper;
 class BPHParticleNeutralVeto;
 
 //---------------
@@ -50,7 +51,7 @@ class BPHDecayToResTrkBuilder:
 
   /** Constructor
    */
-  BPHDecayToResTrkBuilder( const edm::EventSetup& es,
+  BPHDecayToResTrkBuilder( const BPHEventSetupWrapper& es,
       const std::string& resName, double resMass, double resWidth,
       const std::vector<res_ptr>& resCollection,
       const std::string& trkName, double trkMass, double trkSigma,

@@ -21,8 +21,7 @@
 //------------------------------------
 #include "BPHAnalysis/SpecificDecay/interface/BPHKinFitChi2Select.h"
 
-#include "FWCore/Framework/interface/EventSetup.h"
-
+class BPHEventSetupWrapper;
 class BPHRecoBuilder;
 
 //---------------
@@ -43,7 +42,7 @@ class BPHDecayToFlyingCascadeBuilderBase:
 
   /** Constructor
    */
-  BPHDecayToFlyingCascadeBuilderBase( const edm::EventSetup& es,
+  BPHDecayToFlyingCascadeBuilderBase( const BPHEventSetupWrapper& es,
       const std::string& flyName, double flyMass, double flyMSigma );
 
   // deleted copy constructor and assignment operator

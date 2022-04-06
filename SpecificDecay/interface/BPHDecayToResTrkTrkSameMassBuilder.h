@@ -29,6 +29,7 @@
 
 #include "FWCore/Framework/interface/EventSetup.h"
 
+class BPHEventSetupWrapper;
 class BPHParticleNeutralVeto;
 
 //---------------
@@ -53,7 +54,7 @@ class BPHDecayToResTrkTrkSameMassBuilder:
 
   /** Constructor
    */
-  BPHDecayToResTrkTrkSameMassBuilder( const edm::EventSetup& es,
+  BPHDecayToResTrkTrkSameMassBuilder( const BPHEventSetupWrapper& es,
       const std::string& resName, double resMass, double resWidth,
       const std::vector<res_ptr>& resCollection,
       const std::string& posName, const std::string& negName,

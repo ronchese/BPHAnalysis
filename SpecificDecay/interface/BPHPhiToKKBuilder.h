@@ -25,6 +25,8 @@
 
 #include "FWCore/Framework/interface/EventSetup.h"
 
+class BPHEventSetupWrapper;
+
 //---------------
 // C++ Headers --
 //---------------
@@ -41,7 +43,7 @@ class BPHPhiToKKBuilder: public BPHDecayToChargedXXbarBuilder {
 
   /** Constructor
    */
-  BPHPhiToKKBuilder( const edm::EventSetup& es,
+  BPHPhiToKKBuilder( const BPHEventSetupWrapper& es,
        const BPHRecoBuilder::BPHGenericCollection* posCollection,
        const BPHRecoBuilder::BPHGenericCollection* negCollection ):
    BPHDecayGenericBuilderBase( es ),

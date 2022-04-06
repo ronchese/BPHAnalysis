@@ -33,7 +33,7 @@ using namespace std;
 // Constructors --
 //----------------
 BPHDecayToV0SameMassBuilder::BPHDecayToV0SameMassBuilder(
-               const edm::EventSetup& es,
+               const BPHEventSetupWrapper& es,
                const string& posName, const string& negName,
                double daugMass, double daugSigma,
                const BPHRecoBuilder::BPHGenericCollection* posCollection,
@@ -49,7 +49,7 @@ BPHDecayToV0SameMassBuilder::BPHDecayToV0SameMassBuilder(
 
 
 BPHDecayToV0SameMassBuilder::BPHDecayToV0SameMassBuilder(
-               const edm::EventSetup& es,
+               const BPHEventSetupWrapper& es,
                const string& posName, const string& negName,
                double daugMass, double daugSigma,
                const vector<reco::VertexCompositeCandidate>* v0Collection,
@@ -65,7 +65,7 @@ BPHDecayToV0SameMassBuilder::BPHDecayToV0SameMassBuilder(
 
 
 BPHDecayToV0SameMassBuilder::BPHDecayToV0SameMassBuilder(
-               const edm::EventSetup& es,
+               const BPHEventSetupWrapper& es,
                const string& posName, const string& negName,
                double daugMass, double daugSigma,
                const vector<reco::VertexCompositePtrCandidate>* vpCollection,

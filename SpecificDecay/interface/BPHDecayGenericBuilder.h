@@ -24,6 +24,8 @@
 
 #include "FWCore/Framework/interface/EventSetup.h"
 
+class BPHEventSetupWrapper;
+
 //---------------
 // C++ Headers --
 //---------------
@@ -43,7 +45,7 @@ class BPHDecayGenericBuilder: public virtual BPHDecayGenericBuilderBase {
 
   /** Constructor
    */
-  BPHDecayGenericBuilder( const edm::EventSetup& es,
+  BPHDecayGenericBuilder( const BPHEventSetupWrapper& es,
                           BPHMassFitSelect* mfs ):
    BPHDecayGenericBuilderBase( es, mfs ) {
   }

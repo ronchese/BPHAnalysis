@@ -17,11 +17,10 @@
 #include "BPHAnalysis/RecoDecay/interface/BPHRecoCandidate.h"
 #include "BPHAnalysis/RecoDecay/interface/BPHPlusMinusVertex.h"
 
-
 //------------------------------------
 // Collaborating Class Declarations --
 //------------------------------------
-
+class BPHEventSetupWrapper;
 
 //---------------
 // C++ Headers --
@@ -44,7 +43,7 @@ class BPHPlusMinusCandidate: public BPHRecoCandidate,
 
   /** Constructor
    */
-  BPHPlusMinusCandidate( const edm::EventSetup* es );
+  BPHPlusMinusCandidate( const BPHEventSetupWrapper* es );
 
   // deleted copy constructor and assignment operator
   BPHPlusMinusCandidate           ( const BPHPlusMinusCandidate& x ) = delete;
@@ -112,7 +111,7 @@ class BPHPlusMinusCandidate: public BPHRecoCandidate,
  private:
 
   // constructor
-  BPHPlusMinusCandidate( const edm::EventSetup* es,
+  BPHPlusMinusCandidate( const BPHEventSetupWrapper* es,
 			 const BPHRecoBuilder::ComponentSet& compList );
 
   // return true or false for positive or negative phi_pos-phi_neg difference

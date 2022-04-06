@@ -22,6 +22,8 @@
 //------------------------------------
 #include "FWCore/Framework/interface/EventSetup.h"
 
+class BPHEventSetupWrapper;
+
 //---------------
 // C++ Headers --
 //---------------
@@ -47,7 +49,7 @@ class BPHDecayToResResBuilder:
 
   /** Constructor
    */
-  BPHDecayToResResBuilder( const edm::EventSetup& es,
+  BPHDecayToResResBuilder( const BPHEventSetupWrapper& es,
       const std::string& res1Name, double res1Mass, double res1Width,
       const std::vector<res1_ptr>& res1Collection,
       const std::string& res2Name,

@@ -155,7 +155,7 @@ void CheckBPHWriteDecay::dump( ostream& os,
     writeCartesian( os, "vpos : ", *vptr, false );
     os << " --- " << vptr->chi2() << " / " << vptr->ndof()
        << " ( " << ChiSquaredProbability( vptr->chi2(),
-                                            vptr->ndof() ) << " )" << endl;
+                                          vptr->ndof() ) << " )" << endl;
   }
   const reco::Vertex* vfit = 
         ( cand.hasUserData              ( "fitVertex" ) ? 
@@ -164,7 +164,7 @@ void CheckBPHWriteDecay::dump( ostream& os,
     writeCartesian( os, "vfit : ", *vfit, false );
     os << " --- "  << vfit->chi2() << " / " << vfit->ndof()
        << " ( " << ChiSquaredProbability( vfit->chi2(),
-                                            vfit->ndof() ) << " )" << endl;
+                                          vfit->ndof() ) << " )" << endl;
   }
   if ( cand.hasUserData( "fitMomentum" ) )
        writeCartesian( os, "fmom : ",

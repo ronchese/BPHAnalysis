@@ -4,6 +4,7 @@
 #include "FWCore/ParameterSet/interface/ConfigurationDescriptions.h"
 #include "FWCore/ParameterSet/interface/ParameterSetDescription.h"
 
+#include "BPHAnalysis/RecoDecay/interface/BPHAnalyzerTokenWrapper.h"
 #include "BPHAnalysis/RecoDecay/interface/BPHRecoBuilder.h"
 #include "BPHAnalysis/RecoDecay/interface/BPHRecoSelect.h"
 #include "BPHAnalysis/RecoDecay/interface/BPHRecoCandidate.h"
@@ -12,9 +13,9 @@
 #include "BPHAnalysis/RecoDecay/interface/BPHVertexSelect.h"
 #include "BPHAnalysis/RecoDecay/interface/BPHTrackReference.h"
 
-#include "DataFormats/PatCandidates/interface/Muon.h"
 #include "DataFormats/TrackReco/interface/Track.h"
 
+#include "DataFormats/PatCandidates/interface/Muon.h"
 #include "DataFormats/PatCandidates/interface/GenericParticle.h"
 #include "DataFormats/PatCandidates/interface/CompositeCandidate.h"
 
@@ -42,6 +43,8 @@ TestBPHRecoDecay::TestBPHRecoDecay( const edm::ParameterSet& ps ) {
   usePC = ( !SET_LABEL( pcCandsLabel, ps ).empty() );
   useGP = ( !SET_LABEL( gpCandsLabel, ps ).empty() );
 
+  esConsume< TransientTrackBuilder,
+             TransientTrackRecord >( ttBToken, "TransientTrackBuilder" );
   if ( usePM ) consume< pat::MuonCollection                  >( patMuonToken,
                                                                 patMuonLabel );
   if ( useCC ) consume< vector<pat::CompositeCandidate>      >( ccCandsToken,
@@ -99,6 +102,10 @@ void TestBPHRecoDecay::analyze( const edm::Event& ev,
   outF << "--------- event "
        << ev.id().run() << " / "
        << ev.id().event() << " ---------" << endl;
+
+  // create a "wrapper" for EventSetup
+  BPHEventSetupWrapper ew( es,
+                           BPHRecoCandidate::transientTrackBuilder, &ttBToken );
 
   // get object collections
   // collections are got through "BPHTokenWrapper" interface to allow
@@ -318,7 +325,7 @@ void TestBPHRecoDecay::analyze( const edm::Event& ev,
   MuonEtaSelect    muEta( 2.1 );
   string muPos = "MuPos";
   string muNeg = "MuNeg";
-  BPHRecoBuilder bJPsi( es );
+  BPHRecoBuilder bJPsi( ew );
   if ( usePM ) {
   bJPsi.add( muPos, BPHRecoBuilder::createCollection( patMuon, "cfmig" ),
              0.105658 );
@@ -360,7 +367,7 @@ void TestBPHRecoDecay::analyze( const edm::Event& ev,
   // build and dump Phi
 
   outF << "build and dump Phi" << endl;
-  BPHRecoBuilder bPhi( es );
+  BPHRecoBuilder bPhi( ew );
   KaonChargeSelect tkPos( +1 );
   KaonChargeSelect tkNeg( -1 );
   KaonPtSelect tkPt( 0.7 );
@@ -402,7 +409,7 @@ void TestBPHRecoDecay::analyze( const edm::Event& ev,
 
   if ( nJPsi && nPhi ) {
   outF << "build and dump Bs" << endl;
-  BPHRecoBuilder bBs( es );
+  BPHRecoBuilder bBs( ew );
   bBs.setMinPDiffererence( 1.0e-5 );
   bBs.add( "JPsi", lJPsi );
   bBs.add(  "Phi",  lPhi );
@@ -430,7 +437,7 @@ void TestBPHRecoDecay::analyze( const edm::Event& ev,
 
   if ( nJPsi && nrc ) {
   outF << "build and dump Bu" << endl;
-  BPHRecoBuilder bBu( es );
+  BPHRecoBuilder bBu( ew );
   bBu.setMinPDiffererence( 1.0e-5 );
   bBu.add( "JPsi", lJPsi );
   if ( usePF ) {

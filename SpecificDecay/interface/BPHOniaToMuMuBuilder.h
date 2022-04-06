@@ -22,8 +22,7 @@
 #include "BPHAnalysis/RecoDecay/interface/BPHRecoCandidate.h"
 #include "BPHAnalysis/RecoDecay/interface/BPHPlusMinusCandidate.h"
 
-#include "FWCore/Framework/interface/EventSetup.h"
-
+class BPHEventSetupWrapper;
 class BPHMuonPtSelect;
 class BPHMuonEtaSelect;
 class BPHChi2Select;
@@ -54,7 +53,7 @@ class BPHOniaToMuMuBuilder:
   /** Constructor
    */
   BPHOniaToMuMuBuilder(
-    const edm::EventSetup& es,
+    const BPHEventSetupWrapper& es,
     const BPHRecoBuilder::BPHGenericCollection* muPosCollection,
     const BPHRecoBuilder::BPHGenericCollection* muNegCollection );
 

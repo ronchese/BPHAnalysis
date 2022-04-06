@@ -25,6 +25,8 @@
 
 #include "FWCore/Framework/interface/EventSetup.h"
 
+class BPHEventSetupWrapper;
+
 //---------------
 // C++ Headers --
 //---------------
@@ -47,7 +49,7 @@ class BPHDecayToFlyingCascadeBuilder:
 
   /** Constructor
    */
-  BPHDecayToFlyingCascadeBuilder( const edm::EventSetup& es,
+  BPHDecayToFlyingCascadeBuilder( const BPHEventSetupWrapper& es,
       const std::string& flyName, double flyMass, double flyMSigma,
       const std::vector<flying_ptr>& flyCollection ):
    BPHDecayGenericBuilderBase( es, nullptr ),

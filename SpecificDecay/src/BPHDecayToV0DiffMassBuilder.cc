@@ -34,7 +34,7 @@ using namespace std;
 // Constructors --
 //----------------
 BPHDecayToV0DiffMassBuilder::BPHDecayToV0DiffMassBuilder(
-               const edm::EventSetup& es,
+               const BPHEventSetupWrapper& es,
                const string& daug1Name, double daug1Mass, double daug1Sigma,
                const string& daug2Name, double daug2Mass, double daug2Sigma,
                const BPHRecoBuilder::BPHGenericCollection* daug1Collection,
@@ -56,7 +56,7 @@ BPHDecayToV0DiffMassBuilder::BPHDecayToV0DiffMassBuilder(
 
 
 BPHDecayToV0DiffMassBuilder::BPHDecayToV0DiffMassBuilder(
-               const edm::EventSetup& es,
+               const BPHEventSetupWrapper& es,
                const string& daug1Name, double daug1Mass, double daug1Sigma,
                const string& daug2Name, double daug2Mass, double daug2Sigma,
                const vector<reco::VertexCompositeCandidate>* v0Collection,
@@ -76,7 +76,7 @@ BPHDecayToV0DiffMassBuilder::BPHDecayToV0DiffMassBuilder(
 
 
 BPHDecayToV0DiffMassBuilder::BPHDecayToV0DiffMassBuilder(
-               const edm::EventSetup& es,
+               const BPHEventSetupWrapper& es,
                const string& daug1Name, double daug1Mass, double daug1Sigma,
                const string& daug2Name, double daug2Mass, double daug2Sigma,
                const vector<reco::VertexCompositePtrCandidate>* vpCollection,

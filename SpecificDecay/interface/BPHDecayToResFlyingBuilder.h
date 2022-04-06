@@ -23,6 +23,8 @@
 //------------------------------------
 #include "FWCore/Framework/interface/EventSetup.h"
 
+class BPHEventSetupWrapper;
+
 //---------------
 // C++ Headers --
 //---------------
@@ -51,7 +53,7 @@ class BPHDecayToResFlyingBuilder:
 
   /** Constructor
    */
-  BPHDecayToResFlyingBuilder( const edm::EventSetup& es,
+  BPHDecayToResFlyingBuilder( const BPHEventSetupWrapper& es,
       const std::string& resName, double resMass, double resWidth,
       const std::vector<res_ptr>& resCollection,
       const std::string& flyName, double flyMass, double flyMSigma,

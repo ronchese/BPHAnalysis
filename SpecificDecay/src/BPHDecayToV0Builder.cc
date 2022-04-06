@@ -35,7 +35,7 @@ using namespace std;
 // Constructors --
 //----------------
 BPHDecayToV0Builder::BPHDecayToV0Builder(
-               const edm::EventSetup& es,
+               const BPHEventSetupWrapper& es,
                const string& d1Name, const string& d2Name,
                const BPHRecoBuilder::BPHGenericCollection* d1Collection,
                const BPHRecoBuilder::BPHGenericCollection* d2Collection ):
@@ -51,7 +51,7 @@ BPHDecayToV0Builder::BPHDecayToV0Builder(
 
 
 BPHDecayToV0Builder::BPHDecayToV0Builder(
-               const edm::EventSetup& es,
+               const BPHEventSetupWrapper& es,
                const string& d1Name, const string& d2Name,
                const vector<reco::VertexCompositeCandidate>* v0Collection,
                const string& searchList ):
@@ -67,7 +67,7 @@ BPHDecayToV0Builder::BPHDecayToV0Builder(
 
 
 BPHDecayToV0Builder::BPHDecayToV0Builder(
-               const edm::EventSetup& es,
+               const BPHEventSetupWrapper& es,
                const string& d1Name, const string& d2Name,
                const vector<reco::VertexCompositePtrCandidate>* vpCollection,
                const string& searchList ):

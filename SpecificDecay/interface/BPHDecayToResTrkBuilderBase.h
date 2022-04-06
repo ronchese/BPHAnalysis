@@ -25,8 +25,7 @@
 #include "BPHAnalysis/RecoDecay/interface/BPHRecoBuilder.h"
 #include "BPHAnalysis/RecoDecay/interface/BPHRecoCandidate.h"
 
-#include "FWCore/Framework/interface/EventSetup.h"
-
+class BPHEventSetupWrapper;
 class BPHParticleNeutralVeto;
 
 //---------------
@@ -47,7 +46,7 @@ class BPHDecayToResTrkBuilderBase:
 
   /** Constructor
    */
-  BPHDecayToResTrkBuilderBase( const edm::EventSetup& es,
+  BPHDecayToResTrkBuilderBase( const BPHEventSetupWrapper& es,
       const std::string& resName, double resMass, double resWidth,
       const std::string& trkName, double trkMass, double trkSigma,
       const BPHRecoBuilder::BPHGenericCollection* trkCollection );

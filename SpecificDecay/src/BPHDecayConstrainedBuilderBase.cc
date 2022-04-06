@@ -20,7 +20,6 @@
 //---------------
 // C++ Headers --
 //---------------
-#include <iostream>
 using namespace std;
 
 //-------------------
@@ -32,7 +31,7 @@ using namespace std;
 // Constructors --
 //----------------
 BPHDecayConstrainedBuilderBase::BPHDecayConstrainedBuilderBase(
-    const edm::EventSetup& es,
+    const BPHEventSetupWrapper& es,
     const string& resName, double resMass, double resWidth ):
  BPHDecayConstrainedBuilderBase( resName, resMass, resWidth ) {
   evSetup = &es;

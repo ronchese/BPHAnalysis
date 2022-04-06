@@ -25,6 +25,8 @@
 
 #include "FWCore/Framework/interface/EventSetup.h"
 
+class BPHEventSetupWrapper;
+
 //---------------
 // C++ Headers --
 //---------------
@@ -41,7 +43,7 @@ class BPHK0sToPiPiBuilder: public BPHDecayToV0SameMassBuilder {
 
   /** Constructor
    */
-  BPHK0sToPiPiBuilder( const edm::EventSetup& es,
+  BPHK0sToPiPiBuilder( const BPHEventSetupWrapper& es,
        const BPHRecoBuilder::BPHGenericCollection* posCollection,
        const BPHRecoBuilder::BPHGenericCollection* negCollection ):
    BPHDecayGenericBuilderBase( es ),
@@ -55,7 +57,7 @@ class BPHK0sToPiPiBuilder: public BPHDecayToV0SameMassBuilder {
   }
 
   template<class V0VertexType>
-  BPHK0sToPiPiBuilder( const edm::EventSetup& es,
+  BPHK0sToPiPiBuilder( const BPHEventSetupWrapper& es,
        const std::vector<V0VertexType>* v0Collection,
        const std::string& searchList = "cfp" ):
    BPHDecayGenericBuilderBase( es ),

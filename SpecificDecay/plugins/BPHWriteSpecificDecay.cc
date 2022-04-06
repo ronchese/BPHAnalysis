@@ -2,14 +2,6 @@
 
 #include "FWCore/Framework/interface/MakerMacros.h"
 
-#include "BPHAnalysis/RecoDecay/interface/BPHRecoBuilder.h"
-#include "BPHAnalysis/RecoDecay/interface/BPHRecoSelect.h"
-#include "BPHAnalysis/RecoDecay/interface/BPHRecoCandidate.h"
-#include "BPHAnalysis/RecoDecay/interface/BPHPlusMinusCandidate.h"
-#include "BPHAnalysis/RecoDecay/interface/BPHMomentumSelect.h"
-#include "BPHAnalysis/RecoDecay/interface/BPHVertexSelect.h"
-#include "BPHAnalysis/RecoDecay/interface/BPHTrackReference.h"
-
 #include "BPHAnalysis/SpecificDecay/interface/BPHMuonPtSelect.h"
 #include "BPHAnalysis/SpecificDecay/interface/BPHMuonEtaSelect.h"
 #include "BPHAnalysis/SpecificDecay/interface/BPHParticlePtSelect.h"
@@ -30,6 +22,15 @@
 #include "BPHAnalysis/SpecificDecay/interface/BPHLbToJPsiL0Builder.h"
 #include "BPHAnalysis/SpecificDecay/interface/BPHBcToJPsiPiBuilder.h"
 #include "BPHAnalysis/SpecificDecay/interface/BPHX3872ToJPsiPiPiBuilder.h"
+
+#include "BPHAnalysis/RecoDecay/interface/BPHAnalyzerTokenWrapper.h"
+#include "BPHAnalysis/RecoDecay/interface/BPHRecoBuilder.h"
+#include "BPHAnalysis/RecoDecay/interface/BPHRecoSelect.h"
+#include "BPHAnalysis/RecoDecay/interface/BPHRecoCandidate.h"
+#include "BPHAnalysis/RecoDecay/interface/BPHPlusMinusCandidate.h"
+#include "BPHAnalysis/RecoDecay/interface/BPHMomentumSelect.h"
+#include "BPHAnalysis/RecoDecay/interface/BPHVertexSelect.h"
+#include "BPHAnalysis/RecoDecay/interface/BPHTrackReference.h"
 
 #include "DataFormats/PatCandidates/interface/Muon.h"
 #include "DataFormats/TrackReco/interface/Track.h"
@@ -160,6 +161,10 @@ BPHWriteSpecificDecay::BPHWriteSpecificDecay( const edm::ParameterSet& ps ) {
   if ( writeBc      ) writeOnia = true;
   if ( writeX3872   ) writeOnia = true;
 
+  esConsume< MagneticField,
+             IdealMagneticFieldRecord >( magFieldToken );
+  esConsume< TransientTrackBuilder,
+             TransientTrackRecord >( ttBToken, "TransientTrackBuilder" );
   if ( usePV ) consume< vector<reco::Vertex                > >( pVertexToken,
                                                                 pVertexLabel );
   if ( usePM ) consume< pat::MuonCollection                  >( patMuonToken,
@@ -269,7 +274,9 @@ void BPHWriteSpecificDecay::beginJob() {
 
 void BPHWriteSpecificDecay::produce( edm::Event& ev,
                                      const edm::EventSetup& es ) {
-  fill( ev, es );
+  BPHEventSetupWrapper ew( es,
+                           BPHRecoCandidate::transientTrackBuilder, &ttBToken );
+  fill( ev, ew );
   if ( writeOnia    ) write( ev, lFull ,  oniaName );
   if ( writeKx0     ) write( ev, lSd   ,    sdName );
   if ( writePkk     ) write( ev, lSs   ,    ssName );
@@ -287,7 +294,7 @@ void BPHWriteSpecificDecay::produce( edm::Event& ev,
 
 
 void BPHWriteSpecificDecay::fill( edm::Event& ev,
-                                  const edm::EventSetup& es ) {
+                                  const BPHEventSetupWrapper& es ) {
 
   lFull.clear();
   lJPsi.clear();
@@ -306,11 +313,12 @@ void BPHWriteSpecificDecay::fill( edm::Event& ev,
   daughMap.clear();
   pvRefMap.clear();
   ccRefMap.clear();
-//  if ( ev.id().event() != 546360791 ) return;
 
   // get magnetic field
+  // data are got through "BPHESTokenWrapper" interface to allow
+  // uniform access in different CMSSW versions
   edm::ESHandle<MagneticField> magneticField;
-  es.get<IdealMagneticFieldRecord>().get( magneticField );
+  magFieldToken.get( *es.get(), magneticField );
 
   // get object collections
   // collections are got through "BPHTokenWrapper" interface to allow

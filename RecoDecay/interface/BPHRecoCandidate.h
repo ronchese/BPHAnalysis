@@ -26,9 +26,7 @@
 #include "BPHAnalysis/RecoDecay/interface/BPHRecoCandidatePtr.h"
 #include "DataFormats/PatCandidates/interface/CompositeCandidate.h"
 
-namespace edm {
-  class EventSetup;
-}
+class BPHEventSetupWrapper;
 
 namespace reco {
   class Candidate;
@@ -54,9 +52,9 @@ class BPHRecoCandidate: public virtual BPHKinematicFit {
    */
   /// create an "empty" object to add daughters later
   /// (see BPHDecayMomentum)
-  BPHRecoCandidate( const edm::EventSetup* es );
+  BPHRecoCandidate( const BPHEventSetupWrapper* es );
   /// create an object with daughters as specified in the ComponentSet
-  BPHRecoCandidate( const edm::EventSetup* es,
+  BPHRecoCandidate( const BPHEventSetupWrapper* es,
                     const BPHRecoBuilder::ComponentSet& compSet );
 
   // deleted copy constructor and assignment operator
@@ -102,6 +100,8 @@ class BPHRecoCandidate: public virtual BPHKinematicFit {
   /// clone object, cloning daughters as well up to required depth
   /// level = -1 to clone all levels
   virtual BPHRecoCandidate* clone( int level = -1 ) const;
+
+  enum esType { transientTrackBuilder };
 
  protected:
 

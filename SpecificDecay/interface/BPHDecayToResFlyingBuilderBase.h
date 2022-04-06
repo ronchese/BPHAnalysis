@@ -21,8 +21,8 @@
 // Collaborating Class Declarations --
 //------------------------------------
 #include "BPHAnalysis/SpecificDecay/interface/BPHKinFitChi2Select.h"
-#include "FWCore/Framework/interface/EventSetup.h"
 
+class BPHEventSetupWrapper;
 class BPHRecoBuilder;
 
 //---------------
@@ -44,7 +44,7 @@ class BPHDecayToResFlyingBuilderBase:
 
   /** Constructor
    */
-  BPHDecayToResFlyingBuilderBase( const edm::EventSetup& es,
+  BPHDecayToResFlyingBuilderBase( const BPHEventSetupWrapper& es,
       const std::string& resName, double resMass, double resWidth,
       const std::string& flyName, double flyMass, double flyMSigma );
 

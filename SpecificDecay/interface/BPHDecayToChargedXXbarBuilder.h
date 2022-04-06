@@ -23,8 +23,7 @@
 #include "BPHAnalysis/RecoDecay/interface/BPHRecoCandidate.h"
 #include "BPHAnalysis/RecoDecay/interface/BPHPlusMinusCandidate.h"
 
-#include "FWCore/Framework/interface/EventSetup.h"
-
+class BPHEventSetupWrapper;
 class BPHParticlePtSelect;
 class BPHParticleEtaSelect;
 class BPHChi2Select;
@@ -48,7 +47,7 @@ class BPHDecayToChargedXXbarBuilder:
 
   /** Constructor
    */
-  BPHDecayToChargedXXbarBuilder( const edm::EventSetup& es,
+  BPHDecayToChargedXXbarBuilder( const BPHEventSetupWrapper& es,
        const std::string& dPosName, const std::string& dNegName,
        double daugMass, double daugSigma,
        const BPHRecoBuilder::BPHGenericCollection* posCollection,

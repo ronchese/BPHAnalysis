@@ -26,7 +26,7 @@
 
 #include "DataFormats/Candidate/interface/VertexCompositeCandidate.h"
 
-#include "FWCore/Framework/interface/EventSetup.h"
+class BPHEventSetupWrapper;
 
 //---------------
 // C++ Headers --
@@ -53,15 +53,15 @@ class BPHDecayToV0Builder:
 
   /** Constructor
    */
-  BPHDecayToV0Builder( const edm::EventSetup& es,
+  BPHDecayToV0Builder( const BPHEventSetupWrapper& es,
        const std::string& daug1Name, const std::string& daug2Name,
        const BPHRecoBuilder::BPHGenericCollection* daug1Collection,
        const BPHRecoBuilder::BPHGenericCollection* daug2Collection );
-  BPHDecayToV0Builder( const edm::EventSetup& es,
+  BPHDecayToV0Builder( const BPHEventSetupWrapper& es,
        const std::string& daug1Name, const std::string& daug2Name,
        const std::vector<reco::VertexCompositeCandidate   >* v0Collection,
        const std::string& searchList = "cfp" );
-  BPHDecayToV0Builder( const edm::EventSetup& es,
+  BPHDecayToV0Builder( const BPHEventSetupWrapper& es,
        const std::string& daug1Name, const std::string& daug2Name,
        const std::vector<reco::VertexCompositePtrCandidate>* vpCollection,
        const std::string& searchList = "cfp" );

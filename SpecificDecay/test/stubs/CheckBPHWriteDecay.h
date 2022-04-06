@@ -2,13 +2,13 @@
 #define BPHAnalysis_SpecificDecay_CheckBPHWriteDecay_h
 
 #include "BPHAnalysis/RecoDecay/interface/BPHAnalyzerTokenWrapper.h"
+#include "BPHAnalysis/RecoDecay/interface/BPHTrackReference.h"
 
 #include "FWCore/Framework/interface/Event.h"
 #include "FWCore/Framework/interface/EventSetup.h"
 #include "FWCore/ParameterSet/interface/ParameterSet.h"
 #include "DataFormats/ParticleFlowCandidate/interface/PFCandidate.h"
 
-#include "BPHAnalysis/RecoDecay/interface/BPHTrackReference.h"
 #include "DataFormats/PatCandidates/interface/Muon.h"
 #include "DataFormats/TrackReco/interface/Track.h"
 #include "DataFormats/PatCandidates/interface/GenericParticle.h"

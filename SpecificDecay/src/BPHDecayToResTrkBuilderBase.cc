@@ -33,7 +33,7 @@ using namespace std;
 // Constructors --
 //----------------
 BPHDecayToResTrkBuilderBase::BPHDecayToResTrkBuilderBase(
-    const edm::EventSetup& es,
+    const BPHEventSetupWrapper& es,
     const string& resName, double resMass, double resWidth,
     const string& trkName, double trkMass, double trkSigma,
     const BPHRecoBuilder::BPHGenericCollection* trkCollection ):

@@ -13,7 +13,7 @@
 //-------------------------------
 // Collaborating Class Headers --
 //-------------------------------
-
+#include "BPHAnalysis/RecoDecay/interface/BPHAnalyzerTokenWrapper.h"
 
 //---------------
 // C++ Headers --
@@ -40,10 +40,10 @@ BPHDecayGenericBuilderBase::BPHDecayGenericBuilderBase():
 
 
 BPHDecayGenericBuilderBase::BPHDecayGenericBuilderBase(
-                            const edm::EventSetup& es,
+                            const BPHEventSetupWrapper& es,
                             BPHMassFitSelect* mfs ):
  BPHDecayGenericBuilderBase() {
-  evSetup = &es;
+  evSetup = new BPHEventSetupWrapper( es );
   mFitSel = mfs;
 }
 
@@ -54,6 +54,7 @@ BPHDecayGenericBuilderBase::~BPHDecayGenericBuilderBase() {
   delete massSel;
   delete chi2Sel;
   delete mFitSel;
+  delete evSetup;
 }
 
 //--------------

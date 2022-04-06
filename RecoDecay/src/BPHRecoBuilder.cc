@@ -13,6 +13,7 @@
 //-------------------------------
 // Collaborating Class Headers --
 //-------------------------------
+#include "BPHAnalysis/RecoDecay/interface/BPHAnalyzerTokenWrapper.h"
 #include "BPHAnalysis/RecoDecay/interface/BPHRecoSelect.h"
 #include "BPHAnalysis/RecoDecay/interface/BPHMomentumSelect.h"
 #include "BPHAnalysis/RecoDecay/interface/BPHVertexSelect.h"
@@ -35,8 +36,8 @@ using namespace std;
 //----------------
 // Constructors --
 //----------------
-BPHRecoBuilder::BPHRecoBuilder( const edm::EventSetup& es ):
- evSetup( &es ),
+BPHRecoBuilder::BPHRecoBuilder( const BPHEventSetupWrapper& es ):
+ evSetup( new BPHEventSetupWrapper( es ) ),
   minPDiff( -1.0 ) {
   msList.reserve( 5 );
   vsList.reserve( 5 );
@@ -59,6 +60,7 @@ BPHRecoBuilder::~BPHRecoBuilder() {
     delete cCollection;
     compCollectList.erase( cCollection );
   }
+  delete evSetup;
 }
 
 //--------------
@@ -211,7 +213,7 @@ vector<BPHRecoBuilder::ComponentSet> BPHRecoBuilder::build() const {
 }
 
 
-const edm::EventSetup* BPHRecoBuilder::eventSetup() const {
+const BPHEventSetupWrapper* BPHRecoBuilder::eventSetup() const {
   return evSetup;
 }
 

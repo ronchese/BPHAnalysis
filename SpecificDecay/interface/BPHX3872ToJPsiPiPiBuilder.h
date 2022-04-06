@@ -26,6 +26,8 @@
 
 #include "FWCore/Framework/interface/EventSetup.h"
 
+class BPHEventSetupWrapper;
+
 //---------------
 // C++ Headers --
 //---------------
@@ -44,7 +46,7 @@ class BPHX3872ToJPsiPiPiBuilder:
 
   /** Constructor
    */
-  BPHX3872ToJPsiPiPiBuilder( const edm::EventSetup& es,
+  BPHX3872ToJPsiPiPiBuilder( const BPHEventSetupWrapper& es,
       const std::vector<BPHPlusMinusConstCandPtr>& jpsiCollection,
       const BPHRecoBuilder::BPHGenericCollection*   posCollection,
       const BPHRecoBuilder::BPHGenericCollection*   negCollection ):

@@ -23,14 +23,11 @@
 #include "BPHAnalysis/RecoDecay/interface/BPHDecayVertex.h"
 #include "BPHAnalysis/RecoDecay/interface/BPHKinematicFit.h"
 #include "BPHAnalysis/RecoDecay/interface/BPHGenericPtr.h"
+class BPHEventSetupWrapper;
 class BPHRecoSelect;
 class BPHMomentumSelect;
 class BPHVertexSelect;
 class BPHFitSelect;
-
-namespace edm {
-  class EventSetup;
-}
 
 namespace reco {
   class RecoCandidate;
@@ -54,7 +51,7 @@ class BPHRecoBuilder {
 
   /** Constructor
    */
-  BPHRecoBuilder( const edm::EventSetup& es );
+  BPHRecoBuilder( const BPHEventSetupWrapper& es );
 
   // deleted copy constructor and assignment operator
   BPHRecoBuilder           ( const BPHRecoBuilder& x ) = delete;
@@ -144,7 +141,7 @@ class BPHRecoBuilder {
   std::vector<ComponentSet> build() const;
 
   /// get the EventSetup set in the constructor
-  const edm::EventSetup* eventSetup() const;
+  const BPHEventSetupWrapper* eventSetup() const;
 
   /// get simple or previously recontructed particle in current combination
   const reco::Candidate* getDaug( const std::string& name ) const;
@@ -204,7 +201,7 @@ class BPHRecoBuilder {
   mutable std::map<std::string,const reco::Candidate*> daugMap;
   mutable std::map<std::string,BPHRecoConstCandPtr   > compMap;
 
-  const edm::EventSetup* evSetup;
+  const BPHEventSetupWrapper* evSetup;
   double minPDiff;
 
   // list of simple and previously recontructed particles in the decay

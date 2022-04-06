@@ -13,9 +13,9 @@
 //-------------------------------
 // Collaborating Class Headers --
 //-------------------------------
+#include "BPHAnalysis/RecoDecay/interface/BPHAnalyzerTokenWrapper.h"
 #include "BPHAnalysis/RecoDecay/interface/BPHRecoBuilder.h"
 #include "BPHAnalysis/RecoDecay/interface/BPHRecoSelect.h"
-#include "BPHAnalysis/RecoDecay/interface/BPHMomentumSelect.h"
 #include "DataFormats/PatCandidates/interface/CompositeCandidate.h"
 #include "DataFormats/Math/interface/deltaPhi.h"
 #include "BPHAnalysis/RecoDecay/interface/BPHAddFourMomenta.h"
@@ -36,14 +36,14 @@ using namespace std;
 //----------------
 // Constructors --
 //----------------
-BPHPlusMinusCandidate::BPHPlusMinusCandidate( const edm::EventSetup* es ):
+BPHPlusMinusCandidate::BPHPlusMinusCandidate( const BPHEventSetupWrapper* es ):
  BPHDecayVertex( es ),
  BPHPlusMinusVertex( es ),
  BPHRecoCandidate( es ) {
 }
 
 
-BPHPlusMinusCandidate::BPHPlusMinusCandidate( const edm::EventSetup* es,
+BPHPlusMinusCandidate::BPHPlusMinusCandidate( const BPHEventSetupWrapper* es,
                        const BPHRecoBuilder::ComponentSet& compList ):
  BPHDecayMomentum( compList.daugMap, compList.compMap ),
  BPHDecayVertex( this, es ),

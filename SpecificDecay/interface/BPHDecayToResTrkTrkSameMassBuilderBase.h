@@ -24,8 +24,7 @@
 #include "BPHAnalysis/SpecificDecay/interface/BPHParticleEtaSelect.h"
 #include "BPHAnalysis/RecoDecay/interface/BPHRecoBuilder.h"
 
-#include "FWCore/Framework/interface/EventSetup.h"
-
+class BPHEventSetupWrapper;
 class BPHParticleNeutralVeto;
 
 //---------------
@@ -45,7 +44,7 @@ class BPHDecayToResTrkTrkSameMassBuilderBase:
 
   /** Constructor
    */
-  BPHDecayToResTrkTrkSameMassBuilderBase( const edm::EventSetup& es,
+  BPHDecayToResTrkTrkSameMassBuilderBase( const BPHEventSetupWrapper& es,
       const std::string& resName, double resMass, double resWidth,
       const std::string& posName, const std::string& negName,
       double trkMass, double trkSigma,

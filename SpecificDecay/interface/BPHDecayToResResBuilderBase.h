@@ -21,8 +21,7 @@
 //------------------------------------
 #include "BPHAnalysis/RecoDecay/interface/BPHRecoBuilder.h"
 
-#include "FWCore/Framework/interface/EventSetup.h"
-
+class BPHEventSetupWrapper;
 class BPHRecoBuilder;
 
 //---------------
@@ -45,7 +44,7 @@ class BPHDecayToResResBuilderBase:
 
   /** Constructor
    */
-  BPHDecayToResResBuilderBase( const edm::EventSetup& es,
+  BPHDecayToResResBuilderBase( const BPHEventSetupWrapper& es,
       const std::string& res1Name, double res1Mass, double res1Width,
       const std::string& res2Name );
 

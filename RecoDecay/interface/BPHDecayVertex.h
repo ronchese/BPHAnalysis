@@ -14,6 +14,8 @@
 //----------------------
 #include "BPHAnalysis/RecoDecay/interface/BPHDecayMomentum.h"
 
+class BPHEventSetupWrapper;
+
 namespace edm {
   class EventSetup;
 }
@@ -82,7 +84,7 @@ class BPHDecayVertex: public virtual BPHDecayMomentum {
   reco::TransientTrack* getTransientTrack( const reco::Candidate* cand ) const;
 
   /// retrieve EventSetup
-  const edm::EventSetup* getEventSetup() const;
+  const BPHEventSetupWrapper* getEventSetup() const;
 
   /// retrieve track search list
   const std::string& getTrackSearchList( const reco::Candidate* cand ) const;
@@ -90,10 +92,10 @@ class BPHDecayVertex: public virtual BPHDecayMomentum {
  protected:
 
   // constructor
-  BPHDecayVertex( const edm::EventSetup* es );
+  BPHDecayVertex( const BPHEventSetupWrapper* es );
   // pointer used to retrieve informations from other bases
   BPHDecayVertex( const BPHDecayVertex* ptr,
-                  const edm::EventSetup* es );
+                  const BPHEventSetupWrapper* es );
 
   // add a simple particle giving it a name and specifying an option list 
   // to search for the associated track
@@ -111,13 +113,14 @@ class BPHDecayVertex: public virtual BPHDecayMomentum {
  private:
 
   // EventSetup needed to build TransientTrack
-  const edm::EventSetup* evSetup;
+  const BPHEventSetupWrapper* evSetup;
 
   // map linking particles to associated track search list
   std::map<const reco::Candidate*,std::string> searchMap;
 
   // reconstruction results cache
   mutable bool oldTracks;
+  mutable bool oldTTracks;
   mutable bool oldVertex;
   mutable bool validTks;
   mutable std::vector<const    reco::Track*> rTracks;
@@ -125,13 +128,14 @@ class BPHDecayVertex: public virtual BPHDecayMomentum {
   mutable std::map<const reco::Candidate*,const    reco::Track*> tkMap;
   mutable std::map<const reco::Candidate*,reco::TransientTrack*> ttMap;
   mutable reco::Vertex fittedVertex;
-  mutable VertexFitter<5>* savedFitter;
-  mutable reco::BeamSpot const * savedBS;
-  mutable GlobalPoint    const * savedPP;
-  mutable GlobalError    const * savedPE;
+  mutable VertexFitter<5>            * savedFitter;
+  mutable const reco::BeamSpot       * savedBS;
+  mutable const GlobalPoint          * savedPP;
+  mutable const GlobalError          * savedPE;
 
   // create TransientTrack and fit vertex
-  virtual void tTracks() const;
+  virtual void fTracks() const;
+  virtual void fTTracks() const;
   virtual void fitVertex( VertexFitter<5>* fitter,
                           const reco::BeamSpot* bs,
                           const GlobalPoint* priorPos,

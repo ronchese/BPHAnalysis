@@ -32,7 +32,7 @@ using namespace std;
 // Constructors --
 //----------------
 BPHDecayToResFlyingBuilderBase::BPHDecayToResFlyingBuilderBase(
-    const edm::EventSetup& es,
+    const BPHEventSetupWrapper& es,
     const string& resName, double resMass, double resWidth,
     const string& flyName, double flyMass, double flyMSigma ):
  BPHDecayGenericBuilderBase( es, nullptr ),

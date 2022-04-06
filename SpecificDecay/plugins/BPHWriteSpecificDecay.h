@@ -16,13 +16,19 @@
 #include "BPHAnalysis/RecoDecay/interface/BPHVertexCompositePtrCandidate.h"
 
 #include "DataFormats/Common/interface/Ref.h"
-#include "DataFormats/PatCandidates/interface/Muon.h"
 #include "DataFormats/TrackReco/interface/Track.h"
+#include "DataFormats/PatCandidates/interface/Muon.h"
 #include "DataFormats/PatCandidates/interface/GenericParticle.h"
 #include "DataFormats/PatCandidates/interface/CompositeCandidate.h"
 
 #include "RecoVertex/KinematicFitPrimitives/interface/RefCountedKinematicParticle.h"
 #include "RecoVertex/KinematicFitPrimitives/interface/RefCountedKinematicVertex.h"
+
+#include "MagneticField/Records/interface/IdealMagneticFieldRecord.h"
+#include "TrackingTools/PatternTools/interface/TwoTrackMinimumDistance.h"
+#include "TrackingTools/TransientTrack/interface/TransientTrackBuilder.h"
+#include "TrackingTools/TransientTrack/interface/TransientTrack.h"
+#include "TrackingTools/Records/interface/TransientTrackRecord.h"
 
 #include <string>
 #include <vector>
@@ -43,7 +49,7 @@ class BPHWriteSpecificDecay:
 
   void beginJob() override;
   void produce( edm::Event& ev, const edm::EventSetup& es ) override;
-  virtual void fill( edm::Event& ev, const edm::EventSetup& es );
+  virtual void fill( edm::Event& ev, const BPHEventSetupWrapper& es );
   void endJob() override;
 
  private:
@@ -60,6 +66,10 @@ class BPHWriteSpecificDecay:
   std::string lSCandsLabel;
 
   // token wrappers to allow running both on "old" and "new" CMSSW versions
+  BPHESTokenWrapper< MagneticField,
+                     IdealMagneticFieldRecord > magFieldToken;
+  BPHESTokenWrapper< TransientTrackBuilder,
+                     TransientTrackRecord >     ttBToken;
   BPHTokenWrapper< std::vector<reco::Vertex                  > > pVertexToken;
   BPHTokenWrapper< pat::MuonCollection                         > patMuonToken;
   BPHTokenWrapper< std::vector<pat::CompositeCandidate       > > ccCandsToken;

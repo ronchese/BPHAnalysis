@@ -21,7 +21,7 @@
 #include "BPHAnalysis/RecoDecay/interface/BPHRecoCandidate.h"
 #include "BPHAnalysis/RecoDecay/interface/BPHPlusMinusCandidate.h"
 
-#include "FWCore/Framework/interface/EventSetup.h"
+class BPHEventSetupWrapper;
 
 //---------------
 // C++ Headers --
@@ -40,7 +40,7 @@ class BPHDecayConstrainedBuilderBase:
 
   /** Constructor
    */
-  BPHDecayConstrainedBuilderBase( const edm::EventSetup& es,
+  BPHDecayConstrainedBuilderBase( const BPHEventSetupWrapper& es,
       const std::string& resName, double resMass, double resWidth );
 
   // deleted copy constructor and assignment operator

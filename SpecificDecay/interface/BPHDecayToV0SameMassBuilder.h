@@ -24,7 +24,7 @@
 #include "BPHAnalysis/RecoDecay/interface/BPHRecoCandidate.h"
 #include "BPHAnalysis/RecoDecay/interface/BPHPlusMinusCandidate.h"
 
-#include "FWCore/Framework/interface/EventSetup.h"
+class BPHEventSetupWrapper;
 
 //---------------
 // C++ Headers --
@@ -44,17 +44,17 @@ class BPHDecayToV0SameMassBuilder: public BPHDecayToV0Builder,
 
   /** Constructor
    */
-  BPHDecayToV0SameMassBuilder( const edm::EventSetup& es,
+  BPHDecayToV0SameMassBuilder( const BPHEventSetupWrapper& es,
        const std::string& posName, const std::string& negName,
        double daugMass, double daugSigma,
        const BPHRecoBuilder::BPHGenericCollection* posCollection,
        const BPHRecoBuilder::BPHGenericCollection* negCollection );
-  BPHDecayToV0SameMassBuilder( const edm::EventSetup& es,
+  BPHDecayToV0SameMassBuilder( const BPHEventSetupWrapper& es,
        const std::string& posName, const std::string& negName,
        double daugMass, double daugSigma,
        const std::vector<reco::VertexCompositeCandidate   >* v0Collection,
        const std::string& searchList = "cfp" );
-  BPHDecayToV0SameMassBuilder( const edm::EventSetup& es,
+  BPHDecayToV0SameMassBuilder( const BPHEventSetupWrapper& es,
        const std::string& posName, const std::string& negName,
        double daugMass, double daugSigma,
        const std::vector<reco::VertexCompositePtrCandidate>* vpCollection,

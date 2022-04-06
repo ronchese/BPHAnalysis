@@ -32,7 +32,7 @@ using namespace std;
 // Constructors --
 //----------------
 BPHDecayToFlyingCascadeBuilderBase::BPHDecayToFlyingCascadeBuilderBase(
-    const edm::EventSetup& es,
+    const BPHEventSetupWrapper& es,
     const string& flyName, double flyMass, double flyMSigma ):
  BPHDecayToFlyingCascadeBuilderBase( flyName, flyMass, flyMSigma ) {
   evSetup = &es;

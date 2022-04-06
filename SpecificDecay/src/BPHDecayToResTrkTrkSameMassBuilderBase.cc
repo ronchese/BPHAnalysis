@@ -34,7 +34,7 @@ using namespace std;
 // Constructors --
 //----------------
 BPHDecayToResTrkTrkSameMassBuilderBase::BPHDecayToResTrkTrkSameMassBuilderBase(
-    const edm::EventSetup& es,
+    const BPHEventSetupWrapper& es,
     const string& resName, double resMass, double resWidth,
     const string& posName, const std::string& negName,
     double trkMass, double trkSigma,

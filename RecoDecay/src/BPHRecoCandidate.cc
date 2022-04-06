@@ -13,6 +13,7 @@
 //-------------------------------
 // Collaborating Class Headers --
 //-------------------------------
+#include "BPHAnalysis/RecoDecay/interface/BPHAnalyzerTokenWrapper.h"
 #include "BPHAnalysis/RecoDecay/interface/BPHRecoBuilder.h"
 
 //---------------
@@ -28,12 +29,12 @@ using namespace std;
 //----------------
 // Constructors --
 //----------------
-BPHRecoCandidate::BPHRecoCandidate( const edm::EventSetup* es ):
+BPHRecoCandidate::BPHRecoCandidate( const BPHEventSetupWrapper* es ):
  BPHDecayVertex( es ) {
 }
 
 
-BPHRecoCandidate::BPHRecoCandidate( const edm::EventSetup* es,
+BPHRecoCandidate::BPHRecoCandidate( const BPHEventSetupWrapper* es,
                   const BPHRecoBuilder::ComponentSet& compList ):
  BPHDecayMomentum( compList.daugMap, compList.compMap ),
  BPHDecayVertex( this, es ),
