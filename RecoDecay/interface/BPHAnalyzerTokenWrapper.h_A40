@@ -102,7 +102,6 @@ class BPHAnalyzerWrapper: public T {
   template<class Obj,class Rec>
   void esConsume( BPHESTokenWrapper<Obj,Rec>& tw,
                   const edm::ESInputTag& tag ) {
-    tw.tagged = true;
     tw.token = this->template esConsumes<Obj>( tag );
     return;
   }
