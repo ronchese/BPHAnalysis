@@ -23,6 +23,7 @@
 #include "FWCore/Framework/interface/Event.h"
 #include "FWCore/Framework/interface/EventSetup.h"
 #include "FWCore/Framework/interface/EDConsumerBase.h"
+#include "FWCore/Framework/interface/ESConsumesCollector.h"
 #include "FWCore/Framework/interface/one/EDAnalyzer.h"
 #include "FWCore/Framework/interface/one/EDProducer.h"
 #include "FWCore/Framework/interface/stream/EDAnalyzer.h"
@@ -61,14 +62,12 @@ class BPHTokenWrapper {
 template<class Obj,class Rec>
 class BPHESTokenWrapper {
  public:
-  typedef edm::ESInputTag type;
+  typedef edm::ESGetToken<Obj,Rec> type;
   bool get( const edm::EventSetup& es,
             edm::ESHandle<Obj>& obj ) {
-    if ( tagged )
-    return es.get<Rec>().get( token, obj );
-    return es.get<Rec>().get( obj );
+    obj = es.get<Rec>().getHandle( token );
+    return obj.isValid();
   }
-  bool tagged;
   type token;
 };
 
@@ -90,21 +89,20 @@ class BPHAnalyzerWrapper: public T {
   }
   template<class Obj,class Rec>
   void esConsume( BPHESTokenWrapper<Obj,Rec>& tw ) {
-    tw.tagged = false;
+    tw.token = this->template esConsumes<Obj,Rec>();
     return;
   }
   template<class Obj,class Rec>
   void esConsume( BPHESTokenWrapper<Obj,Rec>& tw,
                   const std::string& label ) {
-    tw.tagged = true;
-    tw.token = edm::ESInputTag( "", label );
+    tw.token = this->template esConsumes<Obj,Rec>( edm::ESInputTag( "",
+                                                                    label ) );
     return;
   }
   template<class Obj,class Rec>
   void esConsume( BPHESTokenWrapper<Obj,Rec>& tw,
                   const edm::ESInputTag& tag ) {
-    tw.tagged = true;
-    tw.token = tag;
+    tw.token = this->template esConsumes<Obj>( tag );
     return;
   }
 };
