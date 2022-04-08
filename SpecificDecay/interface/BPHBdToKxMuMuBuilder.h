@@ -95,6 +95,9 @@ class BPHBdToKxMuMuBuilder:
   double getKxMassMin  () const { return mkx0Sel->getMassMin(); }
   double getKxMassMax  () const { return mkx0Sel->getMassMax(); }
 
+  /// setup parameters for BPHRecoBuilder
+  void setup( void* parameters ) override {}
+
  private:
 
   std::string oniaName;
