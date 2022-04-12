@@ -228,12 +228,13 @@ void BPHDecayVertex::fTracks() const {
     const reco::Candidate* rp = dL[n];
     tkMap[rp] = nullptr;
     if ( !rp->charge() ) continue;
-    const reco::Track* tp;
     const char* searchList = "cfhp";
     map<const reco::Candidate*,string>::const_iterator iter =
                                                        searchMap.find( rp );
     if ( iter != searchMap.end() ) searchList = iter->second.c_str();
-    tp = BPHTrackReference::getTrack( *originalReco( rp ), searchList );
+    const reco::Track* tp = tkMap[rp]
+                          = BPHTrackReference::getTrack( *originalReco( rp ),
+                                                         searchList );
     if ( tp == nullptr ) {
       edm::LogPrint( "DataNotFound" )
                   << "BPHDecayVertex::tTracks: "
@@ -241,8 +242,7 @@ void BPHDecayVertex::fTracks() const {
       validTks = false;
       continue;
     }
-     rTracks.push_back( tp );
-    tkMap[rp] = tp;
+    rTracks.push_back( tp );
   }
   oldTracks = false;
   return;
@@ -265,11 +265,13 @@ void BPHDecayVertex::fTTracks() const {
   while ( n-- ) {
     const reco::Candidate* rp = dL[n];
     ttMap[rp] = nullptr;
-    const reco::Track* tp = tkMap[rp];
+    map<const reco::Candidate*,
+        const reco::Track    *>::const_iterator iter = tkMap.find( rp );
+    if ( iter == tkMap.end() ) continue;
+    const reco::Track* tp = iter->second;
+    if ( tp == nullptr ) continue;
     trTracks.push_back( ttB->build( tp ) );
-    reco::TransientTrack* ttp = &trTracks.back();
-    tkMap[rp] =  tp;
-    ttMap[rp] = ttp;
+    reco::TransientTrack* ttp = ttMap[rp] = &trTracks.back();
   }
   oldTTracks = false;
 }
