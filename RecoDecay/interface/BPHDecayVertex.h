@@ -77,6 +77,9 @@ class BPHDecayVertex: public virtual BPHDecayMomentum {
   /// get Track for a daughter
   const reco::Track* getTrack( const reco::Candidate* cand ) const;
 
+  /// get Track mode for a daughter
+  char               getTMode( const reco::Candidate* cand ) const;
+
   /// get list of TransientTracks
   const std::vector<reco::TransientTrack>& transientTracks() const;
 
@@ -92,7 +95,8 @@ class BPHDecayVertex: public virtual BPHDecayMomentum {
  protected:
 
   // constructor
-  BPHDecayVertex( const BPHEventSetupWrapper* es );
+  BPHDecayVertex( const BPHEventSetupWrapper* es,
+                  int daugNum = 2, int compNum = 2 );
   // pointer used to retrieve informations from other bases
   BPHDecayVertex( const BPHDecayVertex* ptr,
                   const BPHEventSetupWrapper* es );
@@ -126,12 +130,13 @@ class BPHDecayVertex: public virtual BPHDecayMomentum {
   mutable std::vector<const    reco::Track*> rTracks;
   mutable std::vector<reco::TransientTrack> trTracks;
   mutable std::map<const reco::Candidate*,const    reco::Track*> tkMap;
+  mutable std::map<const reco::Candidate*,char                 > tmMap;
   mutable std::map<const reco::Candidate*,reco::TransientTrack*> ttMap;
   mutable reco::Vertex fittedVertex;
-  mutable VertexFitter<5>            * savedFitter;
-  mutable const reco::BeamSpot       * savedBS;
-  mutable const GlobalPoint          * savedPP;
-  mutable const GlobalError          * savedPE;
+  mutable VertexFitter<5>     * savedFitter;
+  mutable const reco::BeamSpot* savedBS;
+  mutable const GlobalPoint   * savedPP;
+  mutable const GlobalError   * savedPE;
 
   // create TransientTrack and fit vertex
   virtual void fTracks() const;

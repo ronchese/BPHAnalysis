@@ -52,7 +52,8 @@ class BPHRecoCandidate: public virtual BPHKinematicFit {
    */
   /// create an "empty" object to add daughters later
   /// (see BPHDecayMomentum)
-  BPHRecoCandidate( const BPHEventSetupWrapper* es );
+  BPHRecoCandidate( const BPHEventSetupWrapper* es,
+                    int daugNum = 2, int compNum = 2 );
   /// create an object with daughters as specified in the ComponentSet
   BPHRecoCandidate( const BPHEventSetupWrapper* es,
                     const BPHRecoBuilder::ComponentSet& compSet );

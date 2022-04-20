@@ -35,8 +35,6 @@ class BPHRecoBuilder;
 
 class BPHDecayMomentum {
 
-  friend class BPHRecoBuilder;
-
  public:
 
   /** Constructors are protected
@@ -109,8 +107,6 @@ class BPHDecayMomentum {
    return cMap;
   }
 
- protected:
-
   struct Component {
     const reco::Candidate* cand;
     double mass;
@@ -118,9 +114,12 @@ class BPHDecayMomentum {
     std::string searchList;
   };
 
+ protected:
+
   // constructors
-  BPHDecayMomentum();
-  BPHDecayMomentum( const std::map<std::string,Component>& daugMap );
+  BPHDecayMomentum( int daugNum = 2, int compNum = 2 );
+  BPHDecayMomentum( const std::map<std::string,Component>& daugMap,
+                    int compNum = 2 );
   BPHDecayMomentum( const std::map<std::string,Component>& daugMap,
                     const std::map<std::string,BPHRecoConstCandPtr> compMap );
 
@@ -181,11 +180,14 @@ class BPHDecayMomentum {
   // compute the total momentum of simple particles, produced
   // directly or in cascade decays
   virtual void sumMomentum(
-               const std::vector<const reco::Candidate*> dl ) const;
+               const std::vector<const reco::Candidate*>& dl,
+               const std::vector<std::string           >& dn ) const;
 
   // recursively fill the list of simple particles, produced
   // directly or in cascade decays
-  virtual void fillDaug( std::vector<const reco::Candidate*>& ad ) const;
+  virtual void fillDaug( std::vector<const reco::Candidate*>& ad,
+                         const std::string& name,
+                         std::vector<std::string           >& an ) const;
 
   // compute the total momentum and cache it
   virtual void computeMomentum() const;

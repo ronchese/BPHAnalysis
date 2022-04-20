@@ -171,6 +171,10 @@ class BPHWriteSpecificDecay:
 
   void setRecoParameters( const edm::ParameterSet& ps );
 
+  static
+  void addTrackModes( const std::string& name, const BPHRecoCandidate& cand,
+                      std::string& modes, bool& count );
+
   template <class T>
   edm::OrphanHandle<pat::CompositeCandidateCollection> write( edm::Event& ev,
               const std::vector<T>& list, const std::string& name ) {
@@ -196,6 +200,10 @@ class BPHWriteSpecificDecay:
       const T& ptr = list[i];
       ccList->push_back( ptr->composite() );
       pat::CompositeCandidate& cc = ccList->back();
+      std::string modes;
+      bool count = false;
+      addTrackModes( "", *ptr, modes, count );
+      cc.addUserData( "trackModes", modes, true );
       if ( ( pvrIter = pvRefMap.find( ptr.get() ) ) != pvrIend )
            cc.addUserData( "primaryVertex", pvrIter->second );
       const std::vector<std::string>& cNames = ptr->compNames();

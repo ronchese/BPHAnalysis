@@ -38,7 +38,7 @@ using namespace std;
 //----------------
 BPHRecoBuilder::BPHRecoBuilder( const BPHEventSetupWrapper& es ):
  evSetup( new BPHEventSetupWrapper( es ) ),
-  minPDiff( -1.0 ) {
+ minPDiff( -1.0 ) {
   msList.reserve( 5 );
   vsList.reserve( 5 );
 }
@@ -378,7 +378,7 @@ bool BPHRecoBuilder::contained( ComponentSet& compSet,
     }
 
     for ( c_iter = compMap.begin(); c_iter != c_iend; ++c_iter ) {
-      const pair<string,BPHRecoConstCandPtr>& entry = *c_iter;
+      const map<string,BPHRecoConstCandPtr>::value_type& entry = *c_iter;
       BPHRecoConstCandPtr cCChk = entry.second;
       const vector<const reco::Candidate*>& dCChk = cCChk->daughFull();
       l = dCChk.size();

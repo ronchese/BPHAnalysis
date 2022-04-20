@@ -148,7 +148,9 @@ void CheckBPHWriteDecay::dump( ostream& os,
           " cowboy" : " sailor" ) : "" ) << endl;
   writeCylindric( os, "cmom ", cand, false );
   writeCartesian( os, " xyz ", cand.momentum() );
-  const reco::Vertex* vptr = 
+  if ( cand.hasUserData( "trackModes" ) )
+       os << "trackModes: " << *cand.userData<string>( "trackModes" ) << endl;
+  const reco::Vertex* vptr =
         ( cand.hasUserData              ( "vertex" ) ? 
           cand.   userData<reco::Vertex>( "vertex" ) : nullptr );
   if ( vptr != nullptr ) {
@@ -177,11 +179,13 @@ void CheckBPHWriteDecay::dump( ostream& os,
       if ( pvtx != nullptr ) writeCartesian( os, "ppos ", *pvtx );
     }
   }
+  const pat::CompositeCandidate::role_collection& dNames = cand.roles();
   int i;
   int n = cand.numberOfDaughters();
   for ( i = 0; i < n; ++i ) {
     const reco::Candidate* dptr = cand.daughter( i );
     os << "daug " << i << "/" << n;
+    os << ' ' << dNames[i];
     if ( writePtr ) os << " : " << dptr;
     writeCylindric( os, " == ", *dptr, false );
     os << " " << dptr->mass() << " " << dptr->charge() << endl;

@@ -41,7 +41,9 @@ using namespace std;
 //----------------
 // Constructors --
 //----------------
-BPHDecayVertex::BPHDecayVertex( const BPHEventSetupWrapper* es ):
+BPHDecayVertex::BPHDecayVertex( const BPHEventSetupWrapper* es,
+                                int daugNum, int compNum ):
+ BPHDecayMomentum( daugNum, compNum ),
  evSetup( new BPHEventSetupWrapper( es ) ),
  oldTracks ( true ),
  oldTTracks( true ),
@@ -156,6 +158,16 @@ const reco::Track* BPHDecayVertex::getTrack(
 }
 
 
+char BPHDecayVertex::getTMode(     const reco::Candidate* cand ) const {
+  if ( oldTracks ) fTracks();
+  map<const reco::Candidate*,
+      char              >::const_iterator iter = tmMap.find( cand );
+  map<const reco::Candidate*,
+      char              >::const_iterator iend = tmMap.end();
+  return ( iter != iend ? iter->second : '.' );
+}
+
+
 const vector<reco::TransientTrack>& BPHDecayVertex::transientTracks() const {
   if ( oldTTracks ) fTTracks();
   return trTracks;
@@ -220,6 +232,7 @@ void BPHDecayVertex::fTracks() const {
   oldTTracks = true;
    rTracks.clear();
   tkMap.clear();
+  tmMap.clear();
   const vector<const reco::Candidate*>& dL = daughFull();
   int n = dL.size();
   trTracks.reserve( n );
@@ -227,14 +240,17 @@ void BPHDecayVertex::fTracks() const {
   while ( n-- ) {
     const reco::Candidate* rp = dL[n];
     tkMap[rp] = nullptr;
+    tmMap[rp] = '.';
     if ( !rp->charge() ) continue;
     const char* searchList = "cfhp";
+    char usedMode;
     map<const reco::Candidate*,string>::const_iterator iter =
                                                        searchMap.find( rp );
     if ( iter != searchMap.end() ) searchList = iter->second.c_str();
     const reco::Track* tp = tkMap[rp]
                           = BPHTrackReference::getTrack( *originalReco( rp ),
-                                                         searchList );
+                                                         searchList,
+                                                         &usedMode );
     if ( tp == nullptr ) {
       edm::LogPrint( "DataNotFound" )
                   << "BPHDecayVertex::tTracks: "
@@ -243,6 +259,7 @@ void BPHDecayVertex::fTracks() const {
       continue;
     }
     rTracks.push_back( tp );
+    tmMap[rp] = usedMode;
   }
   oldTracks = false;
   return;
@@ -267,11 +284,10 @@ void BPHDecayVertex::fTTracks() const {
     ttMap[rp] = nullptr;
     map<const reco::Candidate*,
         const reco::Track    *>::const_iterator iter = tkMap.find( rp );
-    if ( iter == tkMap.end() ) continue;
     const reco::Track* tp = iter->second;
     if ( tp == nullptr ) continue;
     trTracks.push_back( ttB->build( tp ) );
-    reco::TransientTrack* ttp = ttMap[rp] = &trTracks.back();
+    ttMap[rp] = &trTracks.back();
   }
   oldTTracks = false;
 }

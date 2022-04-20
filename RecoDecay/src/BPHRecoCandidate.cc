@@ -29,8 +29,11 @@ using namespace std;
 //----------------
 // Constructors --
 //----------------
-BPHRecoCandidate::BPHRecoCandidate( const BPHEventSetupWrapper* es ):
- BPHDecayVertex( es ) {
+BPHRecoCandidate::BPHRecoCandidate( const BPHEventSetupWrapper* es,
+                                    int daugNum, int compNum ):
+ BPHDecayMomentum( daugNum, compNum ),
+ BPHDecayVertex( es ),
+ BPHKinematicFit() {
 }
 
 

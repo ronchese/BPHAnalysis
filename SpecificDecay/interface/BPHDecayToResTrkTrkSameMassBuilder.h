@@ -116,6 +116,7 @@ class BPHDecayToResTrkTrkSameMassBuilder:
       const BPHPlusMinusConstCandPtr tt = ttPairs[iPair];
       for ( iRes = 0; iRes < nRes; ++iRes ) {
         ProdType* cand = new ProdType( evSetup );
+        prod_ptr cPtr( cand );
         cand->add( rName, resList[iRes] );
         cand->add( pName, tt->originalReco( tt->getDaug( pName ) ),
                           tMass, tSigma );
@@ -125,10 +126,10 @@ class BPHDecayToResTrkTrkSameMassBuilder:
         if ( ( chi2Sel != nullptr ) &&
              !chi2Sel->accept( *cand ) ) continue;
         if ( !mFitSel->accept( *cand ) ) continue;
-        prod_ptr cPtr( cand );
         this->recList.push_back( cPtr );
       }
     }
+    ttPairs.clear();
 
     return;
 

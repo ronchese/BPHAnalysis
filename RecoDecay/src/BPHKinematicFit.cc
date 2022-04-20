@@ -38,7 +38,8 @@ using namespace std;
 //----------------
 // Constructors --
 //----------------
-BPHKinematicFit::BPHKinematicFit():
+BPHKinematicFit::BPHKinematicFit( int daugNum, int compNum ):
+ BPHDecayMomentum( daugNum, compNum ),
  BPHDecayVertex( nullptr ),
  massConst( -1.0 ),
  massSigma( -1.0 ),

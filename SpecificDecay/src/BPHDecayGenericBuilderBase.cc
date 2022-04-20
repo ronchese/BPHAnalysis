@@ -18,7 +18,6 @@
 //---------------
 // C++ Headers --
 //---------------
-#include <iostream>
 using namespace std;
 
 //-------------------

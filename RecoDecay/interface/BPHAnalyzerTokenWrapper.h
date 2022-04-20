@@ -23,7 +23,6 @@
 #include "FWCore/Framework/interface/Event.h"
 #include "FWCore/Framework/interface/EventSetup.h"
 #include "FWCore/Framework/interface/EDConsumerBase.h"
-#include "FWCore/Framework/interface/ESConsumesCollector.h"
 #include "FWCore/Framework/interface/one/EDAnalyzer.h"
 #include "FWCore/Framework/interface/one/EDProducer.h"
 #include "FWCore/Framework/interface/stream/EDAnalyzer.h"
@@ -62,12 +61,14 @@ class BPHTokenWrapper {
 template<class Obj,class Rec>
 class BPHESTokenWrapper {
  public:
-  typedef edm::ESGetToken<Obj,Rec> type;
+  typedef edm::ESInputTag type;
   bool get( const edm::EventSetup& es,
             edm::ESHandle<Obj>& obj ) {
-    obj = es.get<Rec>().getHandle( token );
-    return obj.isValid();
+    if ( tagged )
+    return es.get<Rec>().get( token, obj );
+    return es.get<Rec>().get( obj );
   }
+  bool tagged;
   type token;
 };
 
@@ -89,20 +90,21 @@ class BPHAnalyzerWrapper: public T {
   }
   template<class Obj,class Rec>
   void esConsume( BPHESTokenWrapper<Obj,Rec>& tw ) {
-    tw.token = this->template esConsumes<Obj,Rec>();
+    tw.tagged = false;
     return;
   }
   template<class Obj,class Rec>
   void esConsume( BPHESTokenWrapper<Obj,Rec>& tw,
                   const std::string& label ) {
-    tw.token = this->template esConsumes<Obj,Rec>( edm::ESInputTag( "",
-                                                                    label ) );
+    tw.tagged = true;
+    tw.token = edm::ESInputTag( "", label );
     return;
   }
   template<class Obj,class Rec>
   void esConsume( BPHESTokenWrapper<Obj,Rec>& tw,
                   const edm::ESInputTag& tag ) {
-    tw.token = this->template esConsumes<Obj>( tag );
+    tw.tagged = true;
+    tw.token = tag;
     return;
   }
 };
@@ -117,7 +119,7 @@ class BPHEventSetupWrapper {
   BPHEventSetupWrapper( const edm::EventSetup& es, 
                         BPHRecoCandidate::esType type, void* token ):
    BPHEventSetupWrapper( es ) {
-     (*twMap)[type] = token;
+    (*twMap)[type] = token;
   }
   BPHEventSetupWrapper( const edm::EventSetup& es,
                         std::map<BPHRecoCandidate::esType,void*> tokenMap ):
@@ -131,7 +133,7 @@ class BPHEventSetupWrapper {
   BPHEventSetupWrapper( const BPHEventSetupWrapper& es, 
                         BPHRecoCandidate::esType type, void* token ):
    BPHEventSetupWrapper( es ) {
-     (*twMap)[type] = token;
+    (*twMap)[type] = token;
   }
   BPHEventSetupWrapper( BPHEventSetupWrapper& es,
                         std::map<BPHRecoCandidate::esType,void*> tokenMap ):

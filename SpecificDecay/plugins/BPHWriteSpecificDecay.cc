@@ -598,13 +598,13 @@ void BPHWriteSpecificDecay::fill( edm::Event& ev,
   BPHBuToJPsiKBuilder* bu = nullptr;
   if ( recoBu ) {
     if ( usePF ) bu = new BPHBuToJPsiKBuilder( es, lJPsi,
-                          BPHRecoBuilder::createCollection( pfCands ) );
+                          BPHRecoBuilder::createCollection( pfCands, "f" ) );
     else
     if ( usePC ) bu = new BPHBuToJPsiKBuilder( es, lJPsi,
-                          BPHRecoBuilder::createCollection( pcCands ) );
+                          BPHRecoBuilder::createCollection( pcCands, "p" ) );
     else
     if ( useGP ) bu = new BPHBuToJPsiKBuilder( es, lJPsi,
-                          BPHRecoBuilder::createCollection( gpCands ) );
+                          BPHRecoBuilder::createCollection( gpCands, "h" ) );
   }
 
   if ( bu != nullptr ) {
@@ -643,16 +643,16 @@ void BPHWriteSpecificDecay::fill( edm::Event& ev,
   BPHKx0ToKPiBuilder* kx0 = nullptr;
   if ( recoKx0 ) {
     if ( usePF ) kx0 = new BPHKx0ToKPiBuilder( es,
-                       BPHRecoBuilder::createCollection( pfCands ),
-                       BPHRecoBuilder::createCollection( pfCands ) );
+                       BPHRecoBuilder::createCollection( pfCands, "f" ),
+                       BPHRecoBuilder::createCollection( pfCands, "f" ) );
     else
     if ( usePC ) kx0 = new BPHKx0ToKPiBuilder( es,
-                       BPHRecoBuilder::createCollection( pcCands ),
-                       BPHRecoBuilder::createCollection( pcCands ) );
+                       BPHRecoBuilder::createCollection( pcCands, "p" ),
+                       BPHRecoBuilder::createCollection( pcCands, "p" ) );
     else
     if ( useGP ) kx0 = new BPHKx0ToKPiBuilder( es,
-                       BPHRecoBuilder::createCollection( gpCands ),
-                       BPHRecoBuilder::createCollection( gpCands ) );
+                       BPHRecoBuilder::createCollection( gpCands, "h" ),
+                       BPHRecoBuilder::createCollection( gpCands, "h" ) );
   }
 
   if ( kx0 != nullptr ) {
@@ -732,16 +732,16 @@ void BPHWriteSpecificDecay::fill( edm::Event& ev,
   BPHPhiToKKBuilder* phi = nullptr;
   if ( recoPkk ) {
     if ( usePF ) phi = new BPHPhiToKKBuilder( es,
-                       BPHRecoBuilder::createCollection( pfCands ),
-                       BPHRecoBuilder::createCollection( pfCands ) );
+                       BPHRecoBuilder::createCollection( pfCands, "f" ),
+                       BPHRecoBuilder::createCollection( pfCands, "f" ) );
     else
     if ( usePC ) phi = new BPHPhiToKKBuilder( es,
-                       BPHRecoBuilder::createCollection( pcCands ),
-                       BPHRecoBuilder::createCollection( pcCands ) );
+                       BPHRecoBuilder::createCollection( pcCands, "p" ),
+                       BPHRecoBuilder::createCollection( pcCands, "p" ) );
     else
     if ( useGP ) phi = new BPHPhiToKKBuilder( es,
-                       BPHRecoBuilder::createCollection( gpCands ),
-                       BPHRecoBuilder::createCollection( gpCands ) );
+                       BPHRecoBuilder::createCollection( gpCands, "h" ),
+                       BPHRecoBuilder::createCollection( gpCands, "h" ) );
   }
 
   if ( phi != nullptr ) {
@@ -968,13 +968,13 @@ void BPHWriteSpecificDecay::fill( edm::Event& ev,
   BPHBcToJPsiPiBuilder* bc = nullptr;
   if ( recoBc ) {
     if ( usePF ) bc = new BPHBcToJPsiPiBuilder( es, lJPsi,
-                          BPHRecoBuilder::createCollection( pfCands ) );
+                          BPHRecoBuilder::createCollection( pfCands, "f" ) );
     else
     if ( usePC ) bc = new BPHBcToJPsiPiBuilder( es, lJPsi,
-                          BPHRecoBuilder::createCollection( pcCands ) );
+                          BPHRecoBuilder::createCollection( pcCands, "p" ) );
     else
     if ( useGP ) bc = new BPHBcToJPsiPiBuilder( es, lJPsi,
-                          BPHRecoBuilder::createCollection( gpCands ) );
+                          BPHRecoBuilder::createCollection( gpCands, "h" ) );
   }
 
   if ( bc != nullptr ) {
@@ -1012,16 +1012,16 @@ void BPHWriteSpecificDecay::fill( edm::Event& ev,
   BPHX3872ToJPsiPiPiBuilder* x3872 = nullptr;
   if ( recoX3872 ) {
     if ( usePF ) x3872 = new BPHX3872ToJPsiPiPiBuilder( es, lJPsi,
-                             BPHRecoBuilder::createCollection( pfCands ),
-                             BPHRecoBuilder::createCollection( pfCands ) );
+                             BPHRecoBuilder::createCollection( pfCands, "f" ),
+                             BPHRecoBuilder::createCollection( pfCands, "f" ) );
     else
     if ( usePC ) x3872 = new BPHX3872ToJPsiPiPiBuilder( es, lJPsi,
-                             BPHRecoBuilder::createCollection( pcCands ),
-                             BPHRecoBuilder::createCollection( pcCands ) );
+                             BPHRecoBuilder::createCollection( pcCands, "p" ),
+                             BPHRecoBuilder::createCollection( pcCands, "p" ) );
     else
     if ( useGP ) x3872 = new BPHX3872ToJPsiPiPiBuilder( es, lJPsi,
-                             BPHRecoBuilder::createCollection( gpCands ),
-                             BPHRecoBuilder::createCollection( gpCands ) );
+                             BPHRecoBuilder::createCollection( gpCands, "h" ),
+                             BPHRecoBuilder::createCollection( gpCands, "h" ) );
   }
 
   if ( x3872 != nullptr ) {
@@ -1115,6 +1115,30 @@ void BPHWriteSpecificDecay::setRecoParameters( const edm::ParameterSet& ps ) {
          << ( parMap[rMap[name]][id] =
                                      ( ps.getParameter<bool>( fn ) ? 1 : -1 ) );
   }
+
+  return;
+
+}
+
+
+void BPHWriteSpecificDecay::addTrackModes( const std::string& name,
+                                           const BPHRecoCandidate& cand,
+                                           std::string& modes, bool& count ) {
+
+  for ( const std::map<std::string,
+                       const reco::Candidate*>::value_type& entry:
+              cand.daugMap() ) {
+    if ( count ) modes += "#";
+    modes += ( name + entry.first + ":" + cand.getTMode( entry.second ) );
+    count = true;
+  }
+  for ( const std::map<std::string,
+                       BPHRecoConstCandPtr>::value_type& entry:
+              cand.compMap() ) {
+    addTrackModes( entry.first + "/", *entry.second, modes, count );
+  }
+
+  return;
 
 }
 

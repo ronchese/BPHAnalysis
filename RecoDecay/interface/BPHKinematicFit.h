@@ -108,7 +108,7 @@ class BPHKinematicFit: public virtual BPHDecayVertex {
  protected:
 
   // constructors
-  BPHKinematicFit();
+  BPHKinematicFit( int daugNum = 2, int compNum = 2 );
   // pointer used to retrieve informations from other bases
   BPHKinematicFit( const BPHKinematicFit* ptr );
 
