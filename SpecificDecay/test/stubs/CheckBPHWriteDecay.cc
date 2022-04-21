@@ -184,13 +184,18 @@ void CheckBPHWriteDecay::dump( ostream& os,
   int n = cand.numberOfDaughters();
   for ( i = 0; i < n; ++i ) {
     const reco::Candidate* dptr = cand.daughter( i );
+    const string& nDau = dNames[i];
+    string tDau = "trackMode_" + nDau;
     os << "daug " << i << "/" << n;
-    os << ' ' << dNames[i];
+    os << ' ' << nDau;
     if ( writePtr ) os << " : " << dptr;
     writeCylindric( os, " == ", *dptr, false );
-    os << " " << dptr->mass() << " " << dptr->charge() << endl;
+    os << " " << dptr->mass() << " " << dptr->charge();
+    if ( cand.hasUserData( tDau ) ) os << ' ' << *cand.userData<string>( tDau );
+    os << endl;
     const pat::Muon* mptr = dynamic_cast<const pat::Muon*>( dptr );
-    os << "muon " << i << "/" << n << " : " << ( mptr == nullptr ? 'N' : 'Y' ) << endl;
+    os << "muon " << i << "/" << n << " : " << ( mptr == nullptr ? 'N' : 'Y' )
+       << endl;
     const reco::Track* tptr = BPHTrackReference::getTrack( *dptr, "cfhpmnigs" );
     os << "trk  " << i << "/" << n ;
     if ( writePtr ) os << " : " << tptr;

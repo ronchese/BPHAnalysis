@@ -1124,7 +1124,6 @@ void BPHWriteSpecificDecay::setRecoParameters( const edm::ParameterSet& ps ) {
 void BPHWriteSpecificDecay::addTrackModes( const std::string& name,
                                            const BPHRecoCandidate& cand,
                                            std::string& modes, bool& count ) {
-
   for ( const std::map<std::string,
                        const reco::Candidate*>::value_type& entry:
               cand.daugMap() ) {
@@ -1137,9 +1136,23 @@ void BPHWriteSpecificDecay::addTrackModes( const std::string& name,
               cand.compMap() ) {
     addTrackModes( entry.first + "/", *entry.second, modes, count );
   }
-
   return;
+}
 
+
+void BPHWriteSpecificDecay::addTrackModes( const std::string& name,
+                                           const BPHRecoCandidate& cand,
+                                           pat::CompositeCandidate& cc ) {
+  for ( const std::map<std::string,
+                       const reco::Candidate*>::value_type& entry:
+              cand.daugMap() ) cc.addUserData( name + entry.first,
+                               string( 1, cand.getTMode( entry.second ) ),
+                               true );
+  for ( const std::map<std::string,
+                       BPHRecoConstCandPtr>::value_type& entry:
+              cand.compMap() ) addTrackModes( name + entry.first + "/",
+                                              *entry.second, cc );
+  return;
 }
 
 #include "FWCore/Framework/interface/MakerMacros.h"
