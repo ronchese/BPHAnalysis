@@ -43,7 +43,7 @@ class BPHChi2Select: public BPHVertexSelect {
 
   /** Destructor
    */
-  ~BPHChi2Select() override {}
+  ~BPHChi2Select() override = default;
 
   /** Operations
    */

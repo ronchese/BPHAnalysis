@@ -53,12 +53,6 @@ BPHPlusMinusCandidate::BPHPlusMinusCandidate( const BPHEventSetupWrapper* es,
 }
 
 //--------------
-// Destructor --
-//--------------
-BPHPlusMinusCandidate::~BPHPlusMinusCandidate() {
-}
-
-//--------------
 // Operations --
 //--------------
 void BPHPlusMinusCandidate::add( const string& name,
@@ -108,7 +102,7 @@ vector<BPHPlusMinusConstCandPtr> BPHPlusMinusCandidate::build(
   class ChargeSelect: public BPHRecoSelect {
    public:
     ChargeSelect( int c ): charge ( c ) {}
-    ~ChargeSelect() override {}
+    ~ChargeSelect() override = default;
     bool accept( const reco::Candidate& cand ) const override {
       return ( ( charge * cand.charge() ) > 0 );
     }

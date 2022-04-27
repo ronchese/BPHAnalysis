@@ -89,7 +89,7 @@ class BPHLambda0ToPPiBuilder: public BPHDecayToV0DiffMassBuilder {
 
   /** Destructor
    */
-  ~BPHLambda0ToPPiBuilder() override {}
+  ~BPHLambda0ToPPiBuilder() override = default;
 
 };
 

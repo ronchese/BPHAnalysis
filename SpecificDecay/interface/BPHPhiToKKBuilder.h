@@ -63,7 +63,7 @@ class BPHPhiToKKBuilder: public BPHDecayToChargedXXbarBuilder {
 
   /** Destructor
    */
-  ~BPHPhiToKKBuilder() override {}
+  ~BPHPhiToKKBuilder() override = default;
 
 };
 

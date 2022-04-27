@@ -42,7 +42,7 @@ class BPHMuonChargeSelect: public BPHParticleChargeSelect {
 
   /** Destructor
    */
-  ~BPHMuonChargeSelect() override {}
+  ~BPHMuonChargeSelect() override = default;
 
   /** Operations
    */

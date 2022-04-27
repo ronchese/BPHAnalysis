@@ -85,12 +85,6 @@ BPHKinematicFit::BPHKinematicFit( const BPHKinematicFit* ptr ):
 }
 
 //--------------
-// Destructor --
-//--------------
-BPHKinematicFit::~BPHKinematicFit() {
-}
-
-//--------------
 // Operations --
 //--------------
 /// apply a mass constraint
@@ -114,7 +108,7 @@ double BPHKinematicFit::constrSigma() const {
 /// set a decaying daughter as an unique particle fitted independently
 void BPHKinematicFit::setIndependentFit( const string& name, bool flag,
                                          double mass, double sigma ) {
-  string::size_type pos = name.find( "/" );
+  string::size_type pos = name.find( '/' );
   if ( pos != string::npos ) {
     edm::LogPrint( "WrongRequest" )
                 << "BPHKinematicFit::setIndependentFit: "
@@ -161,7 +155,7 @@ vector<RefCountedKinematicParticle> BPHKinematicFit::kinParticles(
       while ( j ) insertParticle( allParticles[--j], plist, pset );
       break;
     }
-    string::size_type pos = pname.find( "/" );
+    string::size_type pos = pname.find( '/' );
     if ( pos != string::npos ) getParticles( pname.substr( 0, pos ),
                                              pname.substr( pos + 1 ),
                                              plist, pset );
@@ -490,7 +484,7 @@ void BPHKinematicFit::getParticles( const string& moth, const
   int n = daug.size();
   for ( i = 0; i < n; ++i ) {
     const string& name = daug[i];
-    string::size_type pos = name.find( "/" );
+    string::size_type pos = name.find( '/' );
     if ( pos != string::npos )
          getParticles( moth + "/" + name.substr( 0, pos ), 
                        name.substr( pos + 1 ),

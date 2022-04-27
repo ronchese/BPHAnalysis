@@ -56,7 +56,7 @@ class BPHDecayGenericBuilder: public virtual BPHDecayGenericBuilderBase {
 
   /** Destructor
    */
-  ~BPHDecayGenericBuilder() override {}
+  ~BPHDecayGenericBuilder() override = default;
 
   /** Operations
    */

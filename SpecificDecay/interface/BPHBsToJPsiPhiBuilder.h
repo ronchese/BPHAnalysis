@@ -69,7 +69,7 @@ class BPHBsToJPsiPhiBuilder:
 
   /** Destructor
    */
-  ~BPHBsToJPsiPhiBuilder() override {}
+  ~BPHBsToJPsiPhiBuilder() override = default;
 
   /** Operations
    */

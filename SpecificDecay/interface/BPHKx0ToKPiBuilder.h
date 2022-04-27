@@ -67,7 +67,7 @@ class BPHKx0ToKPiBuilder: public BPHDecayToTkpTknSymChargeBuilder {
 
   /** Destructor
    */
-  ~BPHKx0ToKPiBuilder() override {}
+  ~BPHKx0ToKPiBuilder() override = default;
 
   /** Operations
    */

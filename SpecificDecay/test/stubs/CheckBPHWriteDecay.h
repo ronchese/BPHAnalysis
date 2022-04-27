@@ -29,7 +29,7 @@ class CheckBPHWriteDecay:
  public:
 
   explicit CheckBPHWriteDecay( const edm::ParameterSet& ps );
-  ~CheckBPHWriteDecay() override;
+  ~CheckBPHWriteDecay() override = default;
 
   static void fillDescriptions( edm::ConfigurationDescriptions& descriptions );
 

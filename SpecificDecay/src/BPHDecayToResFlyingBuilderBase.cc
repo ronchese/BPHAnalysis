@@ -45,12 +45,6 @@ BPHDecayToResFlyingBuilderBase::BPHDecayToResFlyingBuilderBase() {
 }
 
 //--------------
-// Destructor --
-//--------------
-BPHDecayToResFlyingBuilderBase::~BPHDecayToResFlyingBuilderBase() {
-}
-
-//--------------
 // Operations --
 //--------------
 /// build candidates

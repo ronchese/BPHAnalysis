@@ -45,13 +45,6 @@ BPHRecoCandidate::BPHRecoCandidate( const BPHEventSetupWrapper* es,
 }
 
 //--------------
-// Destructor --
-//--------------
-BPHRecoCandidate::~BPHRecoCandidate() {
-}
-
-
-//--------------
 // Operations --
 //--------------
 vector<BPHRecoConstCandPtr> BPHRecoCandidate::build(

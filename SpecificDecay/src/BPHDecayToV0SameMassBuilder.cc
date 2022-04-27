@@ -80,12 +80,6 @@ BPHDecayToV0SameMassBuilder::BPHDecayToV0SameMassBuilder(
 }
 
 //--------------
-// Destructor --
-//--------------
-BPHDecayToV0SameMassBuilder::~BPHDecayToV0SameMassBuilder() {
-}
-
-//--------------
 // Operations --
 //--------------
 void BPHDecayToV0SameMassBuilder::buildFromBPHGenericCollection() {

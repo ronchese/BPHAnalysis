@@ -72,7 +72,7 @@ class BPHLbToJPsiL0Builder:
 
   /** Destructor
    */
-  ~BPHLbToJPsiL0Builder() override {}
+  ~BPHLbToJPsiL0Builder() override = default;
 
   /** Operations
    */

@@ -96,12 +96,6 @@ BPHDecayToV0DiffMassBuilder::BPHDecayToV0DiffMassBuilder(
 }
 
 //--------------
-// Destructor --
-//--------------
-BPHDecayToV0DiffMassBuilder::~BPHDecayToV0DiffMassBuilder() {
-}
-
-//--------------
 // Operations --
 //--------------
 void BPHDecayToV0DiffMassBuilder::buildFromBPHGenericCollection() {

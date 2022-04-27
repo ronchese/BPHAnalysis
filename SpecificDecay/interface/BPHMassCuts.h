@@ -47,7 +47,7 @@ class BPHMassCuts {
 
   /** Destructor
    */
-  virtual ~BPHMassCuts() {}
+  virtual ~BPHMassCuts() = default;
 
   /** Operations
    */

@@ -42,7 +42,7 @@ class BPHMuonEtaSelect: public BPHParticleEtaSelect {
 
   /** Destructor
    */
-  ~BPHMuonEtaSelect() override {}
+  ~BPHMuonEtaSelect() override = default;
 
   /** Operations
    */

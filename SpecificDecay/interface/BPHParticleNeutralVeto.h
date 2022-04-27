@@ -42,7 +42,7 @@ class BPHParticleNeutralVeto: public BPHRecoSelect {
 
   /** Destructor
    */
-  ~BPHParticleNeutralVeto() override {}
+  ~BPHParticleNeutralVeto() override = default;
 
   /** Operations
    */

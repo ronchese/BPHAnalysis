@@ -33,7 +33,7 @@ class BPHRecoBuilder;
 
 class BPHDecaySpecificBuilderBase {
  public:
-  virtual ~BPHDecaySpecificBuilderBase() {}
+  virtual ~BPHDecaySpecificBuilderBase() = default;
  protected:
   virtual void fill( BPHRecoBuilder& brb, void* parameters ) = 0;
   virtual void setup( void* parameters ) = 0;
@@ -56,7 +56,7 @@ class BPHDecaySpecificBuilder:
 
   /** Destructor
    */
-  ~BPHDecaySpecificBuilder() override {}
+  ~BPHDecaySpecificBuilder() override = default;
 
  protected:
 

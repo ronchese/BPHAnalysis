@@ -59,7 +59,7 @@ class BPHDecayToChargedXXbarBuilder:
 
   /** Destructor
    */
-  ~BPHDecayToChargedXXbarBuilder() override;
+  ~BPHDecayToChargedXXbarBuilder() override = default;
 
   /** Operations
    */

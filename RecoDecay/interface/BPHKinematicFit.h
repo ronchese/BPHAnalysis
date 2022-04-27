@@ -48,7 +48,7 @@ class BPHKinematicFit: public virtual BPHDecayVertex {
 
   /** Destructor
    */
-  ~BPHKinematicFit() override;
+  ~BPHKinematicFit() override = default;
 
   /** Operations
    */

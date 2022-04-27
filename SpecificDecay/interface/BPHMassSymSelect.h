@@ -47,7 +47,7 @@ class BPHMassSymSelect: public BPHMomentumSelect {
 
   /** Destructor
    */
-  ~BPHMassSymSelect() override {}
+  ~BPHMassSymSelect() override = default;
 
   /** Operations
    */

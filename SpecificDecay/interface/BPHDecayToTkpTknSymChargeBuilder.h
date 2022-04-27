@@ -61,7 +61,7 @@ class BPHDecayToTkpTknSymChargeBuilder:
 
   /** Destructor
    */
-  ~BPHDecayToTkpTknSymChargeBuilder() override;
+  ~BPHDecayToTkpTknSymChargeBuilder() override = default;
 
   /** Operations
    */

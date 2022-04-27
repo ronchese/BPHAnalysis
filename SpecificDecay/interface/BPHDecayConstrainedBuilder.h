@@ -66,7 +66,7 @@ class BPHDecayConstrainedBuilder:
 
   /** Destructor
    */
-  ~BPHDecayConstrainedBuilder() override {}
+  ~BPHDecayConstrainedBuilder() override = default;
 
  protected:
 

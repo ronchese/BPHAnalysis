@@ -45,7 +45,7 @@ class BPHMassSelect: public BPHMomentumSelect, public BPHMassCuts {
 
   /** Destructor
    */
-  ~BPHMassSelect() override {}
+  ~BPHMassSelect() override = default;
 
   /** Operations
    */

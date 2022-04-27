@@ -42,7 +42,7 @@ class BPHParticleChargeSelect: public BPHRecoSelect {
 
   /** Destructor
    */
-  ~BPHParticleChargeSelect() override {}
+  ~BPHParticleChargeSelect() override = default;
 
   /** Operations
    */

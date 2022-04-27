@@ -206,10 +206,6 @@ BPHWriteSpecificDecay::BPHWriteSpecificDecay( const edm::ParameterSet& ps ) {
 }
 
 
-BPHWriteSpecificDecay::~BPHWriteSpecificDecay() {
-}
-
-
 void BPHWriteSpecificDecay::fillDescriptions(
                             edm::ConfigurationDescriptions& descriptions ) {
    edm::ParameterSetDescription desc;

@@ -30,7 +30,7 @@ class TestBPHRecoDecay:
  public:
 
   explicit TestBPHRecoDecay( const edm::ParameterSet& ps );
-  ~TestBPHRecoDecay() override;
+  ~TestBPHRecoDecay() override = default;
 
   static void fillDescriptions( edm::ConfigurationDescriptions& descriptions );
 

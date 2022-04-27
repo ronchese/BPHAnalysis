@@ -43,7 +43,7 @@ class BPHKinFitChi2Select: public BPHFitSelect {
 
   /** Destructor
    */
-  ~BPHKinFitChi2Select() override {}
+  ~BPHKinFitChi2Select() override = default;
 
   /** Operations
    */

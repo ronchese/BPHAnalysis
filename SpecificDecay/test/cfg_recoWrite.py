@@ -1,6 +1,10 @@
 import FWCore.ParameterSet.Config as cms
 
+from PhysicsTools.PatAlgos.tools.helpers import getPatAlgosToolsTask
+
 process = cms.Process("bphAnalysis")
+
+patAlgosToolsTask = getPatAlgosToolsTask(process)
 
 #process.maxEvents = cms.untracked.PSet( input = cms.untracked.int32(-1) )
 process.maxEvents = cms.untracked.PSet( input = cms.untracked.int32(100) )
@@ -15,13 +19,13 @@ process.load('FWCore.MessageService.MessageLogger_cfi')
 process.load('Configuration.EventContent.EventContent_cff')
 process.load('Configuration.StandardSequences.GeometryRecoDB_cff')
 process.load('Configuration.StandardSequences.MagneticField_AutoFromDBCurrent_cff')
+patAlgosToolsTask.add(process.MEtoEDMConverter)
 process.load('Configuration.StandardSequences.EndOfProcess_cff')
-process.load('Configuration.StandardSequences.FrontierConditions_GlobalTag_condDBv2_cff')
+process.load('Configuration.StandardSequences.FrontierConditions_GlobalTag_cff')
 process.load("TrackingTools/TransientTrack/TransientTrackBuilder_cfi")
 
 process.MessageLogger.cerr.FwkReport.reportEvery = 100
 process.options = cms.untracked.PSet( wantSummary = cms.untracked.bool(True) )
-process.options.allowUnscheduled = cms.untracked.bool(True)
 
 # for BPH skim input
 process.CandidateSelectedTracks = cms.EDProducer( "ConcreteChargedCandidateProducer",
@@ -31,6 +35,7 @@ process.CandidateSelectedTracks = cms.EDProducer( "ConcreteChargedCandidateProdu
 
 from PhysicsTools.PatAlgos.producersLayer1.genericParticleProducer_cfi import patGenericParticles
 process.patSelectedTracks = patGenericParticles.clone(src=cms.InputTag("CandidateSelectedTracks"))
+patAlgosToolsTask.add(process.patSelectedTracks)
 # end BPH skim input
 
 process.source = cms.Source("PoolSource",fileNames = cms.untracked.vstring(
@@ -46,7 +51,7 @@ process.source = cms.Source("PoolSource",fileNames = cms.untracked.vstring(
 #    'file:/...complete_file_path.../XXXX.root'
 ))
 
-from Configuration.AlCa.GlobalTag_condDBv2 import GlobalTag
+from Configuration.AlCa.GlobalTag import GlobalTag
 process.GlobalTag = GlobalTag(process.GlobalTag, 'auto:run2_data', '')
 
 from BPHAnalysis.SpecificDecay.recoSelectForWrite_cfi import recoSelect
@@ -105,5 +110,5 @@ process.p = cms.Path(
     process.bphWriteSpecificDecay
 )
 
-process.e = cms.EndPath(process.out)
+process.e = cms.EndPath(process.out, patAlgosToolsTask)
 

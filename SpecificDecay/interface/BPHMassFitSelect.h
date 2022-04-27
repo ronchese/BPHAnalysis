@@ -62,8 +62,7 @@ class BPHMassFitSelect: public BPHFitSelect, public BPHMassCuts {
 
   /** Destructor
    */
-  ~BPHMassFitSelect() override {
-  }
+  ~BPHMassFitSelect() override = default;
 
   /** Operations
    */

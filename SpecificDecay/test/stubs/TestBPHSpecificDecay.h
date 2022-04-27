@@ -28,7 +28,7 @@ class TestBPHSpecificDecay:
  public:
 
   explicit TestBPHSpecificDecay( const edm::ParameterSet& ps );
-  ~TestBPHSpecificDecay() override;
+  ~TestBPHSpecificDecay() override = default;
 
   static void fillDescriptions( edm::ConfigurationDescriptions& descriptions );
 

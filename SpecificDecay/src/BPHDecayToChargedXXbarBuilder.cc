@@ -57,12 +57,6 @@ BPHDecayToChargedXXbarBuilder::BPHDecayToChargedXXbarBuilder(
 }
 
 //--------------
-// Destructor --
-//--------------
-BPHDecayToChargedXXbarBuilder::~BPHDecayToChargedXXbarBuilder() {
-}
-
-//--------------
 // Operations --
 //--------------
 

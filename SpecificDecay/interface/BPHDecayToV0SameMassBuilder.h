@@ -66,7 +66,7 @@ class BPHDecayToV0SameMassBuilder: public BPHDecayToV0Builder,
 
   /** Destructor
    */
-  ~BPHDecayToV0SameMassBuilder() override;
+  ~BPHDecayToV0SameMassBuilder() override = default;
 
  protected:
 

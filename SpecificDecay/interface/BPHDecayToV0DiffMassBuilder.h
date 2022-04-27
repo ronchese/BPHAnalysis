@@ -69,7 +69,7 @@ class BPHDecayToV0DiffMassBuilder: public BPHDecayToV0Builder,
 
   /** Destructor
    */
-  ~BPHDecayToV0DiffMassBuilder() override;
+  ~BPHDecayToV0DiffMassBuilder() override = default;
 
   /** Operations
    */

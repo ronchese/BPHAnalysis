@@ -6,7 +6,7 @@
 <use name="DataFormats/VertexReco"/>
 <use name="FWCore/Framework"/>
 <use name="FWCore/MessageLogger"/>
-<use name="CommonTools/CandUtils"/>
+<use name="PhysicsTools/CandUtils"/>
 <use name="RecoVertex/KalmanVertexFit"/>
 <use name="RecoVertex/KinematicFit"/>
 <use name="RecoVertex/KinematicFitPrimitives"/>

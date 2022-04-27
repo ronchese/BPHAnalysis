@@ -51,7 +51,7 @@ class BPHPlusMinusCandidate: public BPHRecoCandidate,
 
   /** Destructor
    */
-  ~BPHPlusMinusCandidate() override;
+  ~BPHPlusMinusCandidate() override = default;
 
   /** Operations
    */

@@ -1,6 +1,10 @@
 import FWCore.ParameterSet.Config as cms
 
+from PhysicsTools.PatAlgos.tools.helpers import getPatAlgosToolsTask
+
 process = cms.Process("bphAnalysis")
+
+patAlgosToolsTask = getPatAlgosToolsTask(process)
 
 #process.maxEvents = cms.untracked.PSet( input = cms.untracked.int32(-1) )
 process.maxEvents = cms.untracked.PSet( input = cms.untracked.int32(1000) )
@@ -14,12 +18,12 @@ process.load('Configuration.EventContent.EventContent_cff')
 process.load('Configuration.StandardSequences.GeometryRecoDB_cff')
 process.load('Configuration.StandardSequences.MagneticField_AutoFromDBCurrent_cff')
 process.load('Configuration.StandardSequences.EndOfProcess_cff')
-process.load('Configuration.StandardSequences.FrontierConditions_GlobalTag_condDBv2_cff')
+patAlgosToolsTask.add(process.MEtoEDMConverter)
+process.load('Configuration.StandardSequences.FrontierConditions_GlobalTag_cff')
 process.load("TrackingTools/TransientTrack/TransientTrackBuilder_cfi")
 
 process.MessageLogger.cerr.FwkReport.reportEvery = 100
 process.options = cms.untracked.PSet( wantSummary = cms.untracked.bool(True) )
-process.options.allowUnscheduled = cms.untracked.bool(True)
 
 process.source = cms.Source("PoolSource",fileNames = cms.untracked.vstring(
 #
@@ -34,7 +38,7 @@ process.source = cms.Source("PoolSource",fileNames = cms.untracked.vstring(
 #    'file:/...complete_file_path.../0E685515-8661-E511-8274-00259073E3B6.root'
 ))
 
-from Configuration.AlCa.GlobalTag_condDBv2 import GlobalTag
+from Configuration.AlCa.GlobalTag import GlobalTag
 process.GlobalTag = GlobalTag(process.GlobalTag, 'auto:run2_mc', '')
 
 process.testBPHRecoDecay = cms.EDAnalyzer('TestBPHRecoDecay',
@@ -45,6 +49,7 @@ process.testBPHRecoDecay = cms.EDAnalyzer('TestBPHRecoDecay',
 )
 
 process.p = cms.Path(
-    process.testBPHRecoDecay
+    process.testBPHRecoDecay,
+    patAlgosToolsTask
 )
 

@@ -68,12 +68,6 @@ BPHDecayToResTrkTrkSameMassBuilderBase::BPHDecayToResTrkTrkSameMassBuilderBase(
 }
 
 //--------------
-// Destructor --
-//--------------
-BPHDecayToResTrkTrkSameMassBuilderBase::~BPHDecayToResTrkTrkSameMassBuilderBase() {
-}
-
-//--------------
 // Operations --
 //--------------
 void BPHDecayToResTrkTrkSameMassBuilderBase::fillTrkTrkList() {

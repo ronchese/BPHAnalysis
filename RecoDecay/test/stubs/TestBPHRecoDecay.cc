@@ -20,8 +20,9 @@
 #include "DataFormats/PatCandidates/interface/CompositeCandidate.h"
 
 #include "RecoVertex/KinematicFit/interface/TwoTrackMassKinematicConstraint.h"
-#include <TH1.h>
-#include <TFile.h>
+#include "TH1.h"
+#include "TFile.h"
+#include "TMath.h"
 
 #include <set>
 #include <string>
@@ -60,10 +61,6 @@ TestBPHRecoDecay::TestBPHRecoDecay( const edm::ParameterSet& ps ) {
   if ( outDump.empty() ) fPtr = &cout;
   else                   fPtr = new ofstream( outDump.c_str() );
 
-}
-
-
-TestBPHRecoDecay::~TestBPHRecoDecay() {
 }
 
 
@@ -198,7 +195,7 @@ void TestBPHRecoDecay::analyze( const edm::Event& ev,
   class MuonChargeSelect: public BPHRecoSelect {
    public:
     MuonChargeSelect( int c ): charge ( c ) {}
-    ~MuonChargeSelect() override {}
+    ~MuonChargeSelect() override = default;
     bool accept( const reco::Candidate& cand ) const override {
       const pat::Muon* p = dynamic_cast<const pat::Muon*>( &cand );
       if ( p == nullptr ) return false;
@@ -212,7 +209,7 @@ void TestBPHRecoDecay::analyze( const edm::Event& ev,
   class MuonPtSelect: public BPHRecoSelect {
    public:
     MuonPtSelect( float pt ): ptCut( pt ) {}
-    ~MuonPtSelect() override {}
+    ~MuonPtSelect() override = default;
     bool accept( const reco::Candidate& cand ) const override {
       const pat::Muon* p = dynamic_cast<const pat::Muon*>( &cand );
       if ( p == nullptr ) return false;
@@ -226,7 +223,7 @@ void TestBPHRecoDecay::analyze( const edm::Event& ev,
   class MuonEtaSelect: public BPHRecoSelect {
    public:
     MuonEtaSelect( float eta ): etaCut( eta ) {}
-    ~MuonEtaSelect() override {}
+    ~MuonEtaSelect() override = default;
     bool accept( const reco::Candidate& cand ) const override {
       const pat::Muon* p = dynamic_cast<const pat::Muon*>( &cand );
       if ( p == nullptr ) return false;
@@ -240,7 +237,7 @@ void TestBPHRecoDecay::analyze( const edm::Event& ev,
   class KaonChargeSelect: public BPHRecoSelect {
    public:
     KaonChargeSelect( int c ): charge ( c ) {}
-    ~KaonChargeSelect() override {}
+    ~KaonChargeSelect() override = default;
     bool accept( const reco::Candidate& cand ) const override {
       return ( ( charge * cand.charge() ) > 0 );
     }
@@ -251,7 +248,7 @@ void TestBPHRecoDecay::analyze( const edm::Event& ev,
   class KaonNeutralVeto: public BPHRecoSelect {
    public:
     KaonNeutralVeto() {}
-    ~KaonNeutralVeto() override {}
+    ~KaonNeutralVeto() override = default;
     bool accept( const reco::Candidate& cand ) const override {
       return lround( fabs( cand.charge() ) );
     }
@@ -261,7 +258,7 @@ void TestBPHRecoDecay::analyze( const edm::Event& ev,
   class KaonPtSelect: public BPHRecoSelect {
    public:
     KaonPtSelect( float pt ): ptCut( pt ) {}
-    ~KaonPtSelect() override {}
+    ~KaonPtSelect() override = default;
     bool accept( const reco::Candidate& cand ) const override {
       return ( cand.p4().pt() > ptCut );
     }
@@ -273,7 +270,7 @@ void TestBPHRecoDecay::analyze( const edm::Event& ev,
   class KaonEtaSelect: public BPHRecoSelect {
    public:
     KaonEtaSelect( float eta ): etaCut( eta ) {}
-    ~KaonEtaSelect() override {}
+    ~KaonEtaSelect() override = default;
     bool accept( const reco::Candidate& cand ) const override {
       return ( fabs( cand.p4().eta() ) < etaCut );
     }
@@ -292,7 +289,7 @@ void TestBPHRecoDecay::analyze( const edm::Event& ev,
     MassSelect( double minMass, double maxMass ):
       mMin( minMass ),
       mMax( maxMass ) {}
-    ~MassSelect() override {}
+    ~MassSelect() override = default;
     bool accept( const BPHDecayMomentum& cand ) const override {
       double mass = cand.composite().mass();
       return ( ( mass > mMin ) && ( mass < mMax ) );
@@ -307,7 +304,7 @@ void TestBPHRecoDecay::analyze( const edm::Event& ev,
    public:
     Chi2Select( double minProb ):
       mProb( minProb ) {}
-    ~Chi2Select() override {}
+    ~Chi2Select() override = default;
     bool accept( const BPHDecayVertex& cand ) const override {
       const reco::Vertex& v = cand.vertex();
       if ( v.isFake() ) return false;

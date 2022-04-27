@@ -71,7 +71,7 @@ class BPHDecayToResTrkBuilder:
 
   /** Destructor
    */
-  ~BPHDecayToResTrkBuilder() override {}
+  ~BPHDecayToResTrkBuilder() override = default;
 
  protected:
 

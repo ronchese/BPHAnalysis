@@ -65,7 +65,7 @@ class BPHBdToKxMuMuBuilder:
 
   /** Destructor
    */
-  ~BPHBdToKxMuMuBuilder() override {}
+  ~BPHBdToKxMuMuBuilder() override = default;
 
   /** Operations
    */

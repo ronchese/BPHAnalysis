@@ -73,7 +73,7 @@ class BPHBdToJPsiKsBuilder:
 
   /** Destructor
    */
-  ~BPHBdToJPsiKsBuilder() override {}
+  ~BPHBdToJPsiKsBuilder() override = default;
 
   /** Operations
    */

@@ -32,8 +32,8 @@
 #include "DataFormats/PatCandidates/interface/GenericParticle.h"
 #include "DataFormats/PatCandidates/interface/CompositeCandidate.h"
 
-#include <TH1.h>
-#include <TFile.h>
+#include "TH1.h"
+#include "TFile.h"
 
 #include <set>
 #include <string>
@@ -71,10 +71,6 @@ TestBPHSpecificDecay::TestBPHSpecificDecay( const edm::ParameterSet& ps ) {
   if ( outDump.empty() ) fPtr = &cout;
   else                   fPtr = new ofstream( outDump.c_str() );
 
-}
-
-
-TestBPHSpecificDecay::~TestBPHSpecificDecay() {
 }
 
 

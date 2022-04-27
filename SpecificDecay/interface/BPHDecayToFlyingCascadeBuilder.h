@@ -65,7 +65,7 @@ class BPHDecayToFlyingCascadeBuilder:
 
   /** Destructor
    */
-  ~BPHDecayToFlyingCascadeBuilder() override {}
+  ~BPHDecayToFlyingCascadeBuilder() override = default;
 
  protected:
 

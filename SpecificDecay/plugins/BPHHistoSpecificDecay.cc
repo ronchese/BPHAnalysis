@@ -7,9 +7,6 @@
 
 #include "DataFormats/PatCandidates/interface/Muon.h"
 
-#include "MagneticField/Records/interface/IdealMagneticFieldRecord.h"
-#include "MagneticField/Engine/interface/MagneticField.h"
-
 #include "FWCore/Common/interface/TriggerNames.h"
 #include "FWCore/Framework/interface/ESHandle.h"
 #include "FWCore/MessageLogger/interface/MessageLogger.h"
@@ -21,9 +18,9 @@
 #include "Math/VectorUtil.h"
 #include "TVector3.h"
 
-#include <TH1.h>
-#include <TTree.h>
-#include <TFile.h>
+#include "TH1.h"
+#include "TTree.h"
+#include "TFile.h"
 
 #include <set>
 #include <string>
@@ -1588,10 +1585,6 @@ void BPHHistoSpecificDecay::analyze( const edm::Event& ev,
   runNumber   = ev.id().run();
   lumiSection = ev.id().luminosityBlock();
   eventNumber = ev.id().event();
-
-  // get magnetic field
-  edm::ESHandle<MagneticField> magneticField;
-  es.get<IdealMagneticFieldRecord>().get( magneticField );
 
   // get object collections
   // collections are got through "BPHTokenWrapper" interface to allow

@@ -76,7 +76,7 @@ class BPHK0sToPiPiBuilder: public BPHDecayToV0SameMassBuilder {
 
   /** Destructor
    */
-  ~BPHK0sToPiPiBuilder() override {}
+  ~BPHK0sToPiPiBuilder() override = default;
 
 };
 

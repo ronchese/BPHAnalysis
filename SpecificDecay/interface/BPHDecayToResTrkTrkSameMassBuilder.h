@@ -78,7 +78,7 @@ class BPHDecayToResTrkTrkSameMassBuilder:
 
   /** Destructor
    */
-  ~BPHDecayToResTrkTrkSameMassBuilder() override {}
+  ~BPHDecayToResTrkTrkSameMassBuilder() override = default;
 
  protected:
 

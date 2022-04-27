@@ -42,7 +42,7 @@ class BPHParticleEtaSelect: public BPHRecoSelect {
 
   /** Destructor
    */
-  ~BPHParticleEtaSelect() override {}
+  ~BPHParticleEtaSelect() override = default;
 
   /** Operations
    */

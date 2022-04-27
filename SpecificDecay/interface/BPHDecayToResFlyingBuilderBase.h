@@ -56,7 +56,7 @@ class BPHDecayToResFlyingBuilderBase:
 
   /** Destructor
    */
-  ~BPHDecayToResFlyingBuilderBase() override;
+  ~BPHDecayToResFlyingBuilderBase() override = default;
 
  protected:
 

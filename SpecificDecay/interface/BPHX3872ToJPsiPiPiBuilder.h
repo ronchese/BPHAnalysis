@@ -72,7 +72,7 @@ class BPHX3872ToJPsiPiPiBuilder:
 
   /** Destructor
    */
-  ~BPHX3872ToJPsiPiPiBuilder() override {}
+  ~BPHX3872ToJPsiPiPiBuilder() override = default;
 
   /** Operations
    */

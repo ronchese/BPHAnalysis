@@ -19,8 +19,8 @@
 
 #include "CommonTools/Statistics/interface/ChiSquaredProbability.h"
 
-#include <TH1.h>
-#include <TFile.h>
+#include "TH1.h"
+#include "TFile.h"
 
 #include <set>
 #include <string>
@@ -61,10 +61,6 @@ CheckBPHWriteDecay::CheckBPHWriteDecay( const edm::ParameterSet& ps ) {
   if ( fileName.empty() ) osPtr = &cout;
   else                    osPtr = new ofstream( fileName.c_str() );
 
-}
-
-
-CheckBPHWriteDecay::~CheckBPHWriteDecay() {
 }
 
 

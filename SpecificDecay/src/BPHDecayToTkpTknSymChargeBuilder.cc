@@ -63,12 +63,6 @@ BPHDecayToTkpTknSymChargeBuilder::BPHDecayToTkpTknSymChargeBuilder(
 }
 
 //--------------
-// Destructor --
-//--------------
-BPHDecayToTkpTknSymChargeBuilder::~BPHDecayToTkpTknSymChargeBuilder() {
-}
-
-//--------------
 // Operations --
 //--------------
 void BPHDecayToTkpTknSymChargeBuilder::fillRecList() {

@@ -43,7 +43,7 @@ class BPHWriteSpecificDecay:
  public:
 
   explicit BPHWriteSpecificDecay( const edm::ParameterSet& ps );
-  ~BPHWriteSpecificDecay() override;
+  ~BPHWriteSpecificDecay() override = default;
 
   static void fillDescriptions( edm::ConfigurationDescriptions& descriptions );
 
