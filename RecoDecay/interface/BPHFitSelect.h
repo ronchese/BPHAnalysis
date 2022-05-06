@@ -43,7 +43,7 @@ class BPHFitSelect {
 
   /** Destructor
    */
-  virtual ~BPHFitSelect() {}
+  virtual ~BPHFitSelect() = default;
 
   using AcceptArg = BPHKinematicFit;
 

@@ -151,7 +151,7 @@ class BPHSoftMuonSelect {
    maxZ  ( maxDz            ),
    gM    ( goodMuon         ),
    hP    ( highPurity       ) {}
-  ~BPHSoftMuonSelect() {}
+  ~BPHSoftMuonSelect() = default;
   bool accept( const reco::Candidate& cand,
                const reco::Vertex* pv ) const {
     const pat::Muon* p = dynamic_cast<const pat::Muon*>( &cand );
@@ -197,33 +197,9 @@ class BPHDaughterSelect: public BPHHistoSpecificDecay::CandidateSelect {
                                                    eTMax( etaMaxTight ),
                                                    sms( softMuonselector ) {
   }
-  ~BPHDaughterSelect() override {}
+  ~BPHDaughterSelect() override = default;
   bool accept( const pat::CompositeCandidate& cand,
                const reco::Vertex* pv = nullptr ) const override {
-/*
-    const reco::Candidate* dptr0 = cand.daughter( 0 );
-    const reco::Candidate* dptr1 = cand.daughter( 1 );
-    if ( dptr0 == nullptr ) return false;
-    if ( dptr1 == nullptr ) return false;
-    float pt0 = dptr0->pt();
-    float pt1 = dptr1->pt();
-    if ( ( pt0 < pLMin ) || ( pt1 < pLMin ) ) return false;
-    if ( ( pt0 < pTMin ) && ( pt1 < pTMin ) ) return false;
-    float eta0 = fabs( dptr0->eta() );
-    float eta1 = fabs( dptr1->eta() );
-    if (   ( eLMax > 0 ) &&
-         ( ( eta0 > eLMax ) || ( eta1 > eLMax ) ) ) return false;
-    if (   ( eTMax > 0 ) && 
-         ( ( eta0 > eTMax ) && ( eta1 > eTMax ) ) ) return false;
-    if ( sms != nullptr ) {
-      const reco::Vertex* pvtx = BPHUserData::getByRef
-           <reco::Vertex>( cand, "primaryVertex" );
-      if ( pvtx == nullptr ) return false;
-      if ( !sms->accept( *dptr0, pvtx ) ) return false;
-      if ( !sms->accept( *dptr1, pvtx ) ) return false;
-    }
-    return true;
-*/
     return accept( cand, pLMin, pTMin, eLMax, eTMax, pv, sms );
   }
   static
@@ -278,7 +254,7 @@ class BPHCompositeBasicSelect: public BPHHistoSpecificDecay::CandidateSelect {
                                                        eMax(      etaMax ),
                                                        yMax( rapidityMax ) {
   }
-  ~BPHCompositeBasicSelect() override {}
+  ~BPHCompositeBasicSelect() override = default;
   bool accept( const pat::CompositeCandidate& cand,
                const reco::Vertex* pv = nullptr ) const override {
     if ( ( ( mMin > 0 ) && ( mMax < 0 ) ) ||
@@ -318,7 +294,7 @@ class BPHFittedBasicSelect: public BPHHistoSpecificDecay::CandidateSelect {
                                                     eMax(      etaMax ),
                                                     yMax( rapidityMax ) {
   }
-  ~BPHFittedBasicSelect() override {}
+  ~BPHFittedBasicSelect() override = default;
   bool accept( const pat::CompositeCandidate& cand,
                const reco::Vertex* pv = nullptr ) const override {
     if ( !cand.hasUserFloat( "fitMass"     ) ) return false;
@@ -371,7 +347,7 @@ class BPHGenericVertexSelect: public BPHHistoSpecificDecay::CandidateSelect {
                                               sMin(  sigMin ),
                                               mode(   dMode ) {
   }
-  ~BPHGenericVertexSelect() override {}
+  ~BPHGenericVertexSelect() override = default;
   bool accept( const pat::CompositeCandidate& cand,
                const reco::Vertex* pvtx ) const override {
     if ( pvtx == nullptr ) return false;
@@ -414,24 +390,6 @@ class BPHGenericVertexSelect: public BPHHistoSpecificDecay::CandidateSelect {
       double ctauErrPV;
       VertexAnalysis::dist2D( pvtx, svtx, px, py,
                               cosAlpha, mass, ctauPV, ctauErrPV );
-/*
-      TVector3 disp( svtx->x() - pvtx->x(),
-                     svtx->y() - pvtx->y(),
-                     0 );
-      TVector3 cmom( px, py, 0 );
-      float cosAlpha = disp.Dot( cmom ) / ( disp.Perp() * cmom.Perp() );
-      if ( cosAlpha < cMin ) return false;
-      if ( sMin < 0 ) return true;
-      AlgebraicVector3 vmom( px, py, 0 );
-      VertexDistanceXY vdistXY;
-      Measurement1D distXY = vdistXY.distance( *svtx, *pvtx );
-      double ctauPV = distXY.value() * cosAlpha * mass / cmom.Perp();
-      GlobalError sve = svtx->error();
-      GlobalError pve = pvtx->error();
-      AlgebraicSymMatrix33 vXYe = sve.matrix() + pve.matrix();
-      double ctauErrPV = sqrt( ROOT::Math::Similarity( vmom, vXYe ) ) * mass /
-                               cmom.Perp2();
-*/
       float dTest;
       switch ( mode ) {
       case 'a':
@@ -457,108 +415,6 @@ class BPHGenericVertexSelect: public BPHHistoSpecificDecay::CandidateSelect {
   char mode;
 };
 
-/*
-class BPHCompositeVertexSelect: public BPHHistoSpecificDecay::CandidateSelect {
- public:
-  BPHCompositeVertexSelect( float probMin,
-                            float  cosMin = -1.0,
-                            float  sigMin = -1.0 ): pMin( probMin ),
-                                                    cMin(  cosMin ),
-                                                    sMin(  sigMin ) {
-  }
-  ~BPHCompositeVertexSelect() override {}
-  bool accept( const pat::CompositeCandidate& cand,
-               const reco::Vertex* pvtx ) const {
-    const reco::Vertex* svtx = BPHUserData::get
-         <reco::Vertex>( cand, "vertex" );
-    if ( svtx == nullptr ) return false;
-    if ( pvtx == nullptr ) return false;
-    if ( pMin > 0 ) {
-      if ( ChiSquaredProbability( svtx->chi2(),
-                                  svtx->ndof() ) < pMin ) return false;
-    }
-    if ( ( cMin > 0 ) || ( sMin > 0 ) ) {
-      TVector3 disp( svtx->x() - pvtx->x(),
-                     svtx->y() - pvtx->y(),
-                     0 );
-      TVector3 cmom( cand.px(), cand.py(), 0 );
-      float cosAlpha = disp.Dot( cmom ) / ( disp.Perp() * cmom.Perp() );
-      if ( cosAlpha < cMin ) return false;
-      if ( sMin < 0 ) return true;
-      float mass = cand.mass();
-      AlgebraicVector3 vmom( cand.px(), cand.py(), 0 );
-      VertexDistanceXY vdistXY;
-      Measurement1D distXY = vdistXY.distance( *svtx, *pvtx );
-      double ctauPV = distXY.value() * cosAlpha * mass / cmom.Perp();
-      GlobalError sve = svtx->error();
-      GlobalError pve = pvtx->error();
-      AlgebraicSymMatrix33 vXYe = sve.matrix() + pve.matrix();
-      double ctauErrPV = sqrt( ROOT::Math::Similarity( vmom, vXYe ) ) * mass /
-                               cmom.Perp2();
-      if ( ( ctauPV / ctauErrPV ) < sMin ) return false;
-    }
-    return true;
-  }
-
- private:
-  float pMin;
-  float cMin;
-  float sMin;
-};
-
-
-class BPHFittedVertexSelect: public BPHHistoSpecificDecay::CandidateSelect {
- public:
-  BPHFittedVertexSelect( float probMin,
-                         float  cosMin = -1.0,
-                         float  sigMin = -1.0 ): pMin( probMin ),
-                                                 cMin(  cosMin ),
-                                                 sMin(  sigMin ) {
-  }
-  ~BPHFittedVertexSelect() override {}
-  bool accept( const pat::CompositeCandidate& cand,
-               const reco::Vertex* pvtx ) const {
-    const reco::Vertex* svtx = BPHUserData::get
-         <reco::Vertex>( cand, "fitVertex" );
-    if ( svtx == nullptr ) return false;
-    if ( pvtx == nullptr ) return false;
-    if ( pMin > 0 ) {
-      if ( ChiSquaredProbability( svtx->chi2(),
-                                  svtx->ndof() ) < pMin ) return false;
-    }
-    if ( ( cMin > 0 ) || ( sMin > 0 ) ) {
-      TVector3 disp( svtx->x() - pvtx->x(),
-                     svtx->y() - pvtx->y(),
-                     0 );
-      const Vector3DBase<float,GlobalTag>* fmom = BPHUserData::get
-          < Vector3DBase<float,GlobalTag> >( cand, "fitMomentum" );
-      if ( fmom == nullptr ) return false;
-      TVector3 cmom( fmom->x(), fmom->y(), 0 );
-      float cosAlpha = disp.Dot( cmom ) / ( disp.Perp() * cmom.Perp() );
-      if ( cosAlpha < cMin ) return false;
-      if ( sMin < 0 ) return true;
-      if ( !cand.hasUserFloat( "fitMass" ) ) return false;
-      float mass = cand.userFloat( "fitMass" );
-      AlgebraicVector3 vmom( fmom->x(), fmom->y(), 0 );
-      VertexDistanceXY vdistXY;
-      Measurement1D distXY = vdistXY.distance( *svtx, *pvtx );
-      double ctauPV = distXY.value() * cosAlpha * mass / cmom.Perp();
-      GlobalError sve = svtx->error();
-      GlobalError pve = pvtx->error();
-      AlgebraicSymMatrix33 vXYe = sve.matrix() + pve.matrix();
-      double ctauErrPV = sqrt( ROOT::Math::Similarity( vmom, vXYe ) ) * mass /
-                               cmom.Perp2();
-      if ( ( ctauPV / ctauErrPV ) < sMin ) return false;
-    }
-    return true;
-  }
-
- private:
-  float pMin;
-  float cMin;
-  float sMin;
-};
-*/
 
 BPHHistoSpecificDecay::BPHHistoSpecificDecay( const edm::ParameterSet& ps ) {
 
@@ -682,7 +538,6 @@ BPHHistoSpecificDecay::BPHHistoSpecificDecay( const edm::ParameterSet& ps ) {
    upsBBasicSelect   = new BPHCompositeBasicSelect(
                            upsBMassMin,  upsBMassMax,
                            upsBPtMin  ,  upsBEtaMax ,  upsBYMax );
-//  oniaVertexSelect   = new BPHCompositeVertexSelect(
   oniaVertexSelect   = new BPHGenericVertexSelect( 'c',
                            oniaProbMin, oniaCosMin, oniaSigMin );
   oniaDaughterSelect = new BPHDaughterSelect(
@@ -721,6 +576,7 @@ BPHHistoSpecificDecay::BPHHistoSpecificDecay( const edm::ParameterSet& ps ) {
   double buIProbMin       =  0.15;
   double buICosMin        = -2.0;
   double buISigMin        = -1.0;
+// *** example code for additional selections ***
 //  double buIMuPtMinLoose  = -1.0;
 //  double buIMuPtMinTight  = -1.0;
 //  double buIMuEtaMaxLoose = -1.0;
@@ -737,6 +593,7 @@ BPHHistoSpecificDecay::BPHHistoSpecificDecay( const edm::ParameterSet& ps ) {
   buIVertexSelect       = new BPHGenericVertexSelect( 'f',
                               buIProbMin, buICosMin, buISigMin );
   buIJPsiDaughterSelect = nullptr;
+// *** example code for additional selections ***
 //  buIJPsiDaughterSelect = new BPHDaughterSelect(
 //                              buIMuPtMinLoose , buIMuPtMinTight ,
 //                              buIMuEtaMaxLoose, buMuEtaMaxTight, sms );
@@ -754,6 +611,7 @@ BPHHistoSpecificDecay::BPHHistoSpecificDecay( const edm::ParameterSet& ps ) {
   double buDProbMin       =  0.10;
   double buDCosMin        =  0.99;
   double buDSigMin        =  3.0;
+// *** example code for additional selections ***
 //  double buDMuPtMinLoose  = -1.0;
 //  double buDMuPtMinTight  = -1.0;
 //  double buDMuEtaMaxLoose = -1.0;
@@ -770,6 +628,7 @@ BPHHistoSpecificDecay::BPHHistoSpecificDecay( const edm::ParameterSet& ps ) {
   buDVertexSelect       = new BPHGenericVertexSelect( 'f',
                               buDProbMin, buDCosMin, buDSigMin );
   buDJPsiDaughterSelect = nullptr;
+// *** example code for additional selections ***
 //  buDJPsiDaughterSelect = new BPHDaughterSelect(
 //                              buDMuPtMinLoose , buDMuPtMinTight ,
 //                              buDMuEtaMaxLoose, buDMuEtaMaxTight, sms );
@@ -794,6 +653,7 @@ BPHHistoSpecificDecay::BPHHistoSpecificDecay( const edm::ParameterSet& ps ) {
   double bdIProbMin       =  0.15;
   double bdICosMin        = -2.0;
   double bdISigMin        = -1.0;
+// *** example code for additional selections ***
 //  double bdIMuPtMinLoose  =  -1.0;
 //  double bdIMuPtMinTight  =  -1.0;
 //  double bdIMuEtaMaxLoose =  -1.0;
@@ -811,6 +671,7 @@ BPHHistoSpecificDecay::BPHHistoSpecificDecay( const edm::ParameterSet& ps ) {
   bdIVertexSelect       = new BPHGenericVertexSelect( 'f',
                               bdIProbMin, bdICosMin, bdISigMin );
   bdIJPsiDaughterSelect = nullptr;
+// *** example code for additional selections ***
 //  bdIJPsiDaughterSelect = new BPHDaughterSelect(
 //                              bdIMuPtMinLoose , bdIMuPtMinTight ,
 //                              bdIMuEtaMaxLoose, bdIMuEtaMaxTight, sms );
@@ -833,6 +694,7 @@ BPHHistoSpecificDecay::BPHHistoSpecificDecay( const edm::ParameterSet& ps ) {
   double bdDProbMin       =  0.10;
   double bdDCosMin        =  0.99;
   double bdDSigMin        =  3.0;
+// *** example code for additional selections ***
 //  double bdDMuPtMinLoose  = -1.0;
 //  double bdDMuPtMinTight  = -1.0;
 //  double bdDMuEtaMaxLoose = -1.0;
@@ -850,6 +712,7 @@ BPHHistoSpecificDecay::BPHHistoSpecificDecay( const edm::ParameterSet& ps ) {
   bdDVertexSelect       = new BPHGenericVertexSelect( 'f',
                               bdDProbMin, bdDCosMin, bdDSigMin );
   bdDJPsiDaughterSelect = nullptr;
+// *** example code for additional selections ***
 //  bdDJPsiDaughterSelect = new BPHDaughterSelect(
 //                              bdDMuPtMinLoose , bdDMuPtMinTight ,
 //                              bdDMuEtaMaxLoose, bdDMuEtaMaxTight, sms );
@@ -874,6 +737,7 @@ BPHHistoSpecificDecay::BPHHistoSpecificDecay( const edm::ParameterSet& ps ) {
   double bsIProbMin       =  0.15;
   double bsICosMin        = -2.0;
   double bsISigMin        = -1.0;
+// *** example code for additional selections ***
 //  double bsIMuPtMinLoose  = -1.0;
 //  double bsIMuPtMinTight  = -1.0;
 //  double bsIMuEtaMaxLoose = -1.0;
@@ -891,6 +755,7 @@ BPHHistoSpecificDecay::BPHHistoSpecificDecay( const edm::ParameterSet& ps ) {
   bsIVertexSelect       = new BPHGenericVertexSelect( 'f',
                               bsIProbMin, bsICosMin, bsISigMin );
   bsIJPsiDaughterSelect = nullptr;
+// *** example code for additional selections ***
 //  bsIJPsiDaughterSelect = new BPHDaughterSelect(
 //                              bsIMuPtMinLoose , bsIMuPtMinTight ,
 //                              bsIMuEtaMaxLoose, bsIMuEtaMaxTight, sms );
@@ -913,6 +778,7 @@ BPHHistoSpecificDecay::BPHHistoSpecificDecay( const edm::ParameterSet& ps ) {
   double bsDProbMin       =  0.10;
   double bsDCosMin        =  0.99;
   double bsDSigMin        =  3.0;
+// *** example code for additional selections ***
 //  double bsDMuPtMinLoose  = -1.0;
 //  double bsDMuPtMinTight  = -1.0;
 //  double bsDMuEtaMaxLoose = -1.0;
@@ -930,6 +796,7 @@ BPHHistoSpecificDecay::BPHHistoSpecificDecay( const edm::ParameterSet& ps ) {
   bsDVertexSelect       = new BPHGenericVertexSelect( 'f',
                               bsDProbMin, bsDCosMin, bsDSigMin );
   bsDJPsiDaughterSelect = nullptr;
+// *** example code for additional selections ***
 //  bsDJPsiDaughterSelect = new BPHDaughterSelect(
 //                              bsDMuPtMinLoose , bsDMuPtMinTight ,
 //                              bsDMuEtaMaxLoose, bsDMuEtaMaxTight, sms );
@@ -954,6 +821,7 @@ BPHHistoSpecificDecay::BPHHistoSpecificDecay( const edm::ParameterSet& ps ) {
   double b0IProbMin       =  0.15;
   double b0ICosMin        = -2.0;
   double b0ISigMin        = -1.0;
+// *** example code for additional selections ***
 //  double b0IMuPtMinLoose  =  -1.0;
 //  double b0IMuPtMinTight  =  -1.0;
 //  double b0IMuEtaMaxLoose =  -1.0;
@@ -971,6 +839,7 @@ BPHHistoSpecificDecay::BPHHistoSpecificDecay( const edm::ParameterSet& ps ) {
   b0IVertexSelect       = new BPHGenericVertexSelect( 'f',
                               b0IProbMin, b0ICosMin, b0ISigMin );
   b0IJPsiDaughterSelect = nullptr;
+// *** example code for additional selections ***
 //  b0IJPsiDaughterSelect = new BPHDaughterSelect(
 //                              b0IMuPtMinLoose , b0IMuPtMinTight ,
 //                              b0IMuEtaMaxLoose, b0IMuEtaMaxTight, sms );
@@ -993,6 +862,7 @@ BPHHistoSpecificDecay::BPHHistoSpecificDecay( const edm::ParameterSet& ps ) {
   double b0DProbMin       =  0.10;
   double b0DCosMin        =  0.99;
   double b0DSigMin        =  3.0;
+// *** example code for additional selections ***
 //  double b0DMuPtMinLoose  = -1.0;
 //  double b0DMuPtMinTight  = -1.0;
 //  double b0DMuEtaMaxLoose = -1.0;
@@ -1010,6 +880,7 @@ BPHHistoSpecificDecay::BPHHistoSpecificDecay( const edm::ParameterSet& ps ) {
   b0DVertexSelect       = new BPHGenericVertexSelect( 'f',
                               b0DProbMin, b0DCosMin, b0DSigMin );
   b0DJPsiDaughterSelect = nullptr;
+// *** example code for additional selections ***
 //  b0DJPsiDaughterSelect = new BPHDaughterSelect(
 //                              b0DMuPtMinLoose , b0DMuPtMinTight ,
 //                              b0DMuEtaMaxLoose, b0DMuEtaMaxTight, sms );
@@ -1034,6 +905,7 @@ BPHHistoSpecificDecay::BPHHistoSpecificDecay( const edm::ParameterSet& ps ) {
   double lbIProbMin        =  0.10;
   double lbICosMin         = -2.0;
   double lbISigMin         = -1.0;
+// *** example code for additional selections ***
 //  double lbIMuPtMinLoose   =  -1.0;
 //  double lbIMuPtMinTight   =  -1.0;
 //  double lbIMuEtaMaxLoose  =  -1.0;
@@ -1052,6 +924,7 @@ BPHHistoSpecificDecay::BPHHistoSpecificDecay( const edm::ParameterSet& ps ) {
   lbIVertexSelect       = new BPHGenericVertexSelect( 'f',
                               lbIProbMin, lbICosMin, lbISigMin );
   lbIJPsiDaughterSelect = nullptr;
+// *** example code for additional selections ***
 //  lbIJPsiDaughterSelect = new BPHDaughterSelect(
 //                              lbIMuPtMinLoose , lbIMuPtMinTight ,
 //                              lbIMuEtaMaxLoose, lbIMuEtaMaxTight, sms );
@@ -1074,6 +947,7 @@ BPHHistoSpecificDecay::BPHHistoSpecificDecay( const edm::ParameterSet& ps ) {
   double lbDProbMin        =  0.10;
   double lbDCosMin         =  0.99;
   double lbDSigMin         =  3.0;
+// *** example code for additional selections ***
 //  double lbDMuPtMinLoose   = -1.0;
 //  double lbDMuPtMinTight   = -1.0;
 //  double lbDMuEtaMaxLoose  = -1.0;
@@ -1092,6 +966,7 @@ BPHHistoSpecificDecay::BPHHistoSpecificDecay( const edm::ParameterSet& ps ) {
   lbDVertexSelect       = new BPHGenericVertexSelect( 'f',
                               lbDProbMin, lbDCosMin, lbDSigMin );
   lbDJPsiDaughterSelect = nullptr;
+// *** example code for additional selections ***
 //  lbDJPsiDaughterSelect = new BPHDaughterSelect(
 //                              lbDMuPtMinLoose , lbDMuPtMinTight ,
 //                              lbDMuEtaMaxLoose, lbDMuEtaMaxTight, sms );
@@ -1113,6 +988,7 @@ BPHHistoSpecificDecay::BPHHistoSpecificDecay( const edm::ParameterSet& ps ) {
   double bcICosMin        = -2.0;
   double bcISigMin        = -1.0;
   double bcIDistMin       =  0.01;
+// *** example code for additional selections ***
 //  double bcIMuPtMinLoose  = -1.0;
 //  double bcIMuPtMinTight  = -1.0;
 //  double bcIMuEtaMaxLoose = -1.0;
@@ -1131,6 +1007,7 @@ BPHHistoSpecificDecay::BPHHistoSpecificDecay( const edm::ParameterSet& ps ) {
   bcIVertexSelect       = new BPHGenericVertexSelect( 'f',
                               bcIProbMin, bcICosMin, bcISigMin, bcIDistMin );
   bcIJPsiDaughterSelect = nullptr;
+// *** example code for additional selections ***
 //  bcIJPsiDaughterSelect = new BPHDaughterSelect(
 //                              bcIMuPtMinLoose , bcIMuPtMinTight ,
 //                              bcIMuEtaMaxLoose, bcMuEtaMaxTight, sms );
@@ -1149,6 +1026,7 @@ BPHHistoSpecificDecay::BPHHistoSpecificDecay( const edm::ParameterSet& ps ) {
   double bcDProbMin       =  0.10;
   double bcDCosMin        =  0.99;
   double bcDSigMin        =  3.0;
+// *** example code for additional selections ***
 //  double bcDMuPtMinLoose  = -1.0;
 //  double bcDMuPtMinTight  = -1.0;
 //  double bcDMuEtaMaxLoose = -1.0;
@@ -1168,6 +1046,7 @@ BPHHistoSpecificDecay::BPHHistoSpecificDecay( const edm::ParameterSet& ps ) {
   bcDVertexSelect       = new BPHGenericVertexSelect( 'f',
                               bcDProbMin, bcDCosMin, bcDSigMin );
   bcDJPsiDaughterSelect = nullptr;
+// *** example code for additional selections ***
 //  bcDJPsiDaughterSelect = new BPHDaughterSelect(
 //                              bcDMuPtMinLoose , bcDMuPtMinTight ,
 //                              bcDMuEtaMaxLoose, bcDMuEtaMaxTight, sms );
@@ -1189,6 +1068,7 @@ BPHHistoSpecificDecay::BPHHistoSpecificDecay( const edm::ParameterSet& ps ) {
   double x3872ICosMin        = -2.0;
   double x3872ISigMin        = -1.0;
   double x3872IDistMin       =  0.01;
+// *** example code for additional selections ***
 //  double x3872IMuPtMinLoose  = -1.0;
 //  double x3872IMuPtMinTight  = -1.0;
 //  double x3872IMuEtaMaxLoose = -1.0;
@@ -1210,6 +1090,7 @@ BPHHistoSpecificDecay::BPHHistoSpecificDecay( const edm::ParameterSet& ps ) {
                                  x3872IProbMin,
                                  x3872ICosMin, x3872ISigMin, x3872IDistMin );
   x3872IJPsiDaughterSelect = nullptr;
+// *** example code for additional selections ***
 //  x3872IJPsiDaughterSelect = new BPHDaughterSelect(
 //                                 x3872IMuPtMinLoose , x3872IMuPtMinTight,
 //                                 x3872IMuEtaMaxLoose, x3872MuEtaMaxTight,
@@ -1229,6 +1110,7 @@ BPHHistoSpecificDecay::BPHHistoSpecificDecay( const edm::ParameterSet& ps ) {
   double x3872DProbMin       =  0.10;
   double x3872DCosMin        =  0.99;
   double x3872DSigMin        =  3.0;
+// *** example code for additional selections ***
 //  double x3872DMuPtMinLoose  = -1.0;
 //  double x3872DMuPtMinTight  = -1.0;
 //  double x3872DMuEtaMaxLoose = -1.0;
@@ -1248,6 +1130,7 @@ BPHHistoSpecificDecay::BPHHistoSpecificDecay( const edm::ParameterSet& ps ) {
   x3872DVertexSelect       = new BPHGenericVertexSelect( 'f',
                                  x3872DProbMin, x3872DCosMin, x3872DSigMin );
   x3872DJPsiDaughterSelect = nullptr;
+// *** example code for additional selections ***
 //  x3872DJPsiDaughterSelect = new BPHDaughterSelect(
 //                                 x3872DMuPtMinLoose , x3872DMuPtMinTight ,
 //                                 x3872DMuEtaMaxLoose, x3872DMuEtaMaxTight,,
@@ -1546,8 +1429,6 @@ void BPHHistoSpecificDecay::beginJob() {
 void BPHHistoSpecificDecay::analyze( const edm::Event& ev,
                                      const edm::EventSetup& es ) {
 
-//  if ( ev.id().run  () !=    316239 ) return;
-//  if ( ev.id().event() != 170736782 ) return;
   static map<string,ofstream*> ofMap;
   if ( ofMap.empty() ) {
     ofMap["BarPhi"] = nullptr;
@@ -1624,21 +1505,6 @@ void BPHHistoSpecificDecay::analyze( const edm::Event& ev,
       CHK_TRIG( trigResults, names, iObj, DoubleMu4_JpsiTrk_Displaced       )
     }
   }
-
-//  cout <<       "Dimuon25_Jpsi "
-//       << ( flag_Dimuon25_Jpsi ? 'A' : 'R' ) << endl;
-//  cout <<       "Dimuon20_Jpsi_Barrel_Seagulls "
-//       << ( flag_Dimuon20_Jpsi_Barrel_Seagulls ? 'A' : 'R' ) << endl;
-//  cout <<       "Dimuon14_Phi_Barrel_Seagulls "
-//       << ( flag_Dimuon14_Phi_Barrel_Seagulls ? 'A' : 'R' ) << endl;
-//  cout <<       "Dimuon18_PsiPrime "
-//       << ( flag_Dimuon18_PsiPrime ? 'A' : 'R' ) << endl;
-//  cout <<       "Dimuon10_PsiPrime_Barrel_Seagulls "
-//       << ( flag_Dimuon10_PsiPrime_Barrel_Seagulls ? 'A' : 'R' ) << endl;
-//  cout <<       "Dimuon12_Upsilon_eta1p5 "
-//       << ( flag_Dimuon12_Upsilon_eta1p5 ? 'A' : 'R' ) << endl;
-//  cout <<       "DoubleMu4_JpsiTrk_Displaced "
-//       << ( flag_DoubleMu4_JpsiTrk_Displaced ? 'A' : 'R' ) << endl;
 
   //////////// quarkonia ////////////
 
@@ -1748,6 +1614,7 @@ void BPHHistoSpecificDecay::analyze( const edm::Event& ev,
     if ( kptr == nullptr ) continue;
     if ( buIBasicSelect       ->accept(  cand ) &&
          buIJPsiBasicSelect   ->accept( *jPsi ) &&
+// *** example code for additional selections ***
 //         buIJPsiDaughterSelect->accept( *jPsi ) &&
          buIVertexSelect      ->accept( cand,
                                 BPHUserData::getByRef<reco::Vertex>( *jPsi,
@@ -1768,6 +1635,7 @@ void BPHHistoSpecificDecay::analyze( const edm::Event& ev,
     }
     if ( buDBasicSelect       ->accept(  cand ) &&
          buDJPsiBasicSelect   ->accept( *jPsi ) &&
+// *** example code for additional selections ***
 //         buDJPsiDaughterSelect->accept( *jPsi ) &&
          buDVertexSelect      ->accept( cand,
                                 BPHUserData::getByRef<reco::Vertex>( *jPsi,
@@ -1817,6 +1685,7 @@ void BPHHistoSpecificDecay::analyze( const edm::Event& ev,
     if ( bdIBasicSelect       ->accept(  cand ) &&
          bdIJPsiBasicSelect   ->accept( *jPsi ) &&
          bdIKx0BasicSelect    ->accept( * kx0 ) &&
+// *** example code for additional selections ***
 //         bdIJPsiDaughterSelect->accept( *jPsi ) &&
          bdIVertexSelect      ->accept( cand,
                                 BPHUserData::getByRef<reco::Vertex>( *jPsi,
@@ -1839,6 +1708,7 @@ void BPHHistoSpecificDecay::analyze( const edm::Event& ev,
     if ( bdDBasicSelect       ->accept(  cand ) &&
          bdDJPsiBasicSelect   ->accept( *jPsi ) &&
          bdDKx0BasicSelect    ->accept( * kx0 ) &&
+// *** example code for additional selections ***
 //         bdDJPsiDaughterSelect->accept( *jPsi ) &&
          bdDVertexSelect      ->accept( cand,
                                 BPHUserData::getByRef<reco::Vertex>( *jPsi,
@@ -1889,6 +1759,7 @@ void BPHHistoSpecificDecay::analyze( const edm::Event& ev,
     if ( bsIBasicSelect       ->accept(  cand ) &&
          bsIJPsiBasicSelect   ->accept( *jPsi ) &&
          bsIPhiBasicSelect    ->accept( * phi ) &&
+// *** example code for additional selections ***
 //         bsIJPsiDaughterSelect->accept( *jPsi ) &&
          bsIVertexSelect      ->accept( cand,
                                 BPHUserData::getByRef<reco::Vertex>( *jPsi,
@@ -1911,6 +1782,7 @@ void BPHHistoSpecificDecay::analyze( const edm::Event& ev,
     if ( bsDBasicSelect       ->accept(  cand ) &&
          bsDJPsiBasicSelect   ->accept( *jPsi ) &&
          bsDPhiBasicSelect    ->accept( * phi ) &&
+// *** example code for additional selections ***
 //         bsDJPsiDaughterSelect->accept( *jPsi ) &&
          bsDVertexSelect      ->accept( cand,
                                 BPHUserData::getByRef<reco::Vertex>( *jPsi,
@@ -1988,10 +1860,6 @@ void BPHHistoSpecificDecay::analyze( const edm::Event& ev,
     nb0 = b0Cands->size();
   }
 
-//  cout << nb0 << ' ' << ev.id().run() << ' ' << ev.id().event();
-//  if ( nb0 ) cout << " *************************";
-//  cout << endl;
-
   for ( ib0 = 0; ib0 < nb0; ++ ib0 ) {
     LogTrace( "DataDump" )
            << "*********** B0 " << ib0 << "/" << nb0 << " ***********";
@@ -2011,6 +1879,7 @@ void BPHHistoSpecificDecay::analyze( const edm::Event& ev,
     if ( b0IBasicSelect       ->accept(  cand ) &&
          b0IJPsiBasicSelect   ->accept( *jPsi ) &&
          b0IK0sBasicSelect    ->accept( * k0s ) &&
+// *** example code for additional selections ***
 //         b0IJPsiDaughterSelect->accept( *jPsi ) &&
          b0IVertexSelect      ->accept( cand,
                                 BPHUserData::getByRef<reco::Vertex>( *jPsi,
@@ -2033,6 +1902,7 @@ void BPHHistoSpecificDecay::analyze( const edm::Event& ev,
     if ( b0DBasicSelect       ->accept(  cand ) &&
          b0DJPsiBasicSelect   ->accept( *jPsi ) &&
          b0DK0sBasicSelect    ->accept( * k0s ) &&
+// *** example code for additional selections ***
 //         b0DJPsiDaughterSelect->accept( *jPsi ) &&
          b0DVertexSelect      ->accept( cand,
                                 BPHUserData::getByRef<reco::Vertex>( *jPsi,
@@ -2083,6 +1953,7 @@ void BPHHistoSpecificDecay::analyze( const edm::Event& ev,
     if ( lbIBasicSelect       ->accept(  cand ) &&
          lbIJPsiBasicSelect   ->accept( *jPsi ) &&
          lbILambda0BasicSelect->accept( *  l0 ) &&
+// *** example code for additional selections ***
 //         lbIJPsiDaughterSelect->accept( *jPsi ) &&
          lbIVertexSelect      ->accept( cand,
                                 BPHUserData::getByRef<reco::Vertex>( *jPsi,
@@ -2105,6 +1976,7 @@ void BPHHistoSpecificDecay::analyze( const edm::Event& ev,
     if ( lbDBasicSelect       ->accept(  cand ) &&
          lbDJPsiBasicSelect   ->accept( *jPsi ) &&
          lbDLambda0BasicSelect->accept( *  l0 ) &&
+// *** example code for additional selections ***
 //         lbDJPsiDaughterSelect->accept( *jPsi ) &&
          lbDVertexSelect      ->accept( cand,
                                 BPHUserData::getByRef<reco::Vertex>( *jPsi,
@@ -2145,6 +2017,7 @@ void BPHHistoSpecificDecay::analyze( const edm::Event& ev,
     LogTrace( "DataDump" )
            << "JPsi: " << jPsi;
     if ( jPsi == nullptr ) continue;
+// *** instruction temporarily disabled, to fix ***
 //    if ( BPHUserData::get( *jPsi, "dca", -1.0 ) < bcJPsiDcaMax ) continue;
     if ( !npJPsiBasicSelect   ->accept( *jPsi ) ) continue;
     if ( !npJPsiDaughterSelect->accept( *jPsi ) ) continue;
@@ -2153,6 +2026,7 @@ void BPHHistoSpecificDecay::analyze( const edm::Event& ev,
 
     if ( bcIBasicSelect       ->accept(  cand ) &&
          bcIJPsiBasicSelect   ->accept( *jPsi ) &&
+// *** example code for additional selections ***
 //         bcIJPsiDaughterSelect->accept( *jPsi ) &&
          bcIJPsiVertexSelect  ->accept( *jPsi,
                                 BPHUserData::getByRef<reco::Vertex>( *jPsi,
@@ -2176,6 +2050,7 @@ void BPHHistoSpecificDecay::analyze( const edm::Event& ev,
     }
     if ( bcDBasicSelect       ->accept(  cand ) &&
          bcDJPsiBasicSelect   ->accept( *jPsi ) &&
+// *** example code for additional selections ***
 //         bcDJPsiDaughterSelect->accept( *jPsi ) &&
          bcDVertexSelect      ->accept( cand,
                                 BPHUserData::getByRef<reco::Vertex>( *jPsi,
@@ -2218,6 +2093,7 @@ void BPHHistoSpecificDecay::analyze( const edm::Event& ev,
     LogTrace( "DataDump" )
            << "JPsi: " << jPsi;
     if ( jPsi == nullptr ) continue;
+// *** instruction temporarily disabled, to fix ***
 //    if ( BPHUserData::get( *jPsi, "dca", -1.0 ) < x3872JPsiDcaMax ) continue;
     if ( !npJPsiBasicSelect   ->accept( *jPsi ) ) continue;
     if ( !npJPsiDaughterSelect->accept( *jPsi ) ) continue;
@@ -2227,6 +2103,7 @@ void BPHHistoSpecificDecay::analyze( const edm::Event& ev,
     if ( ppt2 == nullptr ) continue;
     if ( x3872IBasicSelect       ->accept(  cand ) &&
          x3872IJPsiBasicSelect   ->accept( *jPsi ) &&
+// *** example code for additional selections ***
 //         x3872IJPsiDaughterSelect->accept( *jPsi ) &&
          x3872IJPsiVertexSelect  ->accept( *jPsi,
                                    BPHUserData::getByRef<reco::Vertex>( *jPsi,
@@ -2251,6 +2128,7 @@ void BPHHistoSpecificDecay::analyze( const edm::Event& ev,
     }
     if ( x3872DBasicSelect       ->accept(  cand ) &&
          x3872DJPsiBasicSelect   ->accept( *jPsi ) &&
+// *** example code for additional selections ***
 //         x3872DJPsiDaughterSelect->accept( *jPsi ) &&
          x3872DVertexSelect      ->accept( cand,
                                    BPHUserData::getByRef<reco::Vertex>( *jPsi,
@@ -2281,7 +2159,6 @@ void BPHHistoSpecificDecay::analyze( const edm::Event& ev,
 
 
 void BPHHistoSpecificDecay::endJob() {
-//  tree->Write();
   return;
 }
 
@@ -2307,7 +2184,6 @@ void BPHHistoSpecificDecay::fillHisto( const string& name,
     if ( jPsi == nullptr ) return;
     pvtx = BPHUserData::getByRef<reco::Vertex>( *jPsi, "primaryVertex" );
   }
-//  if ( pvtx == nullptr ) return;
 
   if ( pvtx != nullptr ) {
   const reco::Vertex* svtx = nullptr;
@@ -2315,7 +2191,6 @@ void BPHHistoSpecificDecay::fillHisto( const string& name,
   svtx = BPHUserData::get<reco::Vertex>( cand, "fitVertex" );
   if ( svtx == nullptr )
   svtx = BPHUserData::get<reco::Vertex>( cand, "vertex" );
-//  if ( svtx == nullptr ) return;
   if ( svtx != nullptr ) {
 
   float px;
@@ -2330,37 +2205,6 @@ void BPHHistoSpecificDecay::fillHisto( const string& name,
     px = cand.px();
     py = cand.py();
   }
-/*
-  TVector3 disp2( svtx->x() - pvtx->x(),
-                  svtx->y() - pvtx->y(),
-                  0 );
-//  TVector3 disp3( svtx->x() - pvtx->x(),
-//                  svtx->y() - pvtx->y(),
-//                  svtx->z() - pvtx->z() );
-  TVector3 cmom2( cand.px(), cand.py(), 0 );
-//  TVector3 cmom3( cand.px(), cand.py(), cand.pz() );
-  float cosAlpha2 = disp2.Dot( cmom2 ) / ( disp2.Perp() * cmom2.Perp() );
-//  float cosAlpha3 = disp3.Dot( cmom3 ) / ( disp3.Perp() * cmom3.Perp() );
-  AlgebraicVector3 vmom2( cand.px(), cand.py(), 0 );
-//  AlgebraicVector3 vmom3( cand.px(), cand.py(), cand.pz() );
-
-  VertexDistanceXY vdistXY;
-//  VertexDistance3D vdist3D;
-  Measurement1D distXY = vdistXY.distance( *svtx, *pvtx );
-//  Measurement1D dist3D = vdist3D.distance( *svtx, *pvtx );
-//  float mass = cand.mass();
-  double ctauPV2 = distXY.value() * cosAlpha2 * mass / cmom2.Perp();
-//  double ctauPV3 = dist3D.value() * cosAlpha3 * mass / cmom3.Perp();
-  GlobalError sve = svtx->error();
-  GlobalError pve = pvtx->error();
-  AlgebraicSymMatrix33 dve = sve.matrix() + pve.matrix();
-  double ctauErrPV2 = sqrt( ROOT::Math::Similarity( vmom2, dve ) ) * mass /
-                            cmom2.Perp2();
-//  double ctauErrPV3 = sqrt( ROOT::Math::Similarity( vmom3, dve ) ) * mass /
-//                            cmom3.Perp2();
-//  d2d = Measurement1D( ctauPV2, ctauPV2 / ctauErrPV2 );
-//  d3d = Measurement1D( ctauPV3, ctauPV3 / ctauErrPV3 );
-*/
   double ctauPV2;
   double ctauErrPV2;
   VertexAnalysis::dist2D( pvtx, svtx, px, py,

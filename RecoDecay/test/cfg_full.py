@@ -1,6 +1,5 @@
 import FWCore.ParameterSet.Config as cms
-
-process = cms.Process("bphAnalysis")
+from PhysicsTools.PatAlgos.tools.helpers import getPatAlgosToolsTask
 
 process = cms.Process("bphAnalysis")
 
@@ -81,4 +80,3 @@ process.p = cms.Path(
     process.testBPHRecoDecay,
     patAlgosToolsTask
 )
-

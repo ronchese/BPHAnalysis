@@ -43,7 +43,7 @@ class BPHMomentumSelect {
 
   /** Destructor
    */
-  virtual ~BPHMomentumSelect() {}
+  virtual ~BPHMomentumSelect() = default;
 
   using AcceptArg = BPHDecayMomentum;
 

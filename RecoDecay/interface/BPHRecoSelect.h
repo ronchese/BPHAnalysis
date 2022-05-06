@@ -45,7 +45,7 @@ class BPHRecoSelect {
 
   /** Destructor
    */
-  virtual ~BPHRecoSelect() {}
+  virtual ~BPHRecoSelect() = default;
 
   using AcceptArg = reco::Candidate;
 

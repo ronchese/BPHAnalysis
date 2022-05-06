@@ -43,7 +43,7 @@ class BPHVertexSelect {
 
   /** Destructor
    */
-  virtual ~BPHVertexSelect() {}
+  virtual ~BPHVertexSelect() = default;
 
   using AcceptArg = BPHDecayVertex;
 

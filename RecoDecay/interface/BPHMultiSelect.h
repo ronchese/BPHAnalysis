@@ -69,7 +69,7 @@ class BPHMultiSelectBase: public T {
 
   /** Destructor
    */
-  ~BPHMultiSelectBase() override {}
+  ~BPHMultiSelectBase() override = default;
 
   /** Operations
    */
@@ -139,7 +139,7 @@ class BPHSlimSelect: public BPHMultiSelectBase<T> {
 
   /** Destructor
    */
-  ~BPHSlimSelect() override {}
+  ~BPHSlimSelect() override = default;
 
   /** Operations
    */
@@ -167,7 +167,7 @@ class BPHFullSelect: public BPHSlimSelect<T> {
 
   /** Destructor
    */
-  ~BPHFullSelect() override {}
+  ~BPHFullSelect() override = default;
 
   /** Operations
    */
@@ -194,7 +194,7 @@ class BPHMultiSelect: public T {
 
   /** Destructor
    */
-  ~BPHMultiSelect() override {}
+  ~BPHMultiSelect() override = default;
 
   /** Operations
    */
