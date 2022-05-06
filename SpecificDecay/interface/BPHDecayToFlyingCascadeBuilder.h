@@ -76,7 +76,7 @@ class BPHDecayToFlyingCascadeBuilder:
 
   const std::vector<flying_ptr>* fCollection;
 
-  virtual void addFlyCollection( BPHRecoBuilder& brb ) override {
+  void addFlyCollection( BPHRecoBuilder& brb ) override {
     const std::vector<flying_ptr>& fc = *this->fCollection;
     if ( flySel->getMassMax() > 0.0 ) {
       fCollectSel.clear();
