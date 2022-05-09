@@ -63,7 +63,7 @@ class BPHOniaToMuMuBuilder:
 
   /** Destructor
    */
-  virtual ~BPHOniaToMuMuBuilder();
+  ~BPHOniaToMuMuBuilder() override;
 
   /** Operations
    */

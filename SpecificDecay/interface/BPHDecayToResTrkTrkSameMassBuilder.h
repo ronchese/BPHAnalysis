@@ -63,8 +63,7 @@ class BPHDecayToResTrkTrkSameMassBuilder:
       const BPHRecoBuilder::BPHGenericCollection* negCollection ):
    BPHDecayGenericBuilderBase( es, nullptr ),
    BPHDecayConstrainedBuilderBase( resName, resMass, resWidth ),
-   BPHDecayToResTrkTrkSameMassBuilderBase( es,
-                                           posName, negName, trkMass, trkSigma,
+   BPHDecayToResTrkTrkSameMassBuilderBase( posName, negName, trkMass, trkSigma,
                                            posCollection, negCollection ),
    BPHDecayConstrainedBuilder<ProdType,
                               ResType>( resCollection ) {
