@@ -17,6 +17,7 @@
 #include "BPHAnalysis/RecoDecay/interface/BPHRecoBuilder.h"
 #include "BPHAnalysis/RecoDecay/interface/BPHPlusMinusCandidate.h"
 #include "BPHAnalysis/RecoDecay/interface/BPHRecoCandidate.h"
+#include "BPHAnalysis/RecoDecay/interface/BPHAnalyzerTokenWrapper.h"
 
 //---------------
 // C++ Headers --
@@ -35,7 +36,7 @@ BPHDecayToFlyingCascadeBuilderBase::BPHDecayToFlyingCascadeBuilderBase(
     const BPHEventSetupWrapper& es,
     const string& flyName, double flyMass, double flyMSigma ):
  BPHDecayToFlyingCascadeBuilderBase( flyName, flyMass, flyMSigma ) {
-  evSetup = &es;
+  if ( evSetup == nullptr ) evSetup = new BPHEventSetupWrapper( es );
 }
 
 

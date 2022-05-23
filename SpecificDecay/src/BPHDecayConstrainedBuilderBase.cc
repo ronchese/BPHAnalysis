@@ -16,6 +16,7 @@
 #include "BPHAnalysis/RecoDecay/interface/BPHRecoBuilder.h"
 #include "BPHAnalysis/RecoDecay/interface/BPHPlusMinusCandidate.h"
 #include "BPHAnalysis/RecoDecay/interface/BPHRecoCandidate.h"
+#include "BPHAnalysis/RecoDecay/interface/BPHAnalyzerTokenWrapper.h"
 
 //---------------
 // C++ Headers --
@@ -34,7 +35,7 @@ BPHDecayConstrainedBuilderBase::BPHDecayConstrainedBuilderBase(
     const BPHEventSetupWrapper& es,
     const string& resName, double resMass, double resWidth ):
  BPHDecayConstrainedBuilderBase( resName, resMass, resWidth ) {
-  evSetup = &es;
+  if ( evSetup == nullptr ) evSetup = new BPHEventSetupWrapper( es );
 }
 
 
