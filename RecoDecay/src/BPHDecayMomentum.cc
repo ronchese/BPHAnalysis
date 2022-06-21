@@ -267,7 +267,7 @@ void BPHDecayMomentum::fillDaug( vector<const reco::Candidate*>& ad,
   vector<string>::const_iterator iend = nList.end();
   while ( iter != iend ) an.push_back( name + *iter++ );
   int n = cList.size();
-  while ( n-- ) cList[n]->fillDaug( ad, nComp[n] + "/", an );
+  while ( n-- ) cList[n]->fillDaug( ad, name + nComp[n] + "/", an );
   return;
 }
 

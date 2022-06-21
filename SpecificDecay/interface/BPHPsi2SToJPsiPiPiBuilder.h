@@ -1,6 +1,6 @@
-#ifndef BPHAnalysis_SpecificDecay_BPHX3872ToJPsiPiPiBuilder_h
-#define BPHAnalysis_SpecificDecay_BPHX3872ToJPsiPiPiBuilder_h
-/** \class BPHX3872ToJPsiPiPiBuilder
+#ifndef BPHAnalysis_SpecificDecay_BPHPsi2SToJPsiPiPiBuilder_h
+#define BPHAnalysis_SpecificDecay_BPHPsi2SToJPsiPiPiBuilder_h
+/** \class BPHPsi2SToJPsiPiPiBuilder
  *
  *  Description: 
  *     Class to build X3872 to JPsi pi+ pi- candidates
@@ -38,14 +38,14 @@ class BPHEventSetupWrapper;
 //              -- Class Interface --
 //              ---------------------
 
-class BPHX3872ToJPsiPiPiBuilder:
+class BPHPsi2SToJPsiPiPiBuilder:
       public BPHDecayToJPsiPiPiBuilder {
 
  public:
 
   /** Constructor
    */
-  BPHX3872ToJPsiPiPiBuilder( const BPHEventSetupWrapper& es,
+  BPHPsi2SToJPsiPiPiBuilder( const BPHEventSetupWrapper& es,
       const std::vector<BPHPlusMinusConstCandPtr>& jpsiCollection,
       const BPHRecoBuilder::BPHGenericCollection*   posCollection,
       const BPHRecoBuilder::BPHGenericCollection*   negCollection ):
@@ -57,16 +57,16 @@ class BPHX3872ToJPsiPiPiBuilder:
     setTrkEtaMax   ( 10.0 );
     setMassRange   ( 3.00, 4.50 );
     setProbMin     ( 0.02 );
-    setMassFitRange( 3.80, 4.20 );
+    setMassFitRange( 3.50, 3.80 );
   }
 
   // deleted copy constructor and assignment operator
-  BPHX3872ToJPsiPiPiBuilder           ( const BPHX3872ToJPsiPiPiBuilder& x ) = delete;
-  BPHX3872ToJPsiPiPiBuilder& operator=( const BPHX3872ToJPsiPiPiBuilder& x ) = delete;
+  BPHPsi2SToJPsiPiPiBuilder           ( const BPHPsi2SToJPsiPiPiBuilder& x ) = delete;
+  BPHPsi2SToJPsiPiPiBuilder& operator=( const BPHPsi2SToJPsiPiPiBuilder& x ) = delete;
 
   /** Destructor
    */
-  ~BPHX3872ToJPsiPiPiBuilder() override {}
+  ~BPHPsi2SToJPsiPiPiBuilder() override {}
 
 };
 

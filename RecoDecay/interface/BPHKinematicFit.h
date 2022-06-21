@@ -103,7 +103,8 @@ class BPHKinematicFit: public virtual BPHDecayVertex {
   double getMassSigma( const reco::Candidate* cand ) const;
 
   /// retrieve independent fit flag
-  bool getIndependentFit( const std::string& name ) const;
+  bool getIndependentFit( const std::string& name,
+                          double& mass, double& sigma ) const;
 
  protected:
 
@@ -173,11 +174,13 @@ class BPHKinematicFit: public virtual BPHDecayVertex {
                            RefCountedKinematicParticle>& cm ) const;
   virtual void getParticles( const std::string& moth, const std::string& daug,
                std::vector<RefCountedKinematicParticle>& kl,
-               std::set   <RefCountedKinematicParticle>& ks ) const;
+               std::set   <RefCountedKinematicParticle>& ks,
+               const BPHKinematicFit* curr ) const;
   virtual void getParticles( const std::string& moth, const
                std::vector<std::string>& daug,
                std::vector<RefCountedKinematicParticle>& kl,
-               std::set   <RefCountedKinematicParticle>& ks ) const;
+               std::set   <RefCountedKinematicParticle>& ks,
+               const BPHKinematicFit* curr ) const;
   virtual unsigned int numParticles( const BPHKinematicFit* cand = nullptr )
                                      const;
   static  void insertParticle( RefCountedKinematicParticle& kp,

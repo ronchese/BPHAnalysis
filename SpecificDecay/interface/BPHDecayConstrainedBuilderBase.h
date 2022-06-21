@@ -22,6 +22,7 @@
 #include "BPHAnalysis/RecoDecay/interface/BPHPlusMinusCandidate.h"
 
 class BPHEventSetupWrapper;
+class BPHMassFitSelect;
 
 //---------------
 // C++ Headers --
@@ -60,16 +61,19 @@ class BPHDecayConstrainedBuilderBase:
   void setResMassMax( double m  );
   void setResMassRange( double mMin, double mMax );
   void setConstr    ( bool flag );
+  void setMassFitSelect( BPHMassFitSelect* mfs );
 
   /// get current cuts
   double getResMassMin() const { return resoSel->getMassMin(); }
   double getResMassMax() const { return resoSel->getMassMax(); }
   bool   getConstr    () const { return massConstr; }
+  BPHMassFitSelect* getMassFitSelect() const { return mFitSel; }
 
  protected:
 
   BPHDecayConstrainedBuilderBase( const std::string& resName,
-                                  double resMass, double resWidth );
+                                  double resMass, double resWidth,
+                                  bool createFitSelObject = true );
   BPHDecayConstrainedBuilderBase();
 
   std::string rName;
@@ -79,8 +83,10 @@ class BPHDecayConstrainedBuilderBase:
   BPHMassSelect* resoSel;
 
   bool massConstr;
+  bool mfSelForce;
 
   virtual void addResCollection( BPHRecoBuilder& brb ) = 0;
+  virtual BPHMassFitSelect* massFitSelector( double mMin, double mMax);
 
 };
 

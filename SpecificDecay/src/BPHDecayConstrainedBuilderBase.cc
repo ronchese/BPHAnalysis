@@ -21,6 +21,7 @@
 //---------------
 // C++ Headers --
 //---------------
+#include <iostream>
 using namespace std;
 
 //-------------------
@@ -40,14 +41,16 @@ BPHDecayConstrainedBuilderBase::BPHDecayConstrainedBuilderBase(
 
 
 BPHDecayConstrainedBuilderBase::BPHDecayConstrainedBuilderBase(
-    const string& resName, double resMass, double resWidth ):
+    const string& resName, double resMass, double resWidth,
+    bool createFitSelObject ):
  rName( resName ),
  rMass( resMass ),
  rWidth( resWidth ),
  resoSel( new BPHMassSelect( -2.0e+06, -1.0e+06 ) ),
- massConstr( true ) {
-  mFitSel = new BPHMassFitSelect( resName, resMass, resWidth,
-                                  -2.0e+06, -1.0e+06 );
+ massConstr( true ),
+ mfSelForce( false ) {
+  mFitSel = ( createFitSelObject ?
+              massFitSelector( -2.0e+06, -1.0e+06 ) : nullptr );
 }
 
 
@@ -79,7 +82,8 @@ void BPHDecayConstrainedBuilderBase::setResMassMax( double m ) {
 }
 
 
-void BPHDecayConstrainedBuilderBase::setResMassRange( double mMin, double mMax ) {
+void BPHDecayConstrainedBuilderBase::setResMassRange( double mMin,
+                                                      double mMax ) {
   outdated = true;
   resoSel->setMassMin( mMin );
   resoSel->setMassMax( mMax );
@@ -88,15 +92,29 @@ void BPHDecayConstrainedBuilderBase::setResMassRange( double mMin, double mMax )
 
 
 void BPHDecayConstrainedBuilderBase::setConstr( bool flag ) {
+  if ( ( flag == massConstr ) && !mfSelForce ) return;
   outdated = true;
-  if ( flag == massConstr ) return;
-  double mMin = mFitSel->getMassMin();
-  double mMax = mFitSel->getMassMax();
-  delete mFitSel;
   massConstr = flag;
-  if ( massConstr ) mFitSel = new BPHMassFitSelect    ( rName, rMass, rWidth,
-                                                        mMin, mMax );
-  else              mFitSel = new BPHMassFitSelect    ( mMin, mMax );
+  delete mFitSel;
+  mFitSel = massFitSelector( mFitSel->getMassMin(), mFitSel->getMassMax() );
+  mfSelForce = false;
   return;
+}
+
+
+void BPHDecayConstrainedBuilderBase::setMassFitSelect( BPHMassFitSelect* mfs ) {
+  if ( mFitSel == mfs ) return;
+  outdated = true;
+  mfSelForce = true;
+  mFitSel = mfs;
+  return;
+}
+
+
+BPHMassFitSelect* BPHDecayConstrainedBuilderBase::massFitSelector(
+                                                  double mMin, double mMax ) {
+  if ( massConstr ) return new BPHMassFitSelect( rName, rMass, rWidth,
+                                                 mMin, mMax );
+  else              return new BPHMassFitSelect( mMin, mMax );
 }
 

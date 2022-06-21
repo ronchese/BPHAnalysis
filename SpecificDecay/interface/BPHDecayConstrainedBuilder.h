@@ -53,9 +53,9 @@ class BPHDecayConstrainedBuilder:
       const std::vector<res_ptr>& resCollection ):
    BPHDecayGenericBuilderBase( es ),
    BPHDecayConstrainedBuilderBase( resName, resMass, resWidth ),
-   BPHDecayGenericBuilder<ProdType>( es, new BPHMassFitSelect(
-                                         resName, resMass, resWidth,
-                                         -2.0e+06, -1.0e+06 ) ),
+   BPHDecayGenericBuilder<ProdType>( new BPHMassFitSelect(
+                                     resName, resMass, resWidth,
+                                     -2.0e+06, -1.0e+06 ) ),
    rCollection( &resCollection ) {}
 
   // deleted copy constructor and assignment operator

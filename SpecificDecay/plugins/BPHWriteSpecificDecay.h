@@ -38,7 +38,7 @@ class TH1F;
 class BPHRecoCandidate;
 
 class BPHWriteSpecificDecay:
-      public BPHAnalyzerWrapper<BPHModuleWrapper::one_producer> {
+      public BPHAnalyzerWrapper<BPHModuleWrapper::stream_producer> {
 
  public:
 
@@ -47,10 +47,8 @@ class BPHWriteSpecificDecay:
 
   static void fillDescriptions( edm::ConfigurationDescriptions& descriptions );
 
-  void beginJob() override;
   void produce( edm::Event& ev, const edm::EventSetup& es ) override;
   virtual void fill( edm::Event& ev, const BPHEventSetupWrapper& es );
-  void endJob() override;
 
  private:
 
@@ -98,6 +96,7 @@ class BPHWriteSpecificDecay:
   std::string    sdName;
   std::string    ssName;
   std::string    buName;
+  std::string    bpName;
   std::string    bdName;
   std::string    bsName;
   std::string    k0Name;
@@ -105,15 +104,19 @@ class BPHWriteSpecificDecay:
   std::string    b0Name;
   std::string    lbName;
   std::string    bcName;
+  std::string psi2SName;
   std::string x3872Name;
 
   enum recoType { Onia, Pmm , Psi1, Psi2, Ups , Ups1, Ups2, Ups3,
-                  Kx0, Pkk, Bu, Bd, Bs, K0s, Lambda0, B0, Lambdab, Bc, X3872 };
+                  Kx0, Pkk, Bu, Bp, Bd, Bs, K0s, Lambda0, B0, Lambdab, Bc,
+                  Psi2S, X3872 };
   enum  parType { ptMin, etaMax,
                   mPsiMin, mPsiMax, mKx0Min, mKx0Max, mPhiMin, mPhiMax,
                   mK0sMin, mK0sMax, mLambda0Min, mLambda0Max,
                   massMin, massMax, probMin, mFitMin, mFitMax,
-                  constrMass, constrSigma, constrMJPsi, writeCandidate };
+                  constrMass, constrSigma,
+                  requireJPsi, constrMJPsi, constrMPsi2,
+                  writeCandidate };
   std::map<std::string,recoType> rMap;
   std::map<std::string, parType> pMap;
   std::map<std::string, parType> fMap;
@@ -123,6 +126,7 @@ class BPHWriteSpecificDecay:
   bool recoKx0;
   bool recoPkk;
   bool recoBu;
+  bool recoBp;
   bool recoBd;
   bool recoBs;
   bool recoK0s;
@@ -130,12 +134,19 @@ class BPHWriteSpecificDecay:
   bool recoB0;
   bool recoLambdab;
   bool recoBc;
+  bool recoPsi2S;
   bool recoX3872;
+
+  bool allKx0;
+  bool allPkk;
+  bool allK0s;
+  bool allLambda0;
 
   bool writeOnia;
   bool writeKx0;
   bool writePkk;
   bool writeBu;
+  bool writeBp;
   bool writeBd;
   bool writeBs;
   bool writeK0s;
@@ -143,6 +154,7 @@ class BPHWriteSpecificDecay:
   bool writeB0;
   bool writeLambdab;
   bool writeBc;
+  bool writePsi2S;
   bool writeX3872;
 
   bool writeVertex;
@@ -153,6 +165,7 @@ class BPHWriteSpecificDecay:
   std::vector<BPHRecoConstCandPtr> lSd;
   std::vector<BPHRecoConstCandPtr> lSs;
   std::vector<BPHRecoConstCandPtr> lBu;
+  std::vector<BPHRecoConstCandPtr> lBp;
   std::vector<BPHRecoConstCandPtr> lBd;
   std::vector<BPHRecoConstCandPtr> lBs;
   std::vector<BPHPlusMinusConstCandPtr> lK0;
@@ -160,6 +173,7 @@ class BPHWriteSpecificDecay:
   std::vector<BPHRecoConstCandPtr> lB0;
   std::vector<BPHRecoConstCandPtr> lLb;
   std::vector<BPHRecoConstCandPtr> lBc;
+  std::vector<BPHRecoConstCandPtr> lPsi2S;
   std::vector<BPHRecoConstCandPtr> lX3872;
 
   std::map<const BPHRecoCandidate*,const BPHRecoCandidate*> jPsiOMap;

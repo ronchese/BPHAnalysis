@@ -13,6 +13,7 @@
 #include "BPHAnalysis/SpecificDecay/interface/BPHKx0ToKPiBuilder.h"
 #include "BPHAnalysis/SpecificDecay/interface/BPHPhiToKKBuilder.h"
 #include "BPHAnalysis/SpecificDecay/interface/BPHBuToJPsiKBuilder.h"
+#include "BPHAnalysis/SpecificDecay/interface/BPHBuToPsi2SKBuilder.h"
 #include "BPHAnalysis/SpecificDecay/interface/BPHBsToJPsiPhiBuilder.h"
 #include "BPHAnalysis/SpecificDecay/interface/BPHBdToJPsiKxBuilder.h"
 #include "BPHAnalysis/SpecificDecay/interface/BPHK0sToPiPiBuilder.h"
@@ -21,6 +22,7 @@
 #include "BPHAnalysis/SpecificDecay/interface/BPHBdToJPsiKsBuilder.h"
 #include "BPHAnalysis/SpecificDecay/interface/BPHLbToJPsiL0Builder.h"
 #include "BPHAnalysis/SpecificDecay/interface/BPHBcToJPsiPiBuilder.h"
+#include "BPHAnalysis/SpecificDecay/interface/BPHPsi2SToJPsiPiPiBuilder.h"
 #include "BPHAnalysis/SpecificDecay/interface/BPHX3872ToJPsiPiPiBuilder.h"
 
 #include "BPHAnalysis/RecoDecay/interface/BPHAnalyzerTokenWrapper.h"
@@ -44,9 +46,10 @@
 #include "FWCore/Framework/interface/ESHandle.h"
 #include "FWCore/MessageLogger/interface/MessageLogger.h"
 
+#include <algorithm>
 #include <set>
 #include <string>
-
+#include <iostream>
 using namespace std;
 
 #define SET_PAR(TYPE,NAME,PSET) ( NAME = PSET.getParameter< TYPE >( #NAME ) )
@@ -70,6 +73,7 @@ BPHWriteSpecificDecay::BPHWriteSpecificDecay( const edm::ParameterSet& ps ) {
   SET_PAR( string,    sdName, ps );
   SET_PAR( string,    ssName, ps );
   SET_PAR( string,    buName, ps );
+  SET_PAR( string,    bpName, ps );
   SET_PAR( string,    bdName, ps );
   SET_PAR( string,    bsName, ps );
   SET_PAR( string,    k0Name, ps );
@@ -77,6 +81,7 @@ BPHWriteSpecificDecay::BPHWriteSpecificDecay( const edm::ParameterSet& ps ) {
   SET_PAR( string,    b0Name, ps );
   SET_PAR( string,    lbName, ps );
   SET_PAR( string,    bcName, ps );
+  SET_PAR( string, psi2SName, ps );
   SET_PAR( string, x3872Name, ps );
 
   SET_PAR( bool, writeMomentum, ps );
@@ -93,6 +98,7 @@ BPHWriteSpecificDecay::BPHWriteSpecificDecay( const edm::ParameterSet& ps ) {
   rMap["Kx0"    ] = Kx0;
   rMap["PhiKK"  ] = Pkk;
   rMap["Bu"     ] = Bu;
+  rMap["Bp"     ] = Bp;
   rMap["Bd"     ] = Bd;
   rMap["Bs"     ] = Bs;
   rMap["K0s"    ] = K0s;
@@ -100,6 +106,7 @@ BPHWriteSpecificDecay::BPHWriteSpecificDecay( const edm::ParameterSet& ps ) {
   rMap["B0"     ] = B0;
   rMap["Lambdab"] = Lambdab;
   rMap["Bc"     ] = Bc;
+  rMap["Psi2S"  ] = Psi2S;
   rMap["X3872"  ] = X3872;
 
   pMap["ptMin"      ] = ptMin;
@@ -122,13 +129,17 @@ BPHWriteSpecificDecay::BPHWriteSpecificDecay( const edm::ParameterSet& ps ) {
   pMap["constrMass" ] = constrMass;
   pMap["constrSigma"] = constrSigma;
 
+  fMap["requireJPsi"   ] = requireJPsi;
   fMap["constrMJPsi"   ] = constrMJPsi;
+  fMap["constrMPsi2"   ] = constrMPsi2;
+
   fMap["writeCandidate"] = writeCandidate;
 
   recoOnia    =
   recoKx0     = writeKx0     =
   recoPkk     = writePkk     =
   recoBu      = writeBu      =
+  recoBp      = writeBp      =
   recoBd      = writeBd      =
   recoBs      = writeBs      =
   recoK0s     = writeK0s     =
@@ -136,6 +147,7 @@ BPHWriteSpecificDecay::BPHWriteSpecificDecay( const edm::ParameterSet& ps ) {
   recoB0      = writeB0      =
   recoLambdab = writeLambdab =
   recoBc      = writeBc      =
+  recoPsi2S   = writePsi2S   =
   recoX3872   = writeX3872   = false;
 
   writeOnia = true;
@@ -152,6 +164,7 @@ BPHWriteSpecificDecay::BPHWriteSpecificDecay( const edm::ParameterSet& ps ) {
   if (  recoB0      )  recoOnia =  recoK0s     = true;
   if (  recoLambdab )  recoOnia =  recoLambda0 = true;
   if (  recoBc      )  recoOnia = true;
+  if (  recoPsi2S   )  recoOnia = true;
   if (  recoX3872   )  recoOnia = true;
   if ( writeBu      ) writeOnia = true;
   if ( writeBd      ) writeOnia = writeKx0     = true;
@@ -159,7 +172,14 @@ BPHWriteSpecificDecay::BPHWriteSpecificDecay( const edm::ParameterSet& ps ) {
   if ( writeB0      ) writeOnia = writeK0s     = true;
   if ( writeLambdab ) writeOnia = writeLambda0 = true;
   if ( writeBc      ) writeOnia = true;
+  if ( writePsi2S   ) writeOnia = true;
   if ( writeX3872   ) writeOnia = true;
+  if (  recoBp && ! recoPsi2S && ! recoX3872 )  recoPsi2S = true;
+  if ( writeBp && !writePsi2S && !writeX3872 ) writePsi2S = true;
+  allKx0     = ( parMap[Kx0    ][requireJPsi] < 0 );
+  allPkk     = ( parMap[Pkk    ][requireJPsi] < 0 );
+  allK0s     = ( parMap[K0s    ][requireJPsi] < 0 );
+  allLambda0 = ( parMap[Lambda0][requireJPsi] < 0 );
 
   esConsume< MagneticField,
              IdealMagneticFieldRecord >( magFieldToken );
@@ -194,6 +214,7 @@ BPHWriteSpecificDecay::BPHWriteSpecificDecay( const edm::ParameterSet& ps ) {
   if ( writeKx0     ) produces<pat::CompositeCandidateCollection>(    sdName );
   if ( writePkk     ) produces<pat::CompositeCandidateCollection>(    ssName );
   if ( writeBu      ) produces<pat::CompositeCandidateCollection>(    buName );
+  if ( writeBp      ) produces<pat::CompositeCandidateCollection>(    bpName );
   if ( writeBd      ) produces<pat::CompositeCandidateCollection>(    bdName );
   if ( writeBs      ) produces<pat::CompositeCandidateCollection>(    bsName );
   if ( writeK0s     ) produces<pat::CompositeCandidateCollection>(    k0Name );
@@ -201,6 +222,7 @@ BPHWriteSpecificDecay::BPHWriteSpecificDecay( const edm::ParameterSet& ps ) {
   if ( writeB0      ) produces<pat::CompositeCandidateCollection>(    b0Name );
   if ( writeLambdab ) produces<pat::CompositeCandidateCollection>(    lbName );
   if ( writeBc      ) produces<pat::CompositeCandidateCollection>(    bcName );
+  if ( writePsi2S   ) produces<pat::CompositeCandidateCollection>( psi2SName );
   if ( writeX3872   ) produces<pat::CompositeCandidateCollection>( x3872Name );
 
 }
@@ -223,6 +245,7 @@ void BPHWriteSpecificDecay::fillDescriptions(
    desc.add<string>(    "sdName",     "kx0Cand" );
    desc.add<string>(    "ssName",     "phiCand" );
    desc.add<string>(    "buName",    "buFitted" );
+   desc.add<string>(    "bpName",    "bpFitted" );
    desc.add<string>(    "bdName",    "bdFitted" );
    desc.add<string>(    "bsName",    "bsFitted" );
    desc.add<string>(    "k0Name",    "k0Fitted" );
@@ -230,6 +253,7 @@ void BPHWriteSpecificDecay::fillDescriptions(
    desc.add<string>(    "b0Name",    "b0Fitted" );
    desc.add<string>(    "lbName",    "lbFitted" );
    desc.add<string>(    "bcName",    "bcFitted" );
+   desc.add<string>( "psi2SName", "psi2SFitted" );
    desc.add<string>( "x3872Name", "x3872Fitted" );
    desc.add<bool>( "writeVertex"  , true );
    desc.add<bool>( "writeMomentum", true );
@@ -254,17 +278,14 @@ void BPHWriteSpecificDecay::fillDescriptions(
    dpar.add<double>(  "massFitMax", -2.0e35 );
    dpar.add<double>(  "constrMass", -2.0e35 );
    dpar.add<double>( "constrSigma", -2.0e35 );
+   dpar.add<bool>(    "requireJPsi", true );
    dpar.add<bool>(    "constrMJPsi", true );
+   dpar.add<bool>(    "constrMPsi2", true );
    dpar.add<bool>( "writeCandidate", true );
    vector<edm::ParameterSet> rpar;
    desc.addVPSet( "recoSelect", dpar, rpar );
    descriptions.add( "bphWriteSpecificDecay", desc );
    return;
-}
-
-
-void BPHWriteSpecificDecay::beginJob() {
-  return;
 }
 
 
@@ -277,6 +298,7 @@ void BPHWriteSpecificDecay::produce( edm::Event& ev,
   if ( writeKx0     ) write( ev, lSd   ,    sdName );
   if ( writePkk     ) write( ev, lSs   ,    ssName );
   if ( writeBu      ) write( ev, lBu   ,    buName );
+  if ( writeBp      ) write( ev, lBp   ,    bpName );
   if ( writeBd      ) write( ev, lBd   ,    bdName );
   if ( writeBs      ) write( ev, lBs   ,    bsName );
   if ( writeK0s     ) write( ev, lK0   ,    k0Name );
@@ -284,6 +306,7 @@ void BPHWriteSpecificDecay::produce( edm::Event& ev,
   if ( writeB0      ) write( ev, lB0   ,    b0Name );
   if ( writeLambdab ) write( ev, lLb   ,    lbName );
   if ( writeBc      ) write( ev, lBc   ,    bcName );
+  if ( writePsi2S   ) write( ev, lPsi2S, psi2SName );
   if ( writeX3872   ) write( ev, lX3872, x3872Name );
   return;
 }
@@ -297,6 +320,7 @@ void BPHWriteSpecificDecay::fill( edm::Event& ev,
   lSd.clear();
   lSs.clear();
   lBu.clear();
+  lBp.clear();
   lBd.clear();
   lBs.clear();
   lK0.clear();
@@ -304,6 +328,7 @@ void BPHWriteSpecificDecay::fill( edm::Event& ev,
   lB0.clear();
   lLb.clear();
   lBc.clear();
+  lPsi2S.clear();
   lX3872.clear();
   jPsiOMap.clear();
   daughMap.clear();
@@ -565,11 +590,10 @@ void BPHWriteSpecificDecay::fill( edm::Event& ev,
   // generic onia candidate
   if ( nFull ) lJPsi = onia->getList( BPHOniaToMuMuBuilder::Psi1 );
 
-  int nJPsi = lJPsi.size();
+  bool jPsiFound = !lJPsi.empty();
   delete onia;
 
-  if ( !nJPsi ) return;
-  if ( !nrc   ) return;
+  if ( !nrc ) return;
 
   int ij;
   int io;
@@ -592,7 +616,7 @@ void BPHWriteSpecificDecay::fill( edm::Event& ev,
   // build and dump Bu
 
   BPHBuToJPsiKBuilder* bu = nullptr;
-  if ( recoBu ) {
+  if ( recoBu && jPsiFound ) {
     if ( usePF ) bu = new BPHBuToJPsiKBuilder( es, lJPsi,
                           BPHRecoBuilder::createCollection( pfCands, "f" ) );
     else
@@ -637,7 +661,7 @@ void BPHWriteSpecificDecay::fill( edm::Event& ev,
 
   vector<BPHPlusMinusConstCandPtr> lKx0;
   BPHKx0ToKPiBuilder* kx0 = nullptr;
-  if ( recoKx0 ) {
+  if ( recoKx0 && ( jPsiFound || allKx0 ) ) {
     if ( usePF ) kx0 = new BPHKx0ToKPiBuilder( es,
                        BPHRecoBuilder::createCollection( pfCands, "f" ),
                        BPHRecoBuilder::createCollection( pfCands, "f" ) );
@@ -650,6 +674,8 @@ void BPHWriteSpecificDecay::fill( edm::Event& ev,
                        BPHRecoBuilder::createCollection( gpCands, "h" ),
                        BPHRecoBuilder::createCollection( gpCands, "h" ) );
   }
+
+  set<BPHRecoConstCandPtr> sKx0;
 
   if ( kx0 != nullptr ) {
     rIter = parMap.find( Kx0 );
@@ -673,14 +699,15 @@ void BPHWriteSpecificDecay::fill( edm::Event& ev,
       }
     }
     lKx0 = kx0->build();
+    if ( allKx0 ) sKx0.insert( lKx0.begin(), lKx0.end() );
     delete kx0;
   }
 
-  int nKx0 = lKx0.size();
+  bool kx0Found = !lKx0.empty();
 
   // build and dump Bd -> JPsi Kx0
 
-  if ( recoBd && nKx0 ) {
+  if ( recoBd && jPsiFound && kx0Found ) {
 
     BPHBdToJPsiKxBuilder* bd = new BPHBdToJPsiKxBuilder( es, lJPsi, lKx0 );
     rIter = parMap.find( Bd );
@@ -712,21 +739,21 @@ void BPHWriteSpecificDecay::fill( edm::Event& ev,
     lBd = bd->build();
     delete bd;
 
-    set<BPHRecoConstCandPtr> sKx0;
     int iBd;
     int nBd = lBd.size();
     for ( iBd = 0; iBd < nBd; ++iBd ) sKx0.insert( lBd[iBd]->getComp( "Kx0" ) );
-    set<BPHRecoConstCandPtr>::const_iterator iter = sKx0.begin();
-    set<BPHRecoConstCandPtr>::const_iterator iend = sKx0.end();
-    while ( iter != iend ) lSd.push_back( *iter++ );
 
   }
+  set<BPHRecoConstCandPtr>::const_iterator kx0_iter = sKx0.begin();
+  set<BPHRecoConstCandPtr>::const_iterator kx0_iend = sKx0.end();
+  lSd.reserve( sKx0.size() );
+  while ( kx0_iter != kx0_iend ) lSd.push_back( *kx0_iter++ );
 
   // build and dump Phi
 
   vector<BPHPlusMinusConstCandPtr> lPhi;
   BPHPhiToKKBuilder* phi = nullptr;
-  if ( recoPkk ) {
+  if ( recoPkk && ( jPsiFound || allPkk ) ) {
     if ( usePF ) phi = new BPHPhiToKKBuilder( es,
                        BPHRecoBuilder::createCollection( pfCands, "f" ),
                        BPHRecoBuilder::createCollection( pfCands, "f" ) );
@@ -739,6 +766,8 @@ void BPHWriteSpecificDecay::fill( edm::Event& ev,
                        BPHRecoBuilder::createCollection( gpCands, "h" ),
                        BPHRecoBuilder::createCollection( gpCands, "h" ) );
   }
+
+  set<BPHRecoConstCandPtr> sPhi;
 
   if ( phi != nullptr ) {
     rIter = parMap.find( Pkk );
@@ -762,14 +791,15 @@ void BPHWriteSpecificDecay::fill( edm::Event& ev,
       }
     }
     lPhi = phi->build();
+    if ( allPkk ) sPhi.insert( lPhi.begin(), lPhi.end() );
     delete phi;
   }
 
-  int nPhi = lPhi.size();
+  bool phiFound = !lPhi.empty();
 
   // build and dump Bs
 
-  if ( recoBs && nPhi ) {
+  if ( recoBs && jPsiFound && phiFound ) {
 
     BPHBsToJPsiPhiBuilder* bs = new BPHBsToJPsiPhiBuilder( es, lJPsi, lPhi );
     rIter = parMap.find( Bs );
@@ -801,20 +831,20 @@ void BPHWriteSpecificDecay::fill( edm::Event& ev,
     lBs = bs->build();
     delete bs;
 
-    set<BPHRecoConstCandPtr> sPhi;
     int iBs;
     int nBs = lBs.size();
     for ( iBs = 0; iBs < nBs; ++iBs ) sPhi.insert( lBs[iBs]->getComp( "Phi" ) );
-    set<BPHRecoConstCandPtr>::const_iterator iter = sPhi.begin();
-    set<BPHRecoConstCandPtr>::const_iterator iend = sPhi.end();
-    while ( iter != iend ) lSs.push_back( *iter++ );
 
   }
+  set<BPHRecoConstCandPtr>::const_iterator phi_iter = sPhi.begin();
+  set<BPHRecoConstCandPtr>::const_iterator phi_iend = sPhi.end();
+  lSs.reserve( sPhi.size() );
+  while ( phi_iter != phi_iend ) lSs.push_back( *phi_iter++ );
 
   // build K0
 
   BPHK0sToPiPiBuilder* k0s = nullptr;
-  if ( recoK0s ) {
+  if ( recoK0s && ( jPsiFound || allK0s ) ) {
     if ( useK0 ) k0s = new BPHK0sToPiPiBuilder( es, k0Cand.product(), "cfp" );
     else
     if ( useKS ) k0s = new BPHK0sToPiPiBuilder( es, kSCand.product(), "cfp" );
@@ -844,15 +874,17 @@ void BPHWriteSpecificDecay::fill( edm::Event& ev,
     delete k0s;
   }
 
-  int nK0 = lK0.size();
+  bool k0Found = !lK0.empty();
 
   // build Lambda0
 
   BPHLambda0ToPPiBuilder* l0s = nullptr;
-  if ( recoLambda0 ) {
-    if ( useL0 ) l0s = new BPHLambda0ToPPiBuilder( es, l0Cand.product(), "cfp" );
+  if ( recoLambda0 && ( jPsiFound || allLambda0 ) ) {
+    if ( useL0 ) l0s = new BPHLambda0ToPPiBuilder( es,
+                                                   l0Cand.product(), "cfp" );
     else
-    if ( useLS ) l0s = new BPHLambda0ToPPiBuilder( es, lSCand.product(), "cfp" );
+    if ( useLS ) l0s = new BPHLambda0ToPPiBuilder( es,
+                                                   lSCand.product(), "cfp" );
   }
   if ( l0s != nullptr ) {
     rIter = parMap.find( Lambda0 );
@@ -879,11 +911,11 @@ void BPHWriteSpecificDecay::fill( edm::Event& ev,
     delete l0s;
   }
 
-  int nL0 = lL0.size();
+  bool l0Found = !lL0.empty();
 
   // build and dump Bd -> JPsi K0s
 
-  if ( recoB0 && nK0 ) {
+  if ( recoB0 && jPsiFound && k0Found ) {
 
     BPHBdToJPsiKsBuilder* b0 = new BPHBdToJPsiKsBuilder( es, lJPsi, lK0 );
     rIter = parMap.find( B0 );
@@ -922,7 +954,7 @@ void BPHWriteSpecificDecay::fill( edm::Event& ev,
 
   // build and dump Lambdab -> JPsi Lambda0
 
-  if ( recoLambdab && nL0 ) {
+  if ( recoLambdab && jPsiFound && l0Found ) {
 
     BPHLbToJPsiL0Builder* lb = new BPHLbToJPsiL0Builder( es, lJPsi, lL0 );
     rIter = parMap.find( Lambdab );
@@ -962,7 +994,7 @@ void BPHWriteSpecificDecay::fill( edm::Event& ev,
   // build and dump Bc
 
   BPHBcToJPsiPiBuilder* bc = nullptr;
-  if ( recoBc ) {
+  if ( recoBc && jPsiFound ) {
     if ( usePF ) bc = new BPHBcToJPsiPiBuilder( es, lJPsi,
                           BPHRecoBuilder::createCollection( pfCands, "f" ) );
     else
@@ -1003,10 +1035,57 @@ void BPHWriteSpecificDecay::fill( edm::Event& ev,
     delete bc;
   }
 
+  // build and dump Psi2S
+
+  BPHPsi2SToJPsiPiPiBuilder* psi2S = nullptr;
+  if ( recoPsi2S && jPsiFound ) {
+    if ( usePF ) psi2S = new BPHPsi2SToJPsiPiPiBuilder( es, lJPsi,
+                             BPHRecoBuilder::createCollection( pfCands, "f" ),
+                             BPHRecoBuilder::createCollection( pfCands, "f" ) );
+    else
+    if ( usePC ) psi2S = new BPHPsi2SToJPsiPiPiBuilder( es, lJPsi,
+                             BPHRecoBuilder::createCollection( pcCands, "p" ),
+                             BPHRecoBuilder::createCollection( pcCands, "p" ) );
+    else
+    if ( useGP ) psi2S = new BPHPsi2SToJPsiPiPiBuilder( es, lJPsi,
+                             BPHRecoBuilder::createCollection( gpCands, "h" ),
+                             BPHRecoBuilder::createCollection( gpCands, "h" ) );
+  }
+
+  if ( psi2S != nullptr ) {
+    rIter = parMap.find( Psi2S );
+    if ( rIter != rIend ) {
+      const map<parType,double>& pMap = rIter->second;
+      map<parType,double>::const_iterator pIter = pMap.begin();
+      map<parType,double>::const_iterator pIend = pMap.end();
+      while ( pIter != pIend ) {
+        const map<parType,double>::value_type& pEntry = *pIter++;
+        parType id = pEntry.first;
+        double  pv = pEntry.second;
+        switch( id ) {
+        case ptMin      : psi2S->setPiPtMin    ( pv ); break;
+        case etaMax     : psi2S->setPiEtaMax   ( pv ); break;
+        case mPsiMin    : psi2S->setJPsiMassMin( pv ); break;
+        case mPsiMax    : psi2S->setJPsiMassMax( pv ); break;
+        case massMin    : psi2S->setMassMin    ( pv ); break;
+        case massMax    : psi2S->setMassMax    ( pv ); break;
+        case probMin    : psi2S->setProbMin    ( pv ); break;
+        case mFitMin    : psi2S->setMassFitMin ( pv ); break;
+        case mFitMax    : psi2S->setMassFitMax ( pv ); break;
+        case constrMJPsi: psi2S->setConstr     ( pv > 0 ); break;
+        case writeCandidate: writePsi2S =      ( pv > 0 ); break;
+        default: break;
+        }
+      }
+    }
+    lPsi2S = psi2S->build();
+    delete psi2S;
+  }
+
   // build and dump X3872
 
   BPHX3872ToJPsiPiPiBuilder* x3872 = nullptr;
-  if ( recoX3872 ) {
+  if ( recoX3872 && jPsiFound ) {
     if ( usePF ) x3872 = new BPHX3872ToJPsiPiPiBuilder( es, lJPsi,
                              BPHRecoBuilder::createCollection( pfCands, "f" ),
                              BPHRecoBuilder::createCollection( pfCands, "f" ) );
@@ -1050,13 +1129,107 @@ void BPHWriteSpecificDecay::fill( edm::Event& ev,
     delete x3872;
   }
 
+  // merge Psi2S and X3872
+  class ResTrkTrkCompare {
+   public:
+    bool operator()( const BPHRecoConstCandPtr& l,
+                     const BPHRecoConstCandPtr& r ) const {
+      vector<const reco::Track*> tl = l->tracks();
+      vector<const reco::Track*> tr = r->tracks();
+      if ( tl.size() < tr.size() ) return true;
+      sort( tl.begin(), tl.end() );
+      sort( tr.begin(), tr.end() );
+      int n = tr.size();
+      int i;
+      for ( i = 0; i < n; ++i ) {
+        if ( tl[i] < tr[i] ) return true;
+        if ( tl[i] > tr[i] ) return false;
+      }
+      return false;
+    }
+  } rttc;
+  set<BPHRecoConstCandPtr,ResTrkTrkCompare> sjpPiPi( rttc );
+  sjpPiPi.insert( lPsi2S.begin(), lPsi2S.end() );
+  sjpPiPi.insert( lX3872.begin(), lX3872.end() );
+  vector<BPHRecoConstCandPtr> ljpPiPi;
+  ljpPiPi.insert( ljpPiPi.end(), sjpPiPi.begin(), sjpPiPi.end() );
+  bool jpPiPiFound = !ljpPiPi.empty();
+
+  // build and dump Bp
+
+  BPHBuToPsi2SKBuilder* bp = nullptr;
+  if ( recoBp && jpPiPiFound ) {
+    if ( usePF ) bp = new BPHBuToPsi2SKBuilder( es, ljpPiPi,
+                          BPHRecoBuilder::createCollection( pfCands, "f" ) );
+    else
+    if ( usePC ) bp = new BPHBuToPsi2SKBuilder( es, ljpPiPi,
+                          BPHRecoBuilder::createCollection( pcCands, "p" ) );
+    else
+    if ( useGP ) bp = new BPHBuToPsi2SKBuilder( es, ljpPiPi,
+                          BPHRecoBuilder::createCollection( gpCands, "h" ) );
+  }
+
+  if ( bp != nullptr ) {
+    class BPHBuToPsi2SSelect: public BPHMassFitSelect {
+     public:
+      BPHBuToPsi2SSelect():
+       BPHMassFitSelect( "Psi2S", BPHParticleMasses::psi2Mass,
+                                  BPHParticleMasses::psi2MWidth, 5.0, 6.0 ) {}
+      ~BPHBuToPsi2SSelect() override = default;
+      bool accept( const BPHKinematicFit& cand ) const override {
+             const_cast<BPHRecoCandidate*>( cand.getComp( "Psi2S" )
+                                                .get() )->setIndependentFit(
+                                                "JPsi", true,
+                                                BPHParticleMasses::jPsiMass,
+                                                BPHParticleMasses::jPsiMWidth );
+        return BPHMassFitSelect::accept( cand );
+      }
+    };
+    bool mcJPsi = false;
+    bool mcPsi2 = true;
+    rIter = parMap.find( Bp );
+    if ( rIter != rIend ) {
+      const map<parType,double>& pMap = rIter->second;
+      map<parType,double>::const_iterator pIter = pMap.begin();
+      map<parType,double>::const_iterator pIend = pMap.end();
+      while ( pIter != pIend ) {
+        const map<parType,double>::value_type& pEntry = *pIter++;
+        parType id = pEntry.first;
+        double  pv = pEntry.second;
+        switch( id ) {
+        case ptMin      : bp->setKPtMin      ( pv ); break;
+        case etaMax     : bp->setKEtaMax     ( pv ); break;
+        case mPsiMin    : bp->setPsi2SMassMin( pv ); break;
+        case mPsiMax    : bp->setPsi2SMassMax( pv ); break;
+        case massMin    : bp->setMassMin     ( pv ); break;
+        case massMax    : bp->setMassMax     ( pv ); break;
+        case probMin    : bp->setProbMin     ( pv ); break;
+        case mFitMin    : bp->setMassFitMin  ( pv ); break;
+        case mFitMax    : bp->setMassFitMax  ( pv ); break;
+        case constrMJPsi: mcJPsi =           ( pv > 0 ); break;
+        case constrMPsi2: mcPsi2 =           ( pv > 0 ); break;
+        case writeCandidate: writeBp =       ( pv > 0 ); break;
+        default: break;
+        }
+      }
+    }
+    if ( mcJPsi ) bp->setMassFitSelect( mcPsi2 ?
+                                        new BPHBuToPsi2SSelect :
+                                        new BPHMassFitSelect( "Psi2S/JPsi",
+                                            BPHParticleMasses::jPsiMass,
+                                            BPHParticleMasses::jPsiMWidth,
+                                            bp->getMassFitMin(),
+                                            bp->getMassFitMax() ) );
+    else          bp->setConstr( mcPsi2 );
+    lBp = bp->build();
+    const map<const BPHRecoCandidate*,
+              const BPHRecoCandidate*>& bpMap = bp->daughMap();
+    daughMap.insert( bpMap.begin(), bpMap.end() );
+    delete bp;
+  }
+
   return;
 
-}
-
-
-void BPHWriteSpecificDecay::endJob() {
-  return;
 }
 
 
@@ -1073,16 +1246,22 @@ void BPHWriteSpecificDecay::setRecoParameters( const edm::ParameterSet& ps ) {
   case Ups1:
   case Ups2:
   case Ups3   : recoOnia     = true;                                break;
-  case Kx0    : recoKx0      = true; writeKx0     = writeCandidate; break;
-  case Pkk    : recoPkk      = true; writePkk     = writeCandidate; break;
+  case Kx0    : recoKx0      = true;   allKx0     = false;
+                                     writeKx0     = writeCandidate; break;
+  case Pkk    : recoPkk      = true;   allPkk     = false;
+                                     writePkk     = writeCandidate; break;
   case Bu     : recoBu       = true; writeBu      = writeCandidate; break;
+  case Bp     : recoBp       = true; writeBp      = writeCandidate; break;
   case Bd     : recoBd       = true; writeBd      = writeCandidate; break;
   case Bs     : recoBs       = true; writeBs      = writeCandidate; break;
-  case K0s    : recoK0s      = true; writeK0s     = writeCandidate; break;
-  case Lambda0: recoLambda0  = true; writeLambda0 = writeCandidate; break;
+  case K0s    : recoK0s      = true;   allK0s     = false;
+                                     writeK0s     = writeCandidate; break;
+  case Lambda0: recoLambda0  = true;   allLambda0 = false;
+                                     writeLambda0 = writeCandidate; break;
   case B0     : recoB0       = true; writeB0      = writeCandidate; break;
   case Lambdab: recoLambdab  = true; writeLambdab = writeCandidate; break;
   case Bc     : recoBc       = true; writeBc      = writeCandidate; break;
+  case Psi2S  : recoPsi2S    = true; writePsi2S   = writeCandidate; break;
   case X3872  : recoX3872    = true; writeX3872   = writeCandidate; break;
   }
 
@@ -1105,11 +1284,11 @@ void BPHWriteSpecificDecay::setRecoParameters( const edm::ParameterSet& ps ) {
     const map<string,parType>::value_type& entry = *fIter++;
     const string& fn = entry.first;
     parType       id = entry.second;
-    edm::LogVerbatim( "Configuration" )
+    double pv = ( ps.getParameter<bool>( fn ) ? 1 : -1 );
+    if ( pv > -1.0e35 ) edm::LogVerbatim( "Configuration" )
          << "BPHWriteSpecificDecay::setRecoParameters: set " << fn
          << " for " << name << " : "
-         << ( parMap[rMap[name]][id] =
-                                     ( ps.getParameter<bool>( fn ) ? 1 : -1 ) );
+         << ( parMap[rMap[name]][id] = pv );
   }
 
   return;

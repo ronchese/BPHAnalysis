@@ -53,7 +53,7 @@ class BPHDecayToFlyingCascadeBuilder:
       const std::string& flyName, double flyMass, double flyMSigma,
       const std::vector<flying_ptr>& flyCollection ):
    BPHDecayGenericBuilderBase( es, nullptr ),
-   BPHDecayToFlyingCascadeBuilderBase( es, flyName, flyMass, flyMSigma ),
+   BPHDecayToFlyingCascadeBuilderBase( flyName, flyMass, flyMSigma ),
    fCollection( &flyCollection ) {
   }
 
