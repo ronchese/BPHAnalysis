@@ -193,8 +193,8 @@ const BPHEventSetupWrapper* BPHDecayVertex::getEventSetup() const {
 
 const string& BPHDecayVertex::getTrackSearchList(
                               const reco::Candidate* cand ) const {
-  static string dum = "";
-  map<const reco::Candidate*,string>::const_iterator iter = 
+  static const string dum = "";
+  map<const reco::Candidate*,string>::const_iterator iter =
                                                      searchMap.find( cand );
   if ( iter != searchMap.end() ) return iter->second;
   return dum;
