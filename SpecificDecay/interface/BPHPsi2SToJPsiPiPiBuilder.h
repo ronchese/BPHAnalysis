@@ -66,7 +66,7 @@ class BPHPsi2SToJPsiPiPiBuilder:
 
   /** Destructor
    */
-  ~BPHPsi2SToJPsiPiPiBuilder() override {}
+  ~BPHPsi2SToJPsiPiPiBuilder() override = default;
 
 };
 
